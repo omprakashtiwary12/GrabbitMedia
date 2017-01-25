@@ -18,8 +18,6 @@ public class CategoryActivity extends BaseActivity implements OneAdapter.ReturnV
     public int[] mThumbIds = {
             R.drawable.biz_logo, R.drawable.fitness,
             R.drawable.museum, R.drawable.events,
-
-
     };
 
     @Override
@@ -34,7 +32,6 @@ public class CategoryActivity extends BaseActivity implements OneAdapter.ReturnV
         GridView gridView = (GridView) findViewById(R.id.grid_view);
 
         // Instance of ImageAdapter Class
-
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -47,7 +44,6 @@ public class CategoryActivity extends BaseActivity implements OneAdapter.ReturnV
 
     @Override
     public void init(Bundle save) {
-
 
     }
 

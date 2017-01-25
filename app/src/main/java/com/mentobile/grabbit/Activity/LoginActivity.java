@@ -1,12 +1,22 @@
 package com.mentobile.grabbit.Activity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -14,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -38,8 +47,8 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.mentobile.grabbit.R;
+import com.mentobile.grabbit.Utility.AppPref;
 import com.mentobile.grabbit.Utility.AppUrl;
-import com.mentobile.grabbit.Utility.BaseActivity;
 import com.mentobile.grabbit.Utility.GetDataUsingWService;
 import com.mentobile.grabbit.Utility.GetWebServiceData;
 import com.mentobile.grabbit.Utility.Other;
@@ -47,49 +56,81 @@ import com.mentobile.grabbit.Utility.Other;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
+/**
+ * Created by Administrator on 12/29/2016.
+ */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, GetWebServiceData, GoogleApiClient.OnConnectionFailedListener {
-
-    private Button btnRegister;
     private final String TAG = "LoginActivity";
     private Button btnLogin;
     private Button btnSignup;
+    private ImageView btnFacebook;
+    private ImageView btnGoogle;
     private EditText edUserName;
     private EditText edPassword;
     private TextView tvForgetPass;
-    private ImageView ivFacebook;
-    private ImageView ivGoogle;
     public GoogleApiClient mGoogleApiClient;
+    public static String gcmid = "";
 
-    public static LoginActivity loginActivity;
 
     @Override
-    public void onCreate(Bundle save) {
-        super.onCreate(save);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return true;
+    }
 
-//        FacebookSdk.sdkInitialize(getApplicationContext());
-//        callbackManager = CallbackManager.Factory.create();
-//        AppEventsLogger.activateApp(this);
-        setContentView(R.layout.activity_login);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        loginActivity = this;
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // facebook sdk initialize
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        AppEventsLogger.activateApp(this);
+        setContentView(R.layout.activity_login1);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.mentobile.grabbit",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            Log.d("KeyHash:", "" + e);
+        } catch (NoSuchAlgorithmException e) {
+            Log.d("KeyHash:", "" + e);
+        }
+
         btnLogin = (Button) findViewById(R.id.login_btn_login);
         btnLogin.setOnClickListener(this);
-        btnSignup = (Button) findViewById(R.id.login_btn_register);
+        btnSignup = (Button) findViewById(R.id.login_btn_signup);
         btnSignup.setOnClickListener(this);
-
         edUserName = (EditText) findViewById(R.id.login_ed_username);
         edPassword = (EditText) findViewById(R.id.login_ed_password);
-
         tvForgetPass = (TextView) findViewById(R.id.login_tv_forgetpassword);
-        ivFacebook = (ImageView) findViewById(R.id.login_iv_facebook);
-        ivGoogle = (ImageView) findViewById(R.id.login_iv_google);
-        ivFacebook.setOnClickListener(this);
-        ivGoogle.setOnClickListener(this);
-
         tvForgetPass.setPaintFlags(tvForgetPass.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         tvForgetPass.setOnClickListener(this);
-
+        btnGoogle = (ImageView) findViewById(R.id.login_btn_google);
+        btnGoogle.setOnClickListener(this);
+        btnFacebook = (ImageView) findViewById(R.id.login_btn_google);
+        btnFacebook.setOnClickListener(this);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -98,128 +139,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-    }
-
-    public void toastMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    public void sendToThisActivity(Class activity) {
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-    }
-
-//    @Override
-//    public int getActivityLayout() {
-//        return R.layout.activity_login;
-//    }
-//
-//    @Override
-//    public void initialize() {
-//
-//        loginActivity = this;
-//        btnLogin = (Button) findViewById(R.id.login_btn_login);
-//        btnLogin.setOnClickListener(this);
-//        btnSignup = (Button) findViewById(R.id.login_btn_register);
-//        btnSignup.setOnClickListener(this);
-//
-//        edUserName = (EditText) findViewById(R.id.login_ed_username);
-//        edPassword = (EditText) findViewById(R.id.login_ed_password);
-//
-//        tvForgetPass = (TextView) findViewById(R.id.login_tv_forgetpassword);
-//        ivFacebook = (ImageView) findViewById(R.id.login_iv_facebook);
-//        ivGoogle = (ImageView) findViewById(R.id.login_iv_google);
-//        ivFacebook.setOnClickListener(this);
-//        ivGoogle.setOnClickListener(this);
-//
-//        tvForgetPass.setPaintFlags(tvForgetPass.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-//        tvForgetPass.setOnClickListener(this);
-//
-//
-//        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-//                .requestEmail()
-//                .build();
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
-//                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-//                .build();
-////        googleCloudMessaging = GoogleCloudMessaging.getInstance(this);
-////        GcmAsync myAsynchTask = new GcmAsync();
-////        myAsynchTask.execute();
-//
-//
-//    }
-//
-//    @Override
-//    public void init(Bundle save) {
-//
-//    }
-
-
-    JSONObject json = null;
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.login_btn_login:
-
-                String username = edUserName.getText().toString().trim();
-                String password = edPassword.getText().toString().trim();
-                if (username.length() < 1) {
-                    toastMessage("Please Provide UserName");
-                } else if (password.length() < 1) {
-                    toastMessage("Please Provide Password");
-                } else {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    stringBuilder.append("email=").append(username);
-                    stringBuilder.append("&password=").append(password);
-                    stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
-
-                    String content = stringBuilder.toString();
-
-                    GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 0, content, true, "Logging ...", this);
-                    getDataUsingWService.execute();
-                }
-                break;
-            case R.id.login_btn_register:
-                sendToThisActivity(RegisterActivity.class);
-                break;
-            case R.id.login_tv_forgetpassword:
-                forgetPassword();
-                break;
-            case R.id.login_iv_google:
-                signIn();
-                break;
-        }
-    }
-
-    private void forgetPassword() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.fragment_forget);
-        final EditText fragment_forget_et_email = (EditText) dialog.findViewById(R.id.fragment_forget_et_email);
-
-        Button fragment_forget_cancel = (Button) dialog.findViewById(R.id.fragment_forget_cancel);
-        fragment_forget_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-        Button reset_password = (Button) dialog.findViewById(R.id.reset_password);
-        reset_password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // sendToThisActivity(OtpActivity.class, new String[]{"from;forget", "phone;" + fragment_forget_et_email.getText().toString()});
-            }
-        });
-        dialog.show();
 
     }
-
 
     @Override
     public void getWebServiceResponse(String responseData, int serviceCounter) {
+
         try {
             Log.w("LoginActivity", responseData);
             JSONObject jsonObject = new JSONObject(responseData);
@@ -233,18 +158,126 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String email = jsonObject.getString("email");
                 String name = jsonObject.getString("name");
                 Other.saveDataInSharedPreferences(cus_id, name, email, phone);
-                sendToThisActivity(BluetoothActivity.class);
-                //sendToThisActivity(DrawerActivity.class);
+                AppPref.getInstance().setImageUrl(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg");
+                desigion();
+            } else if (status.equalsIgnoreCase("0")) {
+                String msg = jsonObject.getString("msg");
+                toastMessage(msg);
             }
         } catch (Exception e) {
 
         }
     }
 
+    @Override
+    public void onClick(View view) {
 
-    //google  integration
+        switch (view.getId()) {
+            case R.id.login_btn_login:
+                String username = edUserName.getText().toString().trim();
+                String password = edPassword.getText().toString().trim();
+                if (username.length() < 1) {
+                    toastMessage("Please Provide UserName");
+                } else if (password.length() < 1) {
+                    toastMessage("Please Provide Password");
+                } else {
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append("email=").append(username);
+                    stringBuilder.append("&password=").append(password);
+                    stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
+                    String content = stringBuilder.toString();
+                    GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 100, content, true, "Logging ...", this);
+                    getDataUsingWService.execute();
+                }
+                break;
+            case R.id.login_btn_signup:
+                sendToThisActivity(RegisterActivity.class);
+                break;
+            case R.id.login_tv_forgetpassword:
+                forgetPassword();
+                break;
+            case R.id.login_btn_google:
+                signIn();
+                break;
+
+        }
+    }
+
+    public void sendToThisActivity(Class activity) {
+        Intent intent = new Intent(this, activity);
+        startActivity(intent);
+    }
+
+    public void toastMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void forgetPassword() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.fragment_forget);
+        final EditText fragment_forget_et_email = (EditText) dialog.findViewById(R.id.fragment_forget_et_email);
+        Button fragment_forget_cancel = (Button) dialog.findViewById(R.id.fragment_forget_cancel);
+        fragment_forget_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        Button reset_password = (Button) dialog.findViewById(R.id.reset_password);
+        reset_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String input = fragment_forget_et_email.getText().toString();
+                if (input.equalsIgnoreCase("")) {
+                    toastMessage("Please Enter Number");
+                } else {
+                    sendToThisActivity(OtpActivity.class, new String[]{"from;forget", "phone;" + fragment_forget_et_email.getText().toString()});
+                }
+            }
+        });
+        dialog.show();
+
+    }
+
+    public void sendToThisActivity(Class activity, String s[]) {
+        Intent intent = new Intent(this, activity);
+        for (int i = 0; i < s.length; i++) {
+            String p[] = s[i].split(";");
+            intent.putExtra(p[0], p[1]);
+        }
+        startActivity(intent);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("Exit");
+        builder.setMessage("Do you want to Exit !");
+        builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
 
     private static final int RC_SIGN_IN = 9001;
+
+    // Google client to communicate with Google
+    // private GoogleApiClient mGoogleApiClient;
+
     private boolean mIntentInProgress;
     private boolean signedInUser;
     private ConnectionResult mConnectionResult;
@@ -295,27 +328,69 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         } else {
-            //  callbackManager.onActivityResult(requestCode, resultCode, data);
+            callbackManager.onActivityResult(requestCode, resultCode, data);
         }
     }
     // [END onActivityResult]
 
     // [START handleSignInResult]
 
+    public void uploadresultforGoogle(String name, String email, String login_type) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("api_key=").append(AppUrl.API_KEY);
+        stringBuilder.append("&name=").append(name);
+        stringBuilder.append("&email=").append(email);
+        stringBuilder.append("&Phone=").append("");
+        stringBuilder.append("&password=").append("");
+        stringBuilder.append("&login_type=").append(login_type);
+        stringBuilder.append("$gcm_id=").append(gcmid);
+        String content = stringBuilder.toString();
+        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.REGISTER_URL, 0, content, true, "Loding ..", new GetWebServiceData() {
+            @Override
+            public void getWebServiceResponse(String result, int serviceCounter) {
+                Log.d(TAG, "::::Result " + result);
+
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String status = jsonObject.getString("status");
+                    if (status.equalsIgnoreCase("1")) {
+                        String msg = jsonObject.getString("msg");
+                        toastMessage(msg);
+                        JSONArray jsonArray = jsonObject.getJSONArray("details");
+                        jsonObject = jsonArray.getJSONObject(0);
+                        String cus_id = jsonObject.getString("cus_id");
+                        String phone = jsonObject.getString("phone");
+                        String email = jsonObject.getString("email");
+                        String name = jsonObject.getString("name");
+                        Other.saveDataInSharedPreferences(cus_id, name, email, phone);
+                        desigion();
+                    }
+                    finish();
+                } catch (Exception e) {
+
+                }
+            }
+        });
+        getDataUsingWService.execute();
+
+    }
 
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount acct = result.getSignInAccount();
-//            AppPref.getInstance().setName(acct.getDisplayName());
-//            AppPref.getInstance().setEmail(acct.getEmail());
-//            AppPref.getInstance().setProfileUrl(acct.getPhotoUrl().toString());
-            // uploadresultforGoogle(acct.getDisplayName(), acct.getEmail());
-            Other.saveDataInSharedPreferences("11", acct.getDisplayName(), acct.getEmail(), "");
+            try {
+                GoogleSignInAccount acct = result.getSignInAccount();
+                uploadresultforGoogle(acct.getDisplayName(), acct.getEmail(), "2");
+                AppPref.getInstance().setImageUrl(acct.getPhotoUrl().toString());
+                //  Other.saveDataInSharedPreferences("11", acct.getDisplayName(), acct.getEmail(), "");
+            } catch (Exception e) {
+
+            }
             signOut();
             revokeAccess();
-//            sendToActivity(MainActivity.class);
+//            desigion();
+            //sendToThisActivity(BluetoothActivity.class);
         } else {
 
         }
@@ -344,103 +419,149 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    // facebook  integration
+
+      /*//
+        Google Login Connection Method
+        ------------ End  ---------------
+     */
 
 
-//    private CallbackManager callbackManager;
-//    private LoginButton loginButton;
-//    // private TextView btnLogin;
-//    private ProgressDialog progressDialog;
-//
-//    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
-//        @Override
-//        public void onSuccess(LoginResult loginResult) {
-//            GraphRequest request = GraphRequest.newMeRequest(
-//                    loginResult.getAccessToken(),
-//                    new GraphRequest.GraphJSONObjectCallback() {
-//                        @Override
-//                        public void onCompleted(
-//                                JSONObject object,
-//                                GraphResponse response) {
-//
-//                            Log.e("response: ", response + "");
-//                            try {
-//                                Other.saveDataInSharedPreferences("1234", object.getString("name").toString(), object.getString("email").toString(), "1234567890");
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//
-//
-//                        }
-//
-//                    });
-//
-//            Bundle parameters = new Bundle();
-//            parameters.putString("fields", "id,name,email,gender, birthday");
-//            request.setParameters(parameters);
-//            request.executeAsync();
-//        }
-//
-//        @Override
-//        public void onCancel() {
-//            progressDialog.dismiss();
-//        }
-//
-//        @Override
-//        public void onError(FacebookException e) {
-//            progressDialog.dismiss();
-//        }
-//    };
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//
-//        callbackManager = CallbackManager.Factory.create();
-//        loginButton = (LoginButton) findViewById(R.id.login_button);
-//        loginButton.setReadPermissions("public_profile", "email", "user_friends");
-//        ivFacebook = (ImageView) findViewById(R.id.login_iv_facebook);
-//        ivFacebook.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                progressDialog = new ProgressDialog(LoginActivity.this);
-//                progressDialog.setMessage("Loading...");
-//                progressDialog.show();
-//
-//                loginButton.performClick();
-//
-//                loginButton.setPressed(true);
-//
-//                loginButton.invalidate();
-//
-//                loginButton.registerCallback(callbackManager, mCallBack);
-//
-//                loginButton.setPressed(false);
-//
-//                loginButton.invalidate();
-//
-//            }
-//        });
-//
-//    }
-//
-//    public void disconnectFromFacebook() {
-//
-//        if (AccessToken.getCurrentAccessToken() == null) {
-//            return; // already logged out
-//        }
-//
-//        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
-//                .Callback() {
-//            @Override
-//            public void onCompleted(GraphResponse graphResponse) {
-//
-//                LoginManager.getInstance().logOut();
-//
-//            }
-//        }).executeAsync();
-//    }
+    //facebook integration
+
+    private CallbackManager callbackManager;
+    private LoginButton loginButton;
+    // private TextView btnLogin;
+    private ProgressDialog progressDialog;
+
+    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
+        @Override
+        public void onSuccess(LoginResult loginResult) {
+            GraphRequest request = GraphRequest.newMeRequest(
+                    loginResult.getAccessToken(),
+                    new GraphRequest.GraphJSONObjectCallback() {
+                        @Override
+                        public void onCompleted(
+                                JSONObject object,
+                                GraphResponse response) {
+
+                            Log.e("response: ", response + "");
+                            try {
+                                String imageurl = "https://graph.facebook.com/" + object.getString("id").toString() + "/picture?type=small";
+                                AppPref.getInstance().setImageUrl(imageurl);
+                                uploadresultforGoogle(object.getString("name").toString(), object.getString("email").toString(), "1");
+                                //Other.saveDataInSharedPreferences("11", object.getString("name").toString(), object.getString("email").toString(), "");
+                                Toast.makeText(LoginActivity.this, "welcome ", Toast.LENGTH_LONG).show();
+                                disconnectFromFacebook();
+//                                desigion();
+                                //sendToThisActivity(BluetoothActivity.class);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+
+                        }
+
+                    });
+
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,email,gender, birthday");
+            request.setParameters(parameters);
+            request.executeAsync();
+        }
+
+        @Override
+        public void onCancel() {
+            progressDialog.dismiss();
+        }
+
+        @Override
+        public void onError(FacebookException e) {
+            progressDialog.dismiss();
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        callbackManager = CallbackManager.Factory.create();
+
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+
+        loginButton.setReadPermissions("public_profile", "email", "user_friends");
+        btnFacebook = (ImageView) findViewById(R.id.login_btn_facebook);
+        btnFacebook.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("Loading...");
+                progressDialog.show();
+
+                loginButton.performClick();
+
+                loginButton.setPressed(true);
+
+                loginButton.invalidate();
+
+                loginButton.registerCallback(callbackManager, mCallBack);
+
+                loginButton.setPressed(false);
+
+                loginButton.invalidate();
+
+            }
+        });
+
+    }
+
+    public void disconnectFromFacebook() {
+
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+
+
+    }
+
+    private class GcmAsync extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+               // gcmid = googleCloudMessaging.register("376155352726");
+                Log.d(TAG, ":::gcmid" + gcmid);
+            } catch (Exception e) {
+                Log.d(TAG, "errorinlogin" + e.toString());
+            }
+            return "";
+        }
+    }
+
+
+    //download data
+
+    public void desigion() {
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        final boolean isEnabled = bluetoothAdapter.isEnabled();
+        if (isEnabled) {
+            sendToThisActivity(DrawerActivity.class);
+        } else {
+            sendToThisActivity(BluetoothActivity.class);
+        }
+    }
+
 
 }
+

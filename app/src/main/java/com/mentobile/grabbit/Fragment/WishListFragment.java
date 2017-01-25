@@ -1,12 +1,12 @@
 package com.mentobile.grabbit.Fragment;
 
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,8 +25,9 @@ import com.mentobile.grabbit.Adapter.RecyclerAdapter;
 import com.mentobile.grabbit.GrabbitApplication;
 import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
-import com.mentobile.grabbit.Utility.CircleImageView;
+import com.mentobile.grabbit.Utility.CircleImageView1;
 import com.mentobile.grabbit.Utility.Other;
+import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -39,7 +40,7 @@ import java.util.List;
 public class WishListFragment extends Fragment implements RecyclerAdapter.ReturnView {
     RecyclerView frag_nearby_rv;
     RecyclerAdapter recyclerAdapter;
-    ImageView nearby_item_IMG_star;
+
     public static List<NearByModel> nearByModelList1 = new ArrayList<NearByModel>();
 
 
@@ -47,7 +48,7 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
     public void onStart() {
         super.onStart();
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter("Broadcast"));
-        // recyclerAdapter.notifyDataSetChanged();
+        //recyclerAdapter.notifyDataSetChanged();
     }
 
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -78,7 +79,6 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
         return view;
     }
 
-
     @Override
     public void getAdapterView(View view, List objects, final int position, int from) {
         ViewPager nearyby_item_IMG_place = (ViewPager) view.findViewById(R.id.nearby_item_IMG_place);
@@ -87,11 +87,9 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
         TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
         final LinearLayout viewPagerCountDots = (LinearLayout) view.findViewById(R.id.viewPagerCountDots);
         RelativeLayout nearby_item_RL = (RelativeLayout) view.findViewById(R.id.nearby_item_RL);
-        CircleImageView nearby_item_IMG_logo = (CircleImageView) view.findViewById(R.id.nearby_item_IMG_logo);
-//        ImageView nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
-//        nearby_item_IMG_star.setVisibility(View.INVISIBLE);
+        CircleImageView1 nearby_item_IMG_logo = (CircleImageView1) view.findViewById(R.id.nearby_item_IMG_logo);
         final NearByModel nearByModel = GrabbitApplication.nearByModelList.get(position);
-        nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
+        final ImageView nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
         if (nearByModel.getWishlist() == "1") {
             nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_press));
         } else {
@@ -114,13 +112,14 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
 
         int wishlist = Integer.parseInt(nearByModel.getWishlist());
         final List<String> profilePhotos = new ArrayList<String>();
-        profilePhotos.add("camera");
-        profilePhotos.add("gallery");
-        profilePhotos.add("camera");
-        profilePhotos.add("gallery");
+        profilePhotos.clear();
+        for (int i = 0; i < nearByModel.getOfferImageModels().size(); i++) {
+            profilePhotos.add("http://grabbit.co.in/merchant/uploads/design/" + nearByModel.getM_id() + "/" + nearByModel.getOfferImageModels().get(i).getImageName());
+        }
 
 
-        nearby_item_IMG_logo.setImageResource(R.drawable.hotel);
+        // nearby_item_IMG_logo.setImageResource(R.drawable.hotel);
+        Picasso.with(getContext()).load("http://grabbit.co.in/merchant/uploads/logo/" + nearByModel.getBusiness_name() + "/" + nearByModel.getLogo()).into(nearby_item_IMG_logo);
         nearyby_item_IMG_place.setAdapter(new AdapterViewPager(getActivity(), profilePhotos, position, getActivity()));
 
         nearyby_item_IMG_place.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {

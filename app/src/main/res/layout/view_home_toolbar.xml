@@ -22,37 +22,6 @@
                 android:textColor="@color/white"
                 android:textSize="25sp" />
 
-            <!--<TextView-->
-            <!--android:id="@+id/view_home_toolbar_text"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:background="@drawable/round_white"-->
-            <!--android:gravity="center"-->
-            <!--android:padding="5dp"-->
-            <!--android:text="Search Category"-->
-            <!--android:textSize="15sp" />-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/view_home_toolbar_image"-->
-            <!--android:layout_width="20dp"-->
-            <!--android:layout_height="20dp"-->
-            <!--android:layout_gravity="right|center_vertical"-->
-            <!--android:layout_marginRight="10dp"-->
-            <!--android:src="@drawable/tool"-->
-            <!--android:tag="search" />-->
-
-
-            <!--EditText
-                android:id="@+id/act_home_IBTN_search"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:focusable="false"
-                android:background="@drawable/round_white"
-                android:textSize="15sp"
-                android:drawableRight="@android:drawable/ic_menu_search"
-                android:hint="Search Category" /-->
-
         </FrameLayout>
 
     </RelativeLayout>

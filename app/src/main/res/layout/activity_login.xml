@@ -50,17 +50,17 @@
                 android:textSize="15sp" />
         </android.support.design.widget.TextInputLayout>
 
-        <TextView
-            android:id="@+id/login_tv_forgetpassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/activity_login_textInput_2"
-            android:layout_marginTop="15dp"
-            android:clickable="true"
-            android:text="Forget Password?"
-            android:textColor="@color/black"
-            android:textSize="17sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/login_tv_forgetpassword"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_below="@+id/activity_login_textInput_2"-->
+            <!--android:layout_marginTop="15dp"-->
+            <!--android:clickable="true"-->
+            <!--android:text="Forget Password?"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="17sp" />-->
 
     </RelativeLayout>
 

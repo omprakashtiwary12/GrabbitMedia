@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -17,21 +18,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mentobile.grabbit.Adapter.Pager;
-import com.mentobile.grabbit.Fragment.NearByFragment;
 import com.mentobile.grabbit.GrabbitApplication;
 import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
@@ -74,7 +71,6 @@ public class DrawerActivity extends AppCompatActivity
         boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (isNetworkEnabled || isGpsEnabled) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
                 ActivityCompat.requestPermissions(
                         this,
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
@@ -88,8 +84,10 @@ public class DrawerActivity extends AppCompatActivity
             }
         }
         //setBluetooth(true);
-        loadDataFromServer();
 
+        if (GrabbitApplication.nearByModelList.size() == 0) {
+            loadDataFromServer();
+        }
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -101,6 +99,8 @@ public class DrawerActivity extends AppCompatActivity
         View view = (View) navigationView.getHeaderView(0);
         setHeaderView(view);
 
+        //color  for  icon
+        navigationView.setItemIconTintList(null);
         //setFragment(new NearByFragment());
 
         //Initializing the tablayout
@@ -109,7 +109,7 @@ public class DrawerActivity extends AppCompatActivity
         //Adding the tabs using addTab() method
         tabLayout.addTab(tabLayout.newTab().setText("All"));
         tabLayout.addTab(tabLayout.newTab().setText("WishList"));
-        tabLayout.addTab(tabLayout.newTab().setText("Beacons"));
+        //tabLayout.addTab(tabLayout.newTab().setText("Beacons"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //Initializing viewPager
@@ -123,6 +123,8 @@ public class DrawerActivity extends AppCompatActivity
 
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);
+
+
     }
 
     private void loadDataFromServer() {
@@ -225,16 +227,16 @@ public class DrawerActivity extends AppCompatActivity
             nearByModel.setClose_time(close_time);
             nearByModel.setCity_name(city_name);
             nearByModel.setState_name(state_name);
-            nearByModel.setBusiness_logo(business_logo);
-            nearByModel.setBusiness_banner(business_banner);
+//            nearByModel.setBusiness_logo(business_logo);
+//            nearByModel.setBusiness_banner(business_banner);
             nearByModel.setGallery_img1(gallery_img1);
             nearByModel.setGallery_img2(gallery_img2);
             nearByModel.setGallery_img3(gallery_img3);
             nearByModel.setGallery_img4(gallery_img4);
             nearByModel.setGallery_img5(gallery_img5);
             nearByModel.setOpening_days(opening_days);
-            nearByModel.setCat_name(cat_name);
-            nearByModel.setStatus(status);
+//            nearByModel.setCat_name(cat_name);
+//            nearByModel.setStatus(status);
             nearByModel.setWishlist(wishlist);
             GrabbitApplication.nearByModelList.add(nearByModel);
         }
@@ -258,6 +260,26 @@ public class DrawerActivity extends AppCompatActivity
     @Override
     public void onTabSelected(TabLayout.Tab tab) {
         viewPager.setCurrentItem(tab.getPosition());
+//        switch (tab.getPosition()) {
+//            case 0:
+//                NearByFragment tab1 = new NearByFragment();
+//                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//                transaction.replace(R.id.frag_nearby_rv, tab1);
+//                transaction.commit();
+//
+//            case 1:
+//                WishListFragment tab2 = new WishListFragment();
+//                FragmentTransaction transaction1 = getFragmentManager().beginTransaction();
+//                transaction1.replace(R.id.frag_nearby_rv, tab2);
+//                transaction1.commit();
+//
+//
+//            case 2:
+//                BeaconFragment tab3 = new BeaconFragment();
+//                FragmentTransaction transaction2 = getFragmentManager().beginTransaction();
+//                transaction2.replace(R.id.frag_nearby_rv, tab3);
+//                transaction2.commit();
+//        }
     }
 
     @Override
@@ -270,6 +292,7 @@ public class DrawerActivity extends AppCompatActivity
 
     }
 
+
     private void setHeaderView(View view) {
         TextView username = (TextView) view.findViewById(R.id.user_name);
         TextView useremail = (TextView) view.findViewById(R.id.user_email);
@@ -277,8 +300,13 @@ public class DrawerActivity extends AppCompatActivity
 
         username.setText(AppPref.getInstance().getUserName());
         useremail.setText(AppPref.getInstance().getUserEmail());
+        //Picasso.with(this).load(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg").into(userimage);
+        try {
+            Picasso.with(this).load(AppPref.getInstance().getImageUrl()).into(userimage);
+        } catch (Exception e) {
 
-        Picasso.with(this).load(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg").into(userimage);
+        }
+
     }
 
     @Override
@@ -287,7 +315,7 @@ public class DrawerActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            //super.onBackPressed();
+            super.onBackPressed();
         }
     }
 
@@ -302,12 +330,7 @@ public class DrawerActivity extends AppCompatActivity
             case R.id.my_profile:
                 Other.sendToThisActivity(this, MyProfileActivity.class);
                 break;
-//            case R.id.offer_list:
-//                Other.sendToThisActivity(this, OfferListActivity.class);
-//                break;
-//            case R.id.near_by:
-//                Other.sendToThisActivity(this, BeaconActivity.class);
-//                break;
+
             case R.id.about_us:
                 Other.sendToThisActivity(this, AboutUsActivity.class);
                 break;
@@ -348,7 +371,6 @@ public class DrawerActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_search:
-               // Toast.makeText(this, "", Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(this, SearchActivity.class);
                 startActivity(intent);
                 break;

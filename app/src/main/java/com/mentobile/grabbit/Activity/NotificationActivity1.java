@@ -49,9 +49,8 @@ public class NotificationActivity1 extends ActionBarActivity implements Notifica
             do {
                 i++;
                 String text = cursor.getString(1);
-                String image = cursor.getString(2);
-                String date = cursor.getString(3);
-                Notification notification = new Notification(i + "", text, image, date);
+                String title = cursor.getString(2);
+                Notification notification = new Notification(i + "", title, text, "");
                 arrListQuery.add(notification);
 
             }

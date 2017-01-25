@@ -1,5 +1,6 @@
 package com.mentobile.grabbit.Fragment;
 
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,16 +16,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.mentobile.grabbit.Activity.MerchantDetailsActivity;
+import com.mentobile.grabbit.Adapter.AdapterForGallery;
 import com.mentobile.grabbit.Adapter.AdapterViewPager;
 import com.mentobile.grabbit.Adapter.RecyclerAdapter;
 import com.mentobile.grabbit.GrabbitApplication;
 import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
-import com.mentobile.grabbit.Utility.CircleImageView;
-import com.mentobile.grabbit.Utility.Other;
+import com.mentobile.grabbit.Utility.AppUrl;
+import com.mentobile.grabbit.Utility.CircleImageView1;
+import com.mentobile.grabbit.Utility.GetDataUsingWService;
+import com.mentobile.grabbit.Utility.GetWebServiceData;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -34,9 +39,7 @@ import static android.content.ContentValues.TAG;
 
 public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnView {
     RecyclerView frag_nearby_rv;
-    ImageView nearby_item_IMG_star;
     RecyclerAdapter recyclerAdapter;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,91 +59,111 @@ public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnVi
         ViewPager nearyby_item_IMG_place = (ViewPager) view.findViewById(R.id.nearby_item_IMG_place);
         TextView nearby_item_TXT_name = (TextView) view.findViewById(R.id.nearby_item_TXT_name);
         TextView nearby_item_TXT_address = (TextView) view.findViewById(R.id.nearby_item_TXT_address);
-        TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
+        final TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
         final LinearLayout viewPagerCountDots = (LinearLayout) view.findViewById(R.id.viewPagerCountDots);
         RelativeLayout nearby_item_RL = (RelativeLayout) view.findViewById(R.id.nearby_item_RL);
-        CircleImageView nearby_item_IMG_logo = (CircleImageView) view.findViewById(R.id.nearby_item_IMG_logo);
+        CircleImageView1 nearby_item_IMG_logo = (CircleImageView1) view.findViewById(R.id.nearby_item_IMG_logo);
         //Start imageview
-
+        final NearByModel nearByModel = GrabbitApplication.nearByModelList.get(position);
         Log.w("NearByDataPostion", "" + position);
-        nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
-//        if (nearByModel.getWishlist() == "1") {
-//            nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_press));
-//        } else {
-//            nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_unpress));
-//        }
+        final ImageView nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
+        if (nearByModel.getWishlist() == "1") {
+            nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_press));
+        } else {
+            nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_unpress));
+        }
+        String name[] = nearByModel.getAddress().split(",");
+        nearby_item_TXT_name.setText(name[0]);
+        if (nearByModel.getDistance() != null) {
+            String distance[] = nearByModel.getDistance().trim().split(" ");
+            Double distance_in_km = Double.parseDouble(distance[0]) * 1.60934;
+            nearby_item_TXT_distace.setText(new DecimalFormat("##.##").format(distance_in_km) + "KM");
+        }
+        nearby_item_TXT_address.setText(nearByModel.getAddress());
+        nearby_item_TXT_distace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getBusiness_name());
+
+            }
+        });
         nearby_item_IMG_star.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG,":::::Like Button "+position);
-                NearByModel nearByModel = GrabbitApplication.nearByModelList.get(position);
+                Log.d(TAG, ":::::Like Button " + position);
                 if (nearByModel.getWishlist().equals("1")) {
                     nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_unpress));
+                    addRemoveWishList(nearByModel.getM_id(), "1");
                     nearByModel.setWishlist("0");
                 } else {
                     nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_press));
+                    addRemoveWishList(nearByModel.getM_id(), "2");
                     nearByModel.setWishlist("1");
                 }
-//                Intent intent = new Intent("Broadcast");
-//                getActivity().sendBroadcast(intent);
-                //recyclerAdapter.notifyDataSetChanged();
-               // recyclerAdapter.notifyItemChanged(position);
+                if (nearByModel.getDistance() != null) {
+                    String distance[] = nearByModel.getDistance().trim().split(" ");
+                    Double distance_in_km = Double.parseDouble(distance[0]) * 1.60934;
+                    nearby_item_TXT_distace.setText(new DecimalFormat("##.##").format(distance_in_km) + "KM");
+                }
+                Intent intent = new Intent("Broadcast");
+                getActivity().sendBroadcast(intent);
+                recyclerAdapter.notifyItemChanged(position);
             }
         });
 
         final List<String> profilePhotos = new ArrayList<String>();
-
-        profilePhotos.add("camera");
+//        profilePhotos.add("camera");
 //        profilePhotos.add("gallery");
 //        profilePhotos.add("camera");
-        //profilePhotos.add("gallery");
+//        profilePhotos.add("gallery");
 
-
-        nearby_item_IMG_logo.setImageResource(R.drawable.hotel);
+        Picasso.with(getContext()).load("http://grabbit.co.in/merchant/uploads/logo/" + nearByModel.getBusiness_name() + "/" + nearByModel.getLogo()).into(nearby_item_IMG_logo);
+        profilePhotos.clear();
+        for (int i = 0; i < nearByModel.getOfferImageModels().size(); i++) {
+            profilePhotos.add("http://grabbit.co.in/merchant/uploads/design/" + nearByModel.getM_id() + "/" + nearByModel.getOfferImageModels().get(i).getImageName());
+        }
         nearyby_item_IMG_place.setAdapter(new AdapterViewPager(getActivity(), profilePhotos, position, getActivity()));
-//
-//        nearyby_item_IMG_place.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                setUiPageViewController(profilePhotos.size(), viewPagerCountDots, position);
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//
-//            }
-//        });
+        nearyby_item_IMG_place.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                setUiPageViewController(profilePhotos.size(), viewPagerCountDots, position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        //setUiPageViewController(profilePhotos.size(), viewPagerCountDots);
+    }
 
 
-//        String name[] = nearByModel.getAddress().split(",");
-//        nearby_item_TXT_name.setText(name[0]);
-//        if (nearByModel.getDistance() != null) {
-//            String distance[] = nearByModel.getDistance().trim().split(" ");
-//            Double distance_in_km = Double.parseDouble(distance[0]) * 1.60934;
-//            nearby_item_TXT_distace.setText(new DecimalFormat("##.##").format(distance_in_km) + "KM");
-//        }
-//        nearby_item_TXT_address.setText(nearByModel.getAddress());
-//        nearby_item_TXT_distace.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                showMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getBusiness_name());
-//
-//            }
-//        });
-//
-//
-        setUiPageViewController(profilePhotos.size(), viewPagerCountDots);
-//        nearby_item_RL.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                Other.sendToThisActivity(getActivity(), MerchantDetailsActivity.class, new String[]{"position;" + position});
-//            }
-//        });
+    private void addRemoveWishList(String marchant_id, String condition) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("api_key=").append(AppUrl.API_KEY);
+        stringBuilder.append("&m_id=").append(marchant_id);
+        stringBuilder.append("&status=").append(condition);
+        String content = stringBuilder.toString();
+        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(getActivity(), AppUrl.ADDREMOVE_WISHLIST_URL, 0, content, false, "Loading ...", new GetWebServiceData() {
+            @Override
+            public void getWebServiceResponse(String responseData, int serviceCounter) {
+                try {
+                    JSONObject jsonObject = new JSONObject(responseData);
 
+                    //{"status":1,"msg":"Merchant add to wishlist Successfully."}
+                } catch (Exception e) {
+
+                }
+
+            }
+        });
+        getDataUsingWService.execute();
     }
 
     public void showMap(String lat, String lng, String name) {
@@ -152,7 +175,6 @@ public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnVi
             startActivity(mapIntent);
         }
     }
-
 
     private void setUiPageViewController(int dotscount, LinearLayout viewPagerCountDots) {
         viewPagerCountDots.removeAllViews();
@@ -197,5 +219,6 @@ public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnVi
 
         dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
     }
+
 
 }

@@ -7,7 +7,8 @@
     <android.support.design.widget.TextInputLayout
         android:id="@+id/search_activity_ttl"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
 
         <EditText
             android:id="@+id/search_activity_et_search"

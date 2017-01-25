@@ -1,11 +1,12 @@
 package com.mentobile.grabbit.Adapter;
 
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import com.mentobile.grabbit.Fragment.BeaconFragment;
 import com.mentobile.grabbit.Fragment.NearByFragment;
-import com.mentobile.grabbit.Fragment.Tab1;
 import com.mentobile.grabbit.Fragment.WishListFragment;
 
 public class Pager extends FragmentStatePagerAdapter {
@@ -32,14 +33,13 @@ public class Pager extends FragmentStatePagerAdapter {
                 WishListFragment tab2 = new WishListFragment();
                 return tab2;
             case 2:
-                WishListFragment tab3 = new WishListFragment();
+                BeaconFragment tab3 = new BeaconFragment();
                 return tab3;
             default:
                 return null;
         }
     }
 
-    //Overriden method getCount to get the number of tabs 
     @Override
     public int getCount() {
         return tabCount;

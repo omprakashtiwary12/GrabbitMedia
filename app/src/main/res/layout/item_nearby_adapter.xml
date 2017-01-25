@@ -83,7 +83,7 @@
         </RelativeLayout>
 
 
-        <com.mentobile.grabbit.Utility.CircleImageView
+        <com.mentobile.grabbit.Utility.CircleImageView1
             android:id="@+id/nearby_item_IMG_logo"
             android:layout_width="80dp"
             android:layout_height="80dp"

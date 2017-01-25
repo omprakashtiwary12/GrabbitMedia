@@ -7,12 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
 
 public class AndroidImageAdapter extends PagerAdapter {
     public Context mContext;
+    NearByModel nearByModel;
 
-   public AndroidImageAdapter(Context context) {
+    public AndroidImageAdapter(Context context) {
         this.mContext = context;
     }
 
@@ -22,9 +24,7 @@ public class AndroidImageAdapter extends PagerAdapter {
     }
 
     private int[] sliderImagesId = new int[]{
-            R.drawable.biz_logo, R.drawable.biz_logo, R.drawable.biz_logo,
-
-
+            R.drawable.biz_logo, R.drawable.biz_logo,
     };
 
     @Override
@@ -36,6 +36,7 @@ public class AndroidImageAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int i) {
         ImageView mImageView = new ImageView(mContext);
         mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
         mImageView.setImageResource(sliderImagesId[i]);
         ((ViewPager) container).addView(mImageView, 0);
         return mImageView;

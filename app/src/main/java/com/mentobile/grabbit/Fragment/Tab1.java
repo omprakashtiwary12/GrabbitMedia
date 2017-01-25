@@ -18,4 +18,5 @@ public class Tab1 extends Fragment {
         //Change R.layout.tab1 in you classes 
         return inflater.inflate(R.layout.tab, container, false);
     }
+
 }

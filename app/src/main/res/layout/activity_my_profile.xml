@@ -16,7 +16,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_menu_camera" />
+            android:src="@drawable/picture" />
 
         <Button
             android:id="@+id/activity_my_profile_btn_browse"

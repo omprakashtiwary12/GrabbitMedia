@@ -67,9 +67,7 @@ public class BluetoothActivity extends BaseActivity implements GetWebServiceData
                 current_longitude = location.getLongitude();
             }
         }
-        //setBluetooth(true);
-        //loadDataFromServer();
-        //bluetoothDEsigion();
+
         Button_bluetooth = (Button) findViewById(R.id.Button_bluetooth);
         Button_bluetooth.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +76,6 @@ public class BluetoothActivity extends BaseActivity implements GetWebServiceData
             }
         });
 
-        // decision();
     }
 
     @Override
@@ -91,9 +88,11 @@ public class BluetoothActivity extends BaseActivity implements GetWebServiceData
         final boolean isEnabled = bluetoothAdapter.isEnabled();
         if (!isEnabled) {
             bluetoothAdapter.enable();
-            loadDataFromServer();
+            sendToThisActivity(DrawerActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            // loadDataFromServer();
         } else {
-            loadDataFromServer();
+//            loadDataFromServer();
+            sendToThisActivity(DrawerActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
     }
 
@@ -207,21 +206,15 @@ public class BluetoothActivity extends BaseActivity implements GetWebServiceData
             nearByModel.setClose_time(close_time);
             nearByModel.setCity_name(city_name);
             nearByModel.setState_name(state_name);
-            nearByModel.setBusiness_logo(business_logo);
-            nearByModel.setBusiness_banner(business_banner);
             nearByModel.setGallery_img1(gallery_img1);
             nearByModel.setGallery_img2(gallery_img2);
             nearByModel.setGallery_img3(gallery_img3);
             nearByModel.setGallery_img4(gallery_img4);
             nearByModel.setGallery_img5(gallery_img5);
             nearByModel.setOpening_days(opening_days);
-            nearByModel.setCat_name(cat_name);
-            nearByModel.setStatus(status);
             nearByModel.setWishlist(wishlist);
             GrabbitApplication.nearByModelList.add(nearByModel);
         }
-
-
         calcualteDistance();
     }
 

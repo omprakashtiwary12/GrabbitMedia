@@ -2,7 +2,6 @@ package com.mentobile.grabbit.Activity;
 
 import android.os.Bundle;
 import android.widget.TextView;
-
 import com.mentobile.grabbit.R;
 import com.mentobile.grabbit.Utility.BaseActivity;
 
@@ -22,7 +21,7 @@ public class AboutUsActivity extends BaseActivity {
     public void initialize() {
         setTitle("About Us");
         about_us = (TextView) findViewById(R.id.about_us);
-        about_us.setText("Grabbit Powered By Mentobile");
+        // about_us.setText("");
     }
 
     @Override

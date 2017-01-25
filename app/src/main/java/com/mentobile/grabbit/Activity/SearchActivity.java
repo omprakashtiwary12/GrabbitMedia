@@ -21,7 +21,7 @@ import com.mentobile.grabbit.GrabbitApplication;
 import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
 import com.mentobile.grabbit.Utility.BaseActivity;
-import com.mentobile.grabbit.Utility.CircleImageView;
+import com.mentobile.grabbit.Utility.CircleImageView1;
 import com.mentobile.grabbit.Utility.Other;
 
 import java.text.DecimalFormat;
@@ -95,7 +95,7 @@ public class SearchActivity extends BaseActivity implements RecyclerAdapter.Retu
         TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
         final LinearLayout viewPagerCountDots = (LinearLayout) view.findViewById(R.id.viewPagerCountDots);
         RelativeLayout nearby_item_RL = (RelativeLayout) view.findViewById(R.id.nearby_item_RL);
-        CircleImageView nearby_item_IMG_logo = (CircleImageView) view.findViewById(R.id.nearby_item_IMG_logo);
+        CircleImageView1 nearby_item_IMG_logo = (CircleImageView1) view.findViewById(R.id.nearby_item_IMG_logo);
         ImageView nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
         nearby_item_IMG_star.setVisibility(View.INVISIBLE);
         final NearByModel nearByModel = GrabbitApplication.nearByModelList.get(position);

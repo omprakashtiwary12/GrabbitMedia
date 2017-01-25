@@ -57,7 +57,6 @@ public class ContactUsActivity extends BaseActivity implements OnMapReadyCallbac
         map.getUiSettings().setZoomControlsEnabled(true);
 
         LatLng latLng = new LatLng(28.501150, 77.084880);
-
         map.addMarker(new MarkerOptions().position(latLng).title("Grabbit").snippet("Grabbit"));
         final CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(latLng).zoom(10f).build();

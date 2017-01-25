@@ -54,7 +54,6 @@ public class BeaconActivity extends BaseActivity {
                 beaconManager.startRanging(region);
             }
         });
-
         beaconManager.setRangingListener(new BeaconManager.RangingListener() {
             @Override
             public void onBeaconsDiscovered(Region region, List<Beacon> list) {
@@ -68,12 +67,12 @@ public class BeaconActivity extends BaseActivity {
                         beaconstring += macaddress + major + minor;
                     }
                     String beaconarray[] = beaconstring.split(";");
-                    beacon_list.setAdapter(new ArrayAdapter<>(BeaconActivity.this, android.R.layout.simple_list_item_1, beaconarray));
+                    //send  to  webservice  this id
 
+                    beacon_list.setAdapter(new ArrayAdapter<>(BeaconActivity.this, android.R.layout.simple_list_item_1, beaconarray));
                 }
             }
         });
-
     }
 
 
@@ -84,8 +83,6 @@ public class BeaconActivity extends BaseActivity {
         } catch (Exception e) {
 
         }
-
-
         super.onPause();
     }
 

@@ -9,6 +9,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 
 import com.mentobile.grabbit.R;
+import com.mentobile.grabbit.Utility.AppPref;
 import com.mentobile.grabbit.Utility.BaseActivity;
 
 /**
@@ -34,8 +35,6 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         bluetooth = (Switch) findViewById(R.id.bluetooth);
         gps = (Switch) findViewById(R.id.gps);
         notification = (Switch) findViewById(R.id.notification);
-
-
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter != null) {
@@ -45,10 +44,15 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                 bluetooth.setChecked(false);
             }
         }
-
+        if (AppPref.getInstance().getNotification().equalsIgnoreCase("1") || AppPref.getInstance().getNotification().equalsIgnoreCase("")) {
+            notification.setChecked(true);
+        } else if (AppPref.getInstance().getNotification().equalsIgnoreCase("0")) {
+            notification.setChecked(false);
+        }
         bluetooth.setOnCheckedChangeListener(this);
         gps.setOnCheckedChangeListener(this);
         notification.setOnCheckedChangeListener(this);
+
 
     }
 
@@ -71,6 +75,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
             case REQUEST_GPS:
                 break;
             case REQUEST_NOTIFICATION:
+
+
                 break;
 
         }
@@ -109,6 +115,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                 if (b) {
                     Intent turnOn = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
                     startActivityForResult(turnOn, REQUEST_BLUETOOTH);
+                } else {
+                    bluetoothAdapter.disable();
                 }
                 break;
             case R.id.gps:
@@ -119,6 +127,11 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                 }
                 break;
             case R.id.notification:
+                if (b) {
+                    AppPref.getInstance().setNotification("1");
+                } else {
+                    AppPref.getInstance().setNotification("0");
+                }
                 break;
         }
     }

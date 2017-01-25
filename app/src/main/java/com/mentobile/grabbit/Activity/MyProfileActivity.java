@@ -1,23 +1,26 @@
 package com.mentobile.grabbit.Activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
+import android.app.ProgressDialog;
+import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -40,6 +43,9 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -56,6 +62,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
     EditText activity_my_profile_edt_email;
     EditText activity_my_profile_edt_name;
     CircularImageView activity_my_profile_img_photo;
+    String selectedFilePath;
 
     @Override
     public int getActivityLayout() {
@@ -104,8 +111,13 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         });
 
 
+        // Picasso.with(this).load(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg").into(activity_my_profile_img_photo);
+        try {
+            Picasso.with(this).load(AppPref.getInstance().getImageUrl()).into(activity_my_profile_img_photo);
+        } catch (Exception e) {
 
-        Picasso.with(this).load(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg").into(activity_my_profile_img_photo);
+        }
+        //Picasso.with(this).load(AppPref.getInstance().getImageUrl()).into(activity_my_profile_img_photo);
     }
 
 
@@ -167,7 +179,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         AppPref.getInstance().setUserName("");
         AppPref.getInstance().setUserMobile("");
         AppPref.getInstance().setUserEmail("");
-        sendToThisActivity(LoginActivity1.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        sendToThisActivity(LoginActivity.class, Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
     }
 
     private void save() {
@@ -175,6 +187,93 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         new ImageAsync(activity_my_profile_img_photo.getDrawingCache(), activity_my_profile_edt_name.getText().toString(), activity_my_profile_edt_phone.getText().toString()).execute();
 
     }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (ContextCompat.checkSelfPermission(MyProfileActivity.this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MyProfileActivity.this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                ActivityCompat.requestPermissions(MyProfileActivity.this,
+                        new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
+                        1);
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MyProfileActivity.this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                // Show an expanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+
+            } else {
+                ActivityCompat.requestPermissions(MyProfileActivity.this,
+                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        1);
+            }
+
+
+        }
+        Bitmap photo;
+        try {
+            if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
+                photo = (Bitmap) data.getExtras().get("data");
+                activity_my_profile_img_photo.setImageBitmap(photo);
+//                selectedFilePath = saveToInternalStorage(photo);
+//                Uri selectedFileUri = Uri.fromFile(new File(selectedFilePath));
+//                selectedFilePath = FilePath.getPath(this, selectedFileUri);
+//                Log.i("UpdatePhotoActivity", "Selected File Path:" + selectedFilePath);
+//                //activity_register_profile_image.setImageBitmap(photo);
+//                new ImageAsync1().execute();
+            } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
+                Uri selectedFileUri = data.getData();
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedFileUri);
+                activity_my_profile_img_photo.setImageBitmap(bitmap);
+//                selectedFilePath = FilePath.getPath(this, selectedFileUri);
+//                Log.i("UpdatePhotoActivity", "Selected File Path:" + selectedFilePath);
+//                new ImageAsync1().execute();
+                //activity_register_profile_image.setImageURI(selectedFileUri);
+            }
+
+        } catch (Exception e) {
+            Log.w("Error", e.toString());
+        }
+    }
+
+
+    private String saveToInternalStorage(Bitmap bitmapImage) {
+        ContextWrapper cw = new ContextWrapper(getApplicationContext());
+        // path to /data/data/yourapp/app_data/imageDir
+
+        // Create imageDir
+        File mypath = new File(Environment.getExternalStorageDirectory() + "/profile.jpg");
+
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(mypath);
+            // Use the compress method on the BitMap object to write image to the OutputStream
+            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return mypath.getAbsolutePath();
+    }
+
 
     private void browse() {
         final CharSequence[] items = {"Take Photo", "From Gallery", "Cancel"};
@@ -202,33 +301,62 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         builder.show();
     }
 
+    private class ImageAsync1 extends AsyncTask<Void, Void, String> {
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 1) {
 
-                Bitmap photo = (Bitmap) data.getExtras().get("data");
-                activity_my_profile_img_photo.setImageBitmap(photo);
+        public ImageAsync1() {
 
-            } else if (requestCode == 2) {
-
-                Uri pickedImage = data.getData();
-
-                // Let's read picked image path using content resolver
-                String[] filePath = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
-                cursor.moveToFirst();
-                String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-                Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-                activity_my_profile_img_photo.setImageBitmap(bitmap);
-            }
         }
-        super.onActivityResult(requestCode, resultCode, data);
+
+        public void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+
+            return null;
+        }
+
+        public void onPostExecute(String msg) {
+            try {
+
+                activity_my_profile_img_photo.setImageURI(Uri.parse(new File(selectedFilePath).toString()));
+
+            } catch (Exception e) {
+                Log.w("imagesetError", "Myerror" + e);
+            }
+
+        }
     }
+
+//
+//
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        if (resultCode == Activity.RESULT_OK) {
+//            if (requestCode == 1) {
+//
+//                Bitmap photo = (Bitmap) data.getExtras().get("data");
+//                activity_my_profile_img_photo.setImageBitmap(photo);
+//
+//            } else if (requestCode == 2) {
+//
+//                Uri pickedImage = data.getData();
+//                // Let's read picked image path using content resolver
+//                String[] filePath = {MediaStore.Images.Media.DATA};
+//                Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
+//                cursor.moveToFirst();
+//                String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
+//
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//                Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
+//                activity_my_profile_img_photo.setImageBitmap(bitmap);
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
+
 
     private class ImageAsync extends AsyncTask<Void, Void, String> {
         Bitmap bitmap;
@@ -236,7 +364,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         String userName;
         String userMobile;
         String result;
-        //ProgressDialog pd;
+        ProgressDialog pd;
 
         public ImageAsync(Bitmap bitmap, String userName, String userMobile) {
             this.bitmap = bitmap;
@@ -245,10 +373,10 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         }
 
         public void onPreExecute() {
-//            pd = new ProgressDialog(MyProfileActivity.this);
-//            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            pd.setMessage("Updating Profile ... ");
-//            pd.show();
+            pd = new ProgressDialog(MyProfileActivity.this);
+            pd.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            pd.setMessage("Updating Profile ... ");
+            pd.show();
         }
 
         @Override
@@ -269,16 +397,13 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
                 HttpResponse response = httpclient.execute(httppost);
                 HttpEntity entity = response.getEntity();
                 InputStream is = entity.getContent();
-
                 BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
                 StringBuilder sb = new StringBuilder();
                 sb.append(reader.readLine() + "\n");
                 String line = "0";
-
                 while ((line = reader.readLine()) != null) {
                     sb.append(line + "\n");
                 }
-
                 is.close();
                 result = sb.toString();
                 Log.w("Upload Profile Image", result);
@@ -292,7 +417,7 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
 
         public void onPostExecute(String msg) {
             try {
-                //pd.dismiss();
+                pd.dismiss();
                 JSONObject jsonObject = new JSONObject(result);
                 String status = jsonObject.getString("status");
                 if (status.equalsIgnoreCase("1")) {

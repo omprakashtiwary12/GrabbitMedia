@@ -23,10 +23,11 @@ public class AppPref {
     private final String PREF_USER_EMAIL = "user_email";
     private final String PREF_USER_MOBILE = "user_mobile";
     private final String PREF_USER_TAKEATOUR = "take_a_tour";
+    private final String PREF_UESR_IMAGE_URL = "user_image";
+    private final String PREF_NOTIFICATION = "notification";
 
 
     private AppPref(Context context) {
-
         sPreferences = context.getSharedPreferences(SG_SHARED_PREFERENCES,
                 Context.MODE_PRIVATE);
         sEditor = sPreferences.edit();
@@ -90,6 +91,15 @@ public class AppPref {
         sEditor.commit();
     }
 
+    public String getImageUrl() {
+        return sPreferences.getString(PREF_UESR_IMAGE_URL, "");
+    }
+
+    public void setImageUrl(String imageUrl) {
+        sEditor.putString(PREF_UESR_IMAGE_URL, imageUrl);
+        sEditor.commit();
+    }
+
     public String getTakeATour() {
         return sPreferences.getString(PREF_USER_TAKEATOUR, "");
     }
@@ -99,5 +109,13 @@ public class AppPref {
         sEditor.commit();
     }
 
+    public String getNotification() {
+        return sPreferences.getString(PREF_NOTIFICATION, "");
+    }
+
+    public void setNotification(String notification) {
+        sEditor.putString(PREF_NOTIFICATION, notification);
+        sEditor.commit();
+    }
 
 }
