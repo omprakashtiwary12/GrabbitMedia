@@ -4,6 +4,7 @@ package com.mentobile.grabbit.Utility;
  * Created by Gokul on 11/20/2016.
  */
 public class AppUrl {
+
     public static final String API_KEY = "1234";
 
     public static final String DISTANCE_API_KEY = "&key=AIzaSyAJgswfd3KKqhMIg5nTEgCLKQRd9GbXXEY";
@@ -33,4 +34,8 @@ public class AppUrl {
     public static final String ADDREMOVE_WISHLIST_URL = "http://grabbit.co.in/web_services/add_remove_wishlist.php";
 
     public static final String DISTANCE_URL = "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial";
+
+    public  static final String GET_IMAGE = "http://grabbit.co.in/merchant/uploads/";
+    public  static final String GET_COMPAIGN_IMAGE = "http://grabbit.co.in/merchant/uploads/design/";
+
 }

@@ -1,11 +1,9 @@
 package com.mentobile.grabbit.Fragment;
 
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,31 +11,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.mentobile.grabbit.Adapter.AdapterForGallery;
-import com.mentobile.grabbit.Adapter.AdapterViewPager;
+import com.mentobile.grabbit.Activity.MerchantDetailsActivity;
+import com.mentobile.grabbit.Activity.SplashActivity;
 import com.mentobile.grabbit.Adapter.RecyclerAdapter;
-import com.mentobile.grabbit.GrabbitApplication;
 import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
 import com.mentobile.grabbit.Utility.AppUrl;
 import com.mentobile.grabbit.Utility.CircleImageView1;
-import com.mentobile.grabbit.Utility.GetDataUsingWService;
-import com.mentobile.grabbit.Utility.GetWebServiceData;
+import com.mentobile.grabbit.Utility.Other;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONObject;
-
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
-import static android.content.ContentValues.TAG;
-
-public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnView {
+public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnView, RecyclerAdapter.onItemClickListener {
+    String TAG = "NearByFragment";
     RecyclerView frag_nearby_rv;
     RecyclerAdapter recyclerAdapter;
 
@@ -48,122 +38,40 @@ public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnVi
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         frag_nearby_rv.setLayoutManager(linearLayoutManager);
-        recyclerAdapter = new RecyclerAdapter(GrabbitApplication.nearByModelList, getActivity(), R.layout.item_nearby_adapter, this, 0);
+        recyclerAdapter = new RecyclerAdapter(SplashActivity.nearByModelList, getActivity().getApplicationContext(), R.layout.item_nearby_adapter, this, 0, this);
         frag_nearby_rv.setAdapter(recyclerAdapter);
+        recyclerAdapter.notifyDataSetChanged();
         return view;
     }
 
+    @Override
+    public void getItemPosition(int position) {
+        Other.sendToThisActivity(getActivity(), MerchantDetailsActivity.class, position);
+    }
 
     @Override
     public void getAdapterView(View view, List objects, final int position, int from) {
-        ViewPager nearyby_item_IMG_place = (ViewPager) view.findViewById(R.id.nearby_item_IMG_place);
+        final NearByModel nearByModel = SplashActivity.nearByModelList.get(position);
+
+        ImageView nearyby_item_IMG_place = (ImageView) view.findViewById(R.id.nearyby_item_IMG_place);
+        Picasso.with(getContext()).load(AppUrl.GET_IMAGE + nearByModel.getM_id() + "/" + nearByModel.getBanner())
+                .placeholder(R.drawable.placeholder_banner).into(nearyby_item_IMG_place);
+
         TextView nearby_item_TXT_name = (TextView) view.findViewById(R.id.nearby_item_TXT_name);
+        nearby_item_TXT_name.setText(nearByModel.getBusiness_name());
+
         TextView nearby_item_TXT_address = (TextView) view.findViewById(R.id.nearby_item_TXT_address);
-        final TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
-        final LinearLayout viewPagerCountDots = (LinearLayout) view.findViewById(R.id.viewPagerCountDots);
-        RelativeLayout nearby_item_RL = (RelativeLayout) view.findViewById(R.id.nearby_item_RL);
-        CircleImageView1 nearby_item_IMG_logo = (CircleImageView1) view.findViewById(R.id.nearby_item_IMG_logo);
-        //Start imageview
-        final NearByModel nearByModel = GrabbitApplication.nearByModelList.get(position);
-        Log.w("NearByDataPostion", "" + position);
-        final ImageView nearby_item_IMG_star = (ImageView) view.findViewById(R.id.nearby_item_IMG_star);
-        if (nearByModel.getWishlist() == "1") {
-            nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_press));
-        } else {
-            nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_unpress));
-        }
-        String name[] = nearByModel.getAddress().split(",");
-        nearby_item_TXT_name.setText(name[0]);
+        nearby_item_TXT_address.setText("" + nearByModel.getAddress());
+
+        TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
         if (nearByModel.getDistance() != null) {
             String distance[] = nearByModel.getDistance().trim().split(" ");
             Double distance_in_km = Double.parseDouble(distance[0]) * 1.60934;
             nearby_item_TXT_distace.setText(new DecimalFormat("##.##").format(distance_in_km) + "KM");
         }
-        nearby_item_TXT_address.setText(nearByModel.getAddress());
-        nearby_item_TXT_distace.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getBusiness_name());
-
-            }
-        });
-        nearby_item_IMG_star.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, ":::::Like Button " + position);
-                if (nearByModel.getWishlist().equals("1")) {
-                    nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_unpress));
-                    addRemoveWishList(nearByModel.getM_id(), "1");
-                    nearByModel.setWishlist("0");
-                } else {
-                    nearby_item_IMG_star.setImageDrawable(getResources().getDrawable(R.drawable.like_press));
-                    addRemoveWishList(nearByModel.getM_id(), "2");
-                    nearByModel.setWishlist("1");
-                }
-                if (nearByModel.getDistance() != null) {
-                    String distance[] = nearByModel.getDistance().trim().split(" ");
-                    Double distance_in_km = Double.parseDouble(distance[0]) * 1.60934;
-                    nearby_item_TXT_distace.setText(new DecimalFormat("##.##").format(distance_in_km) + "KM");
-                }
-                Intent intent = new Intent("Broadcast");
-                getActivity().sendBroadcast(intent);
-                recyclerAdapter.notifyItemChanged(position);
-            }
-        });
-
-        final List<String> profilePhotos = new ArrayList<String>();
-//        profilePhotos.add("camera");
-//        profilePhotos.add("gallery");
-//        profilePhotos.add("camera");
-//        profilePhotos.add("gallery");
-
-        Picasso.with(getContext()).load("http://grabbit.co.in/merchant/uploads/logo/" + nearByModel.getBusiness_name() + "/" + nearByModel.getLogo()).into(nearby_item_IMG_logo);
-        profilePhotos.clear();
-        for (int i = 0; i < nearByModel.getOfferImageModels().size(); i++) {
-            profilePhotos.add("http://grabbit.co.in/merchant/uploads/design/" + nearByModel.getM_id() + "/" + nearByModel.getOfferImageModels().get(i).getImageName());
-        }
-        nearyby_item_IMG_place.setAdapter(new AdapterViewPager(getActivity(), profilePhotos, position, getActivity()));
-        nearyby_item_IMG_place.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                setUiPageViewController(profilePhotos.size(), viewPagerCountDots, position);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-
-        //setUiPageViewController(profilePhotos.size(), viewPagerCountDots);
-    }
-
-
-    private void addRemoveWishList(String marchant_id, String condition) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("api_key=").append(AppUrl.API_KEY);
-        stringBuilder.append("&m_id=").append(marchant_id);
-        stringBuilder.append("&status=").append(condition);
-        String content = stringBuilder.toString();
-        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(getActivity(), AppUrl.ADDREMOVE_WISHLIST_URL, 0, content, false, "Loading ...", new GetWebServiceData() {
-            @Override
-            public void getWebServiceResponse(String responseData, int serviceCounter) {
-                try {
-                    JSONObject jsonObject = new JSONObject(responseData);
-
-                    //{"status":1,"msg":"Merchant add to wishlist Successfully."}
-                } catch (Exception e) {
-
-                }
-
-            }
-        });
-        getDataUsingWService.execute();
+        CircleImageView1 nearby_item_IMG_logo = (CircleImageView1) view.findViewById(R.id.nearby_item_IMG_logo);
+        Picasso.with(getContext()).load(AppUrl.GET_IMAGE + nearByModel.getM_id() + "/" + nearByModel.getLogo())
+                .placeholder(R.drawable.placeholder_logo).into(nearby_item_IMG_logo);
     }
 
     public void showMap(String lat, String lng, String name) {
@@ -175,50 +83,4 @@ public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnVi
             startActivity(mapIntent);
         }
     }
-
-    private void setUiPageViewController(int dotscount, LinearLayout viewPagerCountDots) {
-        viewPagerCountDots.removeAllViews();
-        ImageView[] dots = new ImageView[dotscount];
-
-        for (int i = 0; i < dotscount; i++) {
-            dots[i] = new ImageView(getActivity());
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(4, 0, 4, 0);
-
-
-            viewPagerCountDots.addView(dots[i], params);
-        }
-
-        dots[0].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-    }
-
-
-    private void setUiPageViewController(int dotscount, LinearLayout viewPagerCountDots, int position) {
-        viewPagerCountDots.removeAllViews();
-        ImageView[] dots = new ImageView[dotscount];
-
-        for (int i = 0; i < dotscount; i++) {
-            dots[i] = new ImageView(getActivity());
-            dots[i].setImageDrawable(getResources().getDrawable(R.drawable.nonselecteditem_dot));
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-
-            params.setMargins(4, 0, 4, 0);
-
-            viewPagerCountDots.addView(dots[i], params);
-        }
-
-        dots[position].setImageDrawable(getResources().getDrawable(R.drawable.selecteditem_dot));
-    }
-
-
 }

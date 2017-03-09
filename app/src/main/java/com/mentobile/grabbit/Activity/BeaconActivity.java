@@ -31,9 +31,7 @@ public class BeaconActivity extends BaseActivity {
     public void initialize() {
         setTitle("Near By");
         beaconManager = new BeaconManager(this);
-        region = new Region("ranged region",
-                UUID.fromString("B9407F30-F5F8-466E-AFF9-25556B57FE6D"), null, null);
-
+        region = new Region("ranged region",null, null, null);
         beacon_list = (ListView) findViewById(R.id.beacon_list);
     }
 
@@ -63,12 +61,11 @@ public class BeaconActivity extends BaseActivity {
                         Beacon beacon = list.get(i);
                         String macaddress = beacon.getMacAddress() + "\n";
                         String major = beacon.getMajor() + "\n";
-                        String minor = beacon.getMinor() + ";";
+                        String minor = beacon.getProximityUUID() + ";";
                         beaconstring += macaddress + major + minor;
                     }
                     String beaconarray[] = beaconstring.split(";");
                     //send  to  webservice  this id
-
                     beacon_list.setAdapter(new ArrayAdapter<>(BeaconActivity.this, android.R.layout.simple_list_item_1, beaconarray));
                 }
             }
@@ -81,7 +78,6 @@ public class BeaconActivity extends BaseActivity {
         try {
             beaconManager.stopRanging(region);
         } catch (Exception e) {
-
         }
         super.onPause();
     }

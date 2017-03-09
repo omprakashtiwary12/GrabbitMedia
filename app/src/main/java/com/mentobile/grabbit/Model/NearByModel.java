@@ -1,5 +1,7 @@
 package com.mentobile.grabbit.Model;
 
+import android.media.Image;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ public class NearByModel {
     private String m_id;
     private String business_name;
     private String logo;
+    private String banner;
     private String email;
     private String about;
     private String open_time;
@@ -18,12 +21,6 @@ public class NearByModel {
     private String facebook;
     private String twitter;
     private String Instagram;
-    private String gallery_img1;
-    private String gallery_img2;
-    private String gallery_img3;
-    private String gallery_img4;
-    private String gallery_img5;
-    private String gallery_img6;
     private String wishlist;
     private String out_id;
     private String name;
@@ -37,18 +34,25 @@ public class NearByModel {
     private String bcon_id;
     private String bcon_uuid;
     private String distance;
-    private List<OfferImageModel> offerImageModels = new ArrayList<OfferImageModel>();
-
+    private String status;
+    private List<ImageModel> offerImageModels = new ArrayList<ImageModel>();
+    private List<ImageModel> gallerImageModels = new ArrayList<ImageModel>();
 
     public NearByModel() {
 
     }
 
-    public NearByModel(List<OfferImageModel> offerImageModels, String m_id, String business_name, String logo, String email, String about, String open_time, String close_time, String opening_days, String website, String facebook, String twitter, String instagram, String gallery_img1, String gallery_img2, String gallery_img3, String gallery_img4, String gallery_img5, String gallery_img6, String wishlist, String out_id, String name, String address, String city_name, String state_name, String pincode, String phone, String latitude, String longitude, String bcon_id, String bcon_uuid, String distance) {
+    public NearByModel(List<ImageModel> offerImageModels, String m_id, String business_name,
+                       String logo, String banner, String email, String about, String open_time,
+                       String close_time, String opening_days, String website, String facebook,
+                       String twitter, String instagram, String wishlist, String out_id, String name,
+                       String address, String city_name, String state_name, String pincode, String phone,
+                       String latitude, String longitude, String bcon_id, String bcon_uuid, String distance) {
         this.offerImageModels = offerImageModels;
         this.m_id = m_id;
         this.business_name = business_name;
         this.logo = logo;
+        this.banner = banner;
         this.email = email;
         this.about = about;
         this.open_time = open_time;
@@ -58,12 +62,6 @@ public class NearByModel {
         this.facebook = facebook;
         this.twitter = twitter;
         Instagram = instagram;
-        this.gallery_img1 = gallery_img1;
-        this.gallery_img2 = gallery_img2;
-        this.gallery_img3 = gallery_img3;
-        this.gallery_img4 = gallery_img4;
-        this.gallery_img5 = gallery_img5;
-        this.gallery_img6 = gallery_img6;
         this.wishlist = wishlist;
         this.out_id = out_id;
         this.name = name;
@@ -79,12 +77,20 @@ public class NearByModel {
         this.distance = distance;
     }
 
-    public List<OfferImageModel> getOfferImageModels() {
+    public List<ImageModel> getOfferImageModels() {
         return offerImageModels;
     }
 
-    public void setOfferImageModels(List<OfferImageModel> offerImageModels) {
+    public void setOfferImageModels(List<ImageModel> offerImageModels) {
         this.offerImageModels = offerImageModels;
+    }
+
+    public List<ImageModel> getGalleyImage() {
+        return gallerImageModels;
+    }
+
+    public void setGalleryImage(List<ImageModel> gallerImageModels) {
+        this.gallerImageModels = gallerImageModels;
     }
 
     public String getM_id() {
@@ -109,6 +115,14 @@ public class NearByModel {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+
+    public String getBanner() {
+        return banner;
+    }
+
+    public void setBanner(String banner) {
+        this.banner = banner;
     }
 
     public String getEmail() {
@@ -181,54 +195,6 @@ public class NearByModel {
 
     public void setInstagram(String instagram) {
         Instagram = instagram;
-    }
-
-    public String getGallery_img1() {
-        return gallery_img1;
-    }
-
-    public void setGallery_img1(String gallery_img1) {
-        this.gallery_img1 = gallery_img1;
-    }
-
-    public String getGallery_img2() {
-        return gallery_img2;
-    }
-
-    public void setGallery_img2(String gallery_img2) {
-        this.gallery_img2 = gallery_img2;
-    }
-
-    public String getGallery_img3() {
-        return gallery_img3;
-    }
-
-    public void setGallery_img3(String gallery_img3) {
-        this.gallery_img3 = gallery_img3;
-    }
-
-    public String getGallery_img4() {
-        return gallery_img4;
-    }
-
-    public void setGallery_img4(String gallery_img4) {
-        this.gallery_img4 = gallery_img4;
-    }
-
-    public String getGallery_img5() {
-        return gallery_img5;
-    }
-
-    public void setGallery_img5(String gallery_img5) {
-        this.gallery_img5 = gallery_img5;
-    }
-
-    public String getGallery_img6() {
-        return gallery_img6;
-    }
-
-    public void setGallery_img6(String gallery_img6) {
-        this.gallery_img6 = gallery_img6;
     }
 
     public String getWishlist() {
@@ -335,5 +301,28 @@ public class NearByModel {
         this.distance = distance;
     }
 
+    public String getStatus() {
+        return status;
+    }
 
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getFullAddress() {
+        String fullAddress = "";
+        if (getAddress() != null && getAddress().length() > 0) {
+            fullAddress += getAddress() + ", ";
+        }
+        if (getCity_name() != null || getCity_name().length() > 0) {
+            fullAddress += getCity_name() + ", ";
+        }
+        if (getState_name() != null || getState_name().length() > 0) {
+            fullAddress += getState_name() + ", ";
+        }
+        if (getPincode() != null && getPincode().length() > 0) {
+            fullAddress += getPincode();
+        }
+        return fullAddress;
+    }
 }

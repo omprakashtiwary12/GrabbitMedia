@@ -26,7 +26,6 @@ public class NotificationDatabase {
         databaseHelper = new DatabaseHelper(context);
     }
 
-
     private static class DatabaseHelper extends SQLiteOpenHelper {
         public DatabaseHelper(Context ctx) {
             super(ctx, "grabbit", null, 1);

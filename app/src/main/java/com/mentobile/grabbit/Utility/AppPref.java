@@ -2,6 +2,7 @@ package com.mentobile.grabbit.Utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.mentobile.grabbit.GrabbitApplication;
 
@@ -32,7 +33,6 @@ public class AppPref {
                 Context.MODE_PRIVATE);
         sEditor = sPreferences.edit();
     }
-
 
     public static AppPref getInstance() {
         if (instance == null) {
@@ -118,4 +118,18 @@ public class AppPref {
         sEditor.commit();
     }
 
+    public boolean isLogin() {
+        Log.d("App Pref","::::User Id"+getUserID());
+        if (getUserID() != null && getUserID().length() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void clearSharedPreferenceFile() {
+        SharedPreferences sharedPreferences = GrabbitApplication.getInstance().getApplicationContext().
+                getSharedPreferences(SG_SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        sharedPreferences.edit().clear().commit();
+    }
 }

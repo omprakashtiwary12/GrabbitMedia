@@ -20,7 +20,7 @@
         app:border_color="@color/red"
         app:border="true"
         app:border_width="3dp"
-        android:src="@drawable/ic_menu_camera" />
+        android:background="@drawable/user" />
 
     <TextView
         android:id="@+id/user_name"

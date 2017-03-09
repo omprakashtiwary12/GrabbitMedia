@@ -25,7 +25,7 @@
 
         <item
             android:id="@+id/help"
-            android:icon="@drawable/terms"
+            android:icon="@drawable/help"
             android:title="Help" />
 
         <item

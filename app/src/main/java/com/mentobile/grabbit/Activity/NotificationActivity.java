@@ -22,6 +22,7 @@ import java.util.List;
  */
 
 public class NotificationActivity extends BaseActivity implements RecyclerAdapter.ReturnView {
+
     RecyclerView notificatio_recyle_list;
     public static List<Notification> notificationlist = new ArrayList<Notification>();
 
@@ -55,7 +56,7 @@ public class NotificationActivity extends BaseActivity implements RecyclerAdapte
         cursor.close();
         notificationDatabase.close();
         notificatio_recyle_list.setLayoutManager(linearLayoutManager);
-        notificatio_recyle_list.setAdapter(new RecyclerAdapter(notificationlist, this, R.layout.item_notification, this, 0));
+        //notificatio_recyle_list.setAdapter(new RecyclerAdapter(notificationlist, this, R.layout.item_notification, this, 0));
     }
 
     @Override

@@ -1,13 +1,20 @@
 package com.mentobile.grabbit.Utility;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.media.RingtoneManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 
 import com.mentobile.grabbit.R;
@@ -91,8 +98,8 @@ public class Other {
         AppPref.getInstance().setUserName(userName);
         AppPref.getInstance().setUserEmail(userEmail);
         AppPref.getInstance().setUserMobile(userPhone);
-    }
 
+    }
 
     public static boolean isValidEmail(String email) {
         String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -103,4 +110,31 @@ public class Other {
         return matcher.matches();
     }
 
+    public static Double[] getCurrentLocation(Activity activity) {
+        LocationManager locationManager = (LocationManager) activity.getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (isNetworkEnabled || isGpsEnabled) {
+            if (ActivityCompat.checkSelfPermission(activity.getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity.getApplicationContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        activity,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                        1);
+            }
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) == null ? locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) : locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if (location != null) {
+
+                return new Double[]{location.getLatitude(), location.getLongitude()};
+            }
+        }
+        return new Double[]{0.0, 0.0};
+    }
+
+    public static boolean checkBluetoothConnection() {
+        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        final boolean isEnabled = bluetoothAdapter.isEnabled();
+        return isEnabled;
+    }
 }

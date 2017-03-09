@@ -109,8 +109,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
                 return false;
             }
         });
-
-
         // Picasso.with(this).load(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg").into(activity_my_profile_img_photo);
         try {
             Picasso.with(this).load(AppPref.getInstance().getImageUrl()).into(activity_my_profile_img_photo);
@@ -250,31 +248,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
     }
 
 
-    private String saveToInternalStorage(Bitmap bitmapImage) {
-        ContextWrapper cw = new ContextWrapper(getApplicationContext());
-        // path to /data/data/yourapp/app_data/imageDir
-
-        // Create imageDir
-        File mypath = new File(Environment.getExternalStorageDirectory() + "/profile.jpg");
-
-        FileOutputStream fos = null;
-        try {
-            fos = new FileOutputStream(mypath);
-            // Use the compress method on the BitMap object to write image to the OutputStream
-            bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, fos);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                fos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return mypath.getAbsolutePath();
-    }
-
-
     private void browse() {
         final CharSequence[] items = {"Take Photo", "From Gallery", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(MyProfileActivity.this);
@@ -300,63 +273,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         });
         builder.show();
     }
-
-    private class ImageAsync1 extends AsyncTask<Void, Void, String> {
-
-
-        public ImageAsync1() {
-
-        }
-
-        public void onPreExecute() {
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-
-            return null;
-        }
-
-        public void onPostExecute(String msg) {
-            try {
-
-                activity_my_profile_img_photo.setImageURI(Uri.parse(new File(selectedFilePath).toString()));
-
-            } catch (Exception e) {
-                Log.w("imagesetError", "Myerror" + e);
-            }
-
-        }
-    }
-
-//
-//
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (resultCode == Activity.RESULT_OK) {
-//            if (requestCode == 1) {
-//
-//                Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                activity_my_profile_img_photo.setImageBitmap(photo);
-//
-//            } else if (requestCode == 2) {
-//
-//                Uri pickedImage = data.getData();
-//                // Let's read picked image path using content resolver
-//                String[] filePath = {MediaStore.Images.Media.DATA};
-//                Cursor cursor = getContentResolver().query(pickedImage, filePath, null, null, null);
-//                cursor.moveToFirst();
-//                String imagePath = cursor.getString(cursor.getColumnIndex(filePath[0]));
-//
-//                BitmapFactory.Options options = new BitmapFactory.Options();
-//                options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//                Bitmap bitmap = BitmapFactory.decodeFile(imagePath, options);
-//                activity_my_profile_img_photo.setImageBitmap(bitmap);
-//            }
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-
 
     private class ImageAsync extends AsyncTask<Void, Void, String> {
         Bitmap bitmap;

@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public GoogleApiClient mGoogleApiClient;
     public static String gcmid = "";
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
@@ -90,7 +89,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +147,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Log.w("LoginActivity", responseData);
             JSONObject jsonObject = new JSONObject(responseData);
             String status = jsonObject.getString("status");
+            String msg = jsonObject.getString("msg");
             if (status.equalsIgnoreCase("1")) {
-                String msg = jsonObject.getString("msg");
-                toastMessage(msg);
                 jsonObject = jsonObject.getJSONObject("details");
                 String cus_id = jsonObject.getString("cus_id");
                 String phone = jsonObject.getString("phone");
@@ -159,9 +156,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String name = jsonObject.getString("name");
                 Other.saveDataInSharedPreferences(cus_id, name, email, phone);
                 AppPref.getInstance().setImageUrl(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg");
-                desigion();
-            } else if (status.equalsIgnoreCase("0")) {
-                String msg = jsonObject.getString("msg");
+               //checkBloothConnection();
+                sendToThisActivity(DrawerActivity.class);
+            }
+            else {
                 toastMessage(msg);
             }
         } catch (Exception e) {
@@ -248,7 +246,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         startActivity(intent);
     }
-
 
     @Override
     public void onBackPressed() {
@@ -363,7 +360,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         String email = jsonObject.getString("email");
                         String name = jsonObject.getString("name");
                         Other.saveDataInSharedPreferences(cus_id, name, email, phone);
-                        desigion();
+                        checkBloothConnection();
                     }
                     finish();
                 } catch (Exception e) {
@@ -372,11 +369,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         getDataUsingWService.execute();
-
     }
 
     private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleSignInResult:" + result.isSuccess());
+
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             try {
@@ -389,7 +385,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             signOut();
             revokeAccess();
-//            desigion();
+//            checkBloothConnection();
             //sendToThisActivity(BluetoothActivity.class);
         } else {
 
@@ -452,7 +448,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 //Other.saveDataInSharedPreferences("11", object.getString("name").toString(), object.getString("email").toString(), "");
                                 Toast.makeText(LoginActivity.this, "welcome ", Toast.LENGTH_LONG).show();
                                 disconnectFromFacebook();
-//                                desigion();
+//                                checkBloothConnection();
                                 //sendToThisActivity(BluetoothActivity.class);
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -532,7 +528,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }).executeAsync();
 
-
     }
 
     private class GcmAsync extends AsyncTask<String, String, String> {
@@ -552,11 +547,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //download data
 
-    public void desigion() {
+    public void checkBloothConnection() {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         final boolean isEnabled = bluetoothAdapter.isEnabled();
         if (isEnabled) {
-            sendToThisActivity(DrawerActivity.class);
+            sendToThisActivity(CategoryActivity.class);
         } else {
             sendToThisActivity(BluetoothActivity.class);
         }

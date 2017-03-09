@@ -1,6 +1,5 @@
 package com.mentobile.grabbit.Adapter;
 
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -33,8 +32,8 @@ public class Pager extends FragmentStatePagerAdapter {
                 WishListFragment tab2 = new WishListFragment();
                 return tab2;
             case 2:
-                BeaconFragment tab3 = new BeaconFragment();
-                return tab3;
+//                BeaconFragment tab3 = new BeaconFragment();
+//                return tab3;
             default:
                 return null;
         }

@@ -44,14 +44,12 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".Activity.StreetViewPanoramaBasicDemoActivity"
-            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activity.TourActivity"
@@ -69,15 +67,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Activity.MainActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".Activity.ForgetNewPasswordActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Activity.GalleryActivity"
-            android:label="Gallery"
             android:screenOrientation="portrait" />
 
         <activity
@@ -85,24 +75,17 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".Activity.ImageActivity"
-            android:screenOrientation="landscape" />
-
-
-        <service android:name=".Service.EstimoteService" />
-
-        <receiver android:name=".Receiver.EstimoteReceiver" />
-
-        <activity
             android:name=".Activity.BeaconActivity"
             android:label="MainActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".Activity.DrawerActivity"
             android:label="@string/title_activity_drawer"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar">
+
+        </activity>
 
         <activity
             android:name=".Utility.NetworkErrorActivity"
@@ -114,9 +97,6 @@
             android:name=".Activity.CategoryActivity"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".Activity.OfferListActivity"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.SearchActivity"
             android:label="Search"
@@ -151,6 +131,19 @@
         <activity
             android:name=".Activity.MyProfileActivity"
             android:screenOrientation="portrait" />
+
+        <service android:name=".Notification.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <service android:name=".Notification.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

@@ -27,23 +27,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(save);
 
         setContentView(getActivityLayout());
-
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
         initialize();
-
         init(save);
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

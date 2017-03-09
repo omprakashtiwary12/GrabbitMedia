@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/register_bg"
     android:orientation="vertical">
 
 
@@ -25,7 +24,7 @@
                 android:id="@+id/activity_register_profile_image"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:src="@drawable/picture"
+                android:src="@drawable/my_profile"
                 app:border="true"
                 app:border_color="@color/white"
                 app:border_width="3dp" />
@@ -112,13 +111,13 @@
 
         <Button
             android:id="@+id/act_signup_BTN_next"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
+            android:layout_margin="20dp"
             android:background="@drawable/button_selector"
             android:onClick="register"
-            android:text="NEXT"
+            android:text="Register"
             android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>

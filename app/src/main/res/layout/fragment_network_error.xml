@@ -5,18 +5,6 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="@color/chocoloate"
-        android:gravity="center_horizontal"
-        android:padding="15dp"
-        android:text="Network Error"
-        android:textColor="@color/white"
-        android:textSize="23sp"
-        android:textStyle="bold" />
-
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

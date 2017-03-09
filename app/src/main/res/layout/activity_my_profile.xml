@@ -16,7 +16,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/picture" />
+            android:background="@drawable/user" />
 
         <Button
             android:id="@+id/activity_my_profile_btn_browse"
@@ -114,9 +114,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
+            android:layout_margin="30dp"
             android:background="@drawable/button_selector"
             android:text="Logout"
             android:textColor="@color/white" />

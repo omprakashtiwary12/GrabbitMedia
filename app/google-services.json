@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1094934455039",
+    "firebase_url": "https://grabbit-e7f1b.firebaseio.com",
+    "project_id": "grabbit-e7f1b",
+    "storage_bucket": "grabbit-e7f1b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1094934455039:android:9229e2c77b83b02e",
+        "android_client_info": {
+          "package_name": "com.mentobile.grabbit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1094934455039-956navp10lmvfbgsvprehputmlnbfui7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNKDrnkWwm9IGbUOHGwIIVQza0kVN-KzA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -88,9 +88,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public RecordHolder(View gridView) {
             super(gridView);
             view = gridView;
-            tvTitle = (TextView) gridView.findViewById(R.id.list_notification_tv_title);
-            tvDescription = (ImageView) gridView.findViewById(R.id.list_notification_iv_description);
-            tvDateTime = (TextView) gridView.findViewById(R.id.list_notification_tv_date);
+//            tvTitle = (TextView) gridView.findViewById(R.id.list_notification_tv_title);
+//            tvDescription = (ImageView) gridView.findViewById(R.id.list_notification_iv_description);
+//            tvDateTime = (TextView) gridView.findViewById(R.id.list_notification_tv_date);
 
         }
     }

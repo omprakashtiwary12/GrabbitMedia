@@ -14,18 +14,22 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Profil
     private int layout;
     ReturnView returnView;
     int from;
+    public onItemClickListener itemClickListener;
 
     public interface ReturnView {
         void getAdapterView(View view, List objects, int position, int from);
     }
+    public interface onItemClickListener {
+        void getItemPosition(int position);
+    }
 
-
-    public RecyclerAdapter(List rideHistoryModelList, Context context, int layout, ReturnView returnView, int from) {
+    public RecyclerAdapter(List rideHistoryModelList, Context context, int layout, ReturnView returnView, int from,onItemClickListener itemClickListener) {
         this.rideHistoryModelList = rideHistoryModelList;
         this.context = context;
         this.layout = layout;
         this.returnView = returnView;
         this.from = from;
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -34,8 +38,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Profil
     }
 
     @Override
-    public void onBindViewHolder(ProfileHolder rideHistoryViewHolder, final int i) {
-        returnView.getAdapterView(rideHistoryViewHolder.v, rideHistoryModelList, i, from);
+    public void onBindViewHolder(ProfileHolder rideHistoryViewHolder, final int position) {
+        returnView.getAdapterView(rideHistoryViewHolder.v, rideHistoryModelList, position, from);
+        rideHistoryViewHolder.v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                itemClickListener.getItemPosition(position);
+            }
+        });
     }
 
     @Override
@@ -52,7 +62,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Profil
         public ProfileHolder(View v) {
             super(v);
             this.v = v;
-
         }
     }
+
 }

@@ -16,8 +16,8 @@ import com.mentobile.grabbit.Utility.BaseActivity;
 public class CategoryActivity extends BaseActivity implements OneAdapter.ReturnView {
 
     public int[] mThumbIds = {
-            R.drawable.biz_logo, R.drawable.fitness,
-            R.drawable.museum, R.drawable.events,
+            R.drawable.hospitality, R.drawable.retail,
+            R.drawable.event1, R.drawable.travel,
     };
 
     @Override

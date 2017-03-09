@@ -1,474 +1,412 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ImageView
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/placeholder_banner" />
 
-        <ImageView
-            android:id="@+id/act_details_IV_bg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@mipmap/ic_launcher"
-            android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="@color/black" />
 
-        <ImageView
-            android:id="@+id/act_details_IV_bg1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/background1"
-            android:contentDescription="@string/app_name"
-            android:scaleType="centerCrop" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+            <ImageView
+                android:id="@+id/act_details_TV_title_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/back" />
+
+            <TextView
+                android:id="@+id/act_details_TV_title_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/act_details_TV_title_back"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_horizontal"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Aaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                android:textColor="@color/white"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/merchant_detail_wishlist"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_below="@+id/act_details_TV_title_address"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:background="@drawable/button_selector"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:text="Add To Wishlist"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/act_details_TV_title_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="marquee"
+                android:text="Title"
+                android:textColor="@color/white"
+                android:textSize="25sp"
+                android:textStyle="normal" />
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:elevation="1dp"
-                android:gravity="center"
-                android:minHeight="?attr/actionBarSize"
-                app:elevation="1dp"
-                app:theme="@style/ThemeOverlay.AppCompat.Dark">
+                android:orientation="vertical">
 
-                <FrameLayout
+
+                <LinearLayout
+                    android:id="@+id/activity_marchnat_ll_offerlist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_transparent_stroke"
+                    android:orientation="vertical">
 
-                    <RelativeLayout
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="30dp"
+                        android:gravity="center"
+                        android:text="OFFER LIST"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="30dp"
-                            android:orientation="vertical">
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/marchang_offer_pager"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="10dp" />
 
-                            <TextView
-                                android:id="@+id/act_details_TV_title_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
-                                android:layout_marginTop="30dp"
-                                android:ellipsize="marquee"
-                                android:focusable="true"
-                                android:focusableInTouchMode="true"
-                                android:gravity="center_horizontal"
-                                android:padding="5dp"
-                                android:singleLine="true"
-                                android:text="Title"
-                                android:textColor="@color/white"
-                                android:textSize="20sp"
-                                android:textStyle="normal" />
+                </LinearLayout>
 
-                            <TextView
-                                android:id="@+id/act_details_TV_title_address"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="20dp"
-                                android:layout_marginRight="20dp"
-                                android:ellipsize="marquee"
-                                android:focusable="true"
-                                android:focusableInTouchMode="true"
-                                android:gravity="center_horizontal"
-                                android:padding="5dp"
-                                android:scrollHorizontally="true"
-                                android:singleLine="true"
-                                android:text="Aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                                android:textColor="@color/white"
-                                android:textSize="14sp" />
 
-                        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/marchant_ll_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_transparent_stroke"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="18dp"
+                        android:text="About"
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!--<TextView-->
+                    <!--android:id="@+id/act_details_TV_about"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textSize="14sp" />-->
+
+                    <!--<ImageView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="2dp"-->
+                    <!--android:layout_marginBottom="5dp"-->
+                    <!--android:layout_marginTop="5dp"-->
+                    <!--android:contentDescription="@string/app_name" />-->
+
+                    <LinearLayout
+                        android:id="@+id/act_details_ll_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="horizontal">
 
                         <ImageView
-                            android:id="@+id/act_details_TV_title_back"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/image1"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentTop="true"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginTop="20dp"
-                            android:contentDescription="@string/app_name"
-                            android:src="@drawable/back" />
-                    </RelativeLayout>
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/address" />
 
-                </FrameLayout>
+                        <TextView
+                            android:id="@+id/act_details_TV_address"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="8"
+                            android:autoLink="none"
+                            android:text="Address"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
 
-            </android.support.v7.widget.Toolbar>
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/next" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/darker_gray" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@string/app_name" />
+
+                    <LinearLayout
+                        android:id="@+id/act_details_ll_phone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/phone" />
+
+                        <TextView
+                            android:id="@+id/act_details_TV_mobile"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="8"
+                            android:autoLink="none"
+                            android:text="Mobile: 9523558483"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/next" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/darker_gray" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@string/app_name" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/clock" />
+
+                        <TextView
+                            android:id="@+id/act_details_TV_workingHours"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="8"
+                            android:autoLink="none"
+                            android:text="10:00 am to 06:00 pm"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/next" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/darker_gray" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@string/app_name" />
+
+                    <LinearLayout
+                        android:id="@+id/act_details_ll_website"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:src="@drawable/website" />
+
+                        <TextView
+                            android:id="@+id/act_details_TV_website"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="5dp"
+                            android:layout_weight="8"
+                            android:autoLink="none"
+                            android:text="http://www.mentobile.com"
+                            android:textColor="@android:color/white"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="1"
+                            android:src="@drawable/next" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="40dp"
+                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@android:color/darker_gray" />
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp"
+                        android:contentDescription="@string/app_name" />
 
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/bg_transparent_stroke"
                     android:orientation="vertical">
 
-
-                    <LinearLayout
-                        android:id="@+id/activity_marchnat_ll_offerlist"
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/bg_transparent_stroke"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_marginBottom="18dp"
-                            android:gravity="center"
-                            android:padding="5dp"
-                            android:text="OFFER LIST"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <android.support.v4.view.ViewPager
-                            android:id="@+id/marchang_offer_pager"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp"
-                            android:layout_marginBottom="10dp"
-                            android:layout_marginRight="30dp" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/marchant_ll_about"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/bg_transparent_stroke"
-                        android:orientation="vertical"
-                        android:padding="10dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_horizontal"
-                            android:layout_marginBottom="18dp"
-                            android:text="About"
-                            android:textAllCaps="true"
-                            android:textColor="@android:color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <!--<TextView-->
-                        <!--android:id="@+id/act_details_TV_about"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:textSize="14sp" />-->
-
-                        <!--<ImageView-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="2dp"-->
-                        <!--android:layout_marginBottom="5dp"-->
-                        <!--android:layout_marginTop="5dp"-->
-                        <!--android:contentDescription="@string/app_name" />-->
-
-                        <LinearLayout
-                            android:id="@+id/act_details_ll_address"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/image1"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:src="@drawable/address" />
-
-                            <TextView
-                                android:id="@+id/act_details_TV_address"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="8"
-                                android:autoLink="none"
-                                android:text="Address"
-                                android:textColor="@android:color/white"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/next" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginRight="50dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@android:color/darker_gray" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="5dp"
-                            android:contentDescription="@string/app_name" />
-
-                        <LinearLayout
-                            android:id="@+id/act_details_ll_phone"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:src="@drawable/phone" />
-
-                            <TextView
-                                android:id="@+id/act_details_TV_mobile"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="8"
-                                android:autoLink="none"
-                                android:text="Mobile: 9523558483"
-                                android:textColor="@android:color/white"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/next" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginRight="50dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@android:color/darker_gray" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="5dp"
-                            android:contentDescription="@string/app_name" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:src="@drawable/clock" />
-
-                            <TextView
-                                android:id="@+id/act_details_TV_workingHours"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="8"
-                                android:autoLink="none"
-                                android:text="10:00 am to 06:00 pm"
-                                android:textColor="@android:color/white"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/next" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginRight="50dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@android:color/darker_gray" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="5dp"
-                            android:contentDescription="@string/app_name" />
-
-                        <LinearLayout
-                            android:id="@+id/act_details_ll_website"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="10"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_weight="1"
-                                android:src="@drawable/website" />
-
-                            <TextView
-                                android:id="@+id/act_details_TV_website"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginLeft="5dp"
-                                android:layout_weight="8"
-                                android:autoLink="none"
-                                android:text="http://www.mentobile.com"
-                                android:textColor="@android:color/white"
-                                android:textSize="16sp" />
-
-                            <ImageView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_marginRight="10dp"
-                                android:layout_weight="1"
-                                android:src="@drawable/next" />
-                        </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_marginLeft="40dp"
-                            android:layout_marginRight="50dp"
-                            android:layout_marginTop="10dp"
-                            android:background="@android:color/darker_gray" />
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="2dp"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginTop="5dp"
-                            android:contentDescription="@string/app_name" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
-                        android:background="@drawable/bg_transparent_stroke"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="30dp"
-                            android:layout_marginBottom="18dp"
-                            android:gravity="center"
-                            android:text="Gallery"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <HorizontalScrollView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="10dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <ImageView
-                                    android:id="@+id/img_gallery1"
-                                    android:layout_width="300dp"
-                                    android:layout_height="150dp"
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_marginRight="10dp"
-                                    android:elevation="5dp" />
-
-                                <ImageView
-                                    android:id="@+id/img_gallery2"
-                                    android:layout_width="300dp"
-                                    android:layout_height="150dp"
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_marginRight="10dp"
-                                    android:elevation="5dp" />
-
-                                <ImageView
-                                    android:id="@+id/img_gallery3"
-                                    android:layout_width="300dp"
-                                    android:layout_height="150dp"
-                                    android:layout_marginLeft="10dp"
-                                    android:layout_marginRight="10dp"
-                                    android:elevation="5dp" />
-                            </LinearLayout>
-                        </HorizontalScrollView>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10dp"
+                        android:layout_height="30dp"
+                        android:layout_marginBottom="10dp"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="10dp">
+                        android:text="GALLERY"
+                        android:textColor="@color/white"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                        <ImageView
-                            android:id="@+id/act_details_IV_facebook"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="15dp"
-                            android:src="@drawable/facebook" />
-
-                        <ImageView
-                            android:id="@+id/act_details_IV_twitter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="15dp"
-                            android:src="@drawable/twitter" />
-
-                        <ImageView
-                            android:id="@+id/act_details_IV_instagram"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="15dp"
-                            android:src="@drawable/instagram" />
-                    </LinearLayout>
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/marchang_gallery_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="150dp"
+                        android:layout_margin="10dp" />
                 </LinearLayout>
-            </ScrollView>
-        </LinearLayout>
-    </FrameLayout>
-</LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
+
+                    <ImageView
+                        android:id="@+id/act_details_IV_facebook"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/facebook" />
+
+                    <ImageView
+                        android:id="@+id/act_details_IV_twitter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/twitter" />
+
+                    <ImageView
+                        android:id="@+id/act_details_IV_instagram"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/instagram" />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</FrameLayout>
