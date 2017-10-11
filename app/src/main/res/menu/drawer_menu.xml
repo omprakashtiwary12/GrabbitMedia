@@ -2,18 +2,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_search"
-        android:icon="@drawable/magnifying"
-        android:title="Search"
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_action_action_search"
+        android:title="@string/abc_search_hint"
+        android:visible="false"
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_noti"
-        android:icon="@drawable/notification"
+        android:icon="@drawable/notification_32"
         android:title="menu"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_sort"
-        android:icon="@drawable/sort_by"
-        android:title="menu"
-        app:showAsAction="always" />
+
 </menu>

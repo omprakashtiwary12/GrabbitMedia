@@ -14,6 +14,7 @@ public class NearByModel {
     private String banner;
     private String email;
     private String about;
+    private String category_id;
     private String open_time;
     private String close_time;
     private String opening_days;
@@ -324,5 +325,13 @@ public class NearByModel {
             fullAddress += getPincode();
         }
         return fullAddress;
+    }
+
+    public String getCategory_id() {
+        return category_id;
+    }
+
+    public void setCategory_id(String category_id) {
+        this.category_id = category_id;
     }
 }

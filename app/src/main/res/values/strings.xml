@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Grabbit</string>
     <string name="action_settings">Settings</string>
+    <string name="action_clear_all">Clear All</string>
     <string name="title_activity_drawer">Grabbit</string>
+    <string name="title_feedback">Feedback</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -14,4 +16,7 @@ Cutting thru the barriers of brick  mortar businesses with limited resources (bo
 A well-defined automated B2C platform for Merchant and the Customer which provides Merchant with a login dashboard and customizable template’s to showcase their offers and make it visible to customers within few minutes- the fastest way of showcasing your offers/daily deals. Effortlessly promote new products, upcoming events, or exclusive specials and deliver it to customer’s right in the palm of their hand.\n\n
 
 GRABBIT mobile app provides all the details of the offers/daily deals of the merchants to the customer with in the radius of 10KM making customer engagements a faster and better experience.</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

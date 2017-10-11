@@ -5,14 +5,12 @@
     android:background="@drawable/register_bg"
     android:orientation="vertical">
 
-
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:src="@mipmap/grabbit" />
-
 
     <TextView
         android:layout_width="wrap_content"
@@ -20,9 +18,17 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:text="Sit back &amp; Relax! while we verify your mobile number"
-        android:textColor="@color/colorPrimary" />
+        android:text="We have sent an OTP on your number"
+        android:textSize="16sp" />
 
+    <TextView
+        android:id="@+id/text_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="+91 8826510669"
+        android:textSize="16sp" />
 
     <EditText
         android:id="@+id/edit_otp"
@@ -34,8 +40,9 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:hint="Enter OTP"
-        android:inputType="number" />
+        android:hint="Enter your OTP"
+        android:inputType="number"
+        android:maxLength="4" />
 
     <Button
         android:id="@+id/verify_otp"
@@ -44,6 +51,8 @@
         android:layout_gravity="center"
         android:layout_margin="10dp"
         android:background="@color/colorPrimary"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
         android:text="Verify"
         android:textColor="@color/white" />
 
@@ -53,8 +62,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:text="Resend Otp"
+        android:text="Resend OTP?"
         android:textColor="@color/black"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textStyle="normal" />
 
 </LinearLayout>

@@ -21,7 +21,6 @@ public class WebService1 {
         BufferedReader reader;
         URL serviceURL;
 
-
         try {
             serviceURL = new URL(webServiceURL);
             messagebuffer = new StringBuffer();

@@ -5,9 +5,10 @@ public class Notification {
     private String id;
     private String title;
     private String description;
+    private String view_status;
     private String date;
 
-    public Notification(String id, String title, String description, String date) {
+    public Notification(String id, String title, String description, String view_status, String date) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -36,6 +37,14 @@ public class Notification {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getView_status() {
+        return view_status;
+    }
+
+    public void setView_status(String view_status) {
+        this.view_status = view_status;
     }
 
     public String getDate() {

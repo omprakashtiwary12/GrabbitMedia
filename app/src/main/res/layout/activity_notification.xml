@@ -8,4 +8,28 @@
         android:id="@+id/notificatio_recyle_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:id="@+id/liner_layout_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/notification_128" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="You have no new notification"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 </RelativeLayout>

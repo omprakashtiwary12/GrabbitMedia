@@ -10,7 +10,7 @@ import com.mentobile.grabbit.Utility.BaseActivity;
  */
 public class AboutUsActivity extends BaseActivity {
 
-    TextView about_us;
+    private TextView about_us;
 
     @Override
     public int getActivityLayout() {

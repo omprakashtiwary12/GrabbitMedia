@@ -1,5 +1,6 @@
 package com.mentobile.grabbit.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mentobile.grabbit.Activity.DrawerActivity;
+import com.mentobile.grabbit.Activity.LoadDataFromServer;
 import com.mentobile.grabbit.Activity.MerchantDetailsActivity;
 import com.mentobile.grabbit.Activity.SplashActivity;
 import com.mentobile.grabbit.Adapter.RecyclerAdapter;
@@ -21,7 +24,6 @@ import com.mentobile.grabbit.Utility.CircleImageView1;
 import com.mentobile.grabbit.Utility.Other;
 import com.squareup.picasso.Picasso;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +37,7 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
     RecyclerView frag_nearby_rv;
     RecyclerAdapter recyclerAdapter;
 
-    private List<NearByModel> wishListArrayList = new ArrayList<NearByModel>();
+    public static List<NearByModel> wishListArrayList = new ArrayList<NearByModel>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,30 +48,26 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         frag_nearby_rv.setLayoutManager(linearLayoutManager);
+        wishListArrayList = new LoadDataFromServer().getWishList();
         recyclerAdapter = new RecyclerAdapter(wishListArrayList, getActivity().getApplicationContext(), R.layout.item_nearby_adapter, this, 0, this);
         frag_nearby_rv.setAdapter(recyclerAdapter);
+        recyclerAdapter.notifyDataSetChanged();
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        wishListArrayList.clear();
-        for (int i = 0; i < SplashActivity.nearByModelList.size(); i++) {
-            NearByModel nearByModel = SplashActivity.nearByModelList.get(i);
-            if (nearByModel.getWishlist().equals("1")) {
-                wishListArrayList.add(nearByModel);
-            }
-        }
+        wishListArrayList = new LoadDataFromServer().getWishList();
         recyclerAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void getItemPosition(int position) {
-        NearByModel nearByModel = wishListArrayList.get(position);
-        int indexValue  = SplashActivity.nearByModelList.indexOf(nearByModel);
-        Other.sendToThisActivity(getActivity(), MerchantDetailsActivity.class, indexValue);
-        Log.d(TAG,"::::Index Value "+indexValue);
+        Intent intent = new Intent(getActivity(), MerchantDetailsActivity.class);
+        intent.putExtra("index_value", position);
+        intent.putExtra("type", "w");
+        getActivity().startActivity(intent);
     }
 
     @Override
@@ -87,11 +85,7 @@ public class WishListFragment extends Fragment implements RecyclerAdapter.Return
         nearby_item_TXT_address.setText("" + nearByModel.getAddress());
 
         TextView nearby_item_TXT_distace = (TextView) view.findViewById(R.id.nearby_item_TXT_distace);
-        if (nearByModel.getDistance() != null) {
-            String distance[] = nearByModel.getDistance().trim().split(" ");
-            Double distance_in_km = Double.parseDouble(distance[0]) * 1.60934;
-            nearby_item_TXT_distace.setText(new DecimalFormat("##.##").format(distance_in_km) + "KM");
-        }
+        nearby_item_TXT_distace.setText("" + nearByModel.getDistance() + " KM");
         CircleImageView1 nearby_item_IMG_logo = (CircleImageView1) view.findViewById(R.id.nearby_item_IMG_logo);
         Picasso.with(getContext()).load(AppUrl.GET_IMAGE + nearByModel.getM_id() + "/" + nearByModel.getLogo())
                 .placeholder(R.drawable.placeholder_logo).into(nearby_item_IMG_logo);

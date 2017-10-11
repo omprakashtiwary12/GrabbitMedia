@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#EF5350</color>
-    <color name="colorPrimaryDark">#E53935</color>
-    <color name="colorAccent">#E53935</color>
+    <color name="colorPrimary">#fc8019</color>
+    <color name="colorPrimaryDark">#fc8019</color>
+    <color name="colorAccent">#fc8019</color>
     <color name="chocoloate">#0f0fff</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="red">#E53935</color>
-    <color name="red_press">#EF5350</color>
-
-    <color name="toolbar_color">#E65100</color>
-    <color name="toolbar_color_new">#EF6c00</color>
+    <color name="dark_gray">#4b4949</color>
+    <color name="red">#fc8019</color>
+    <color name="red_press">#fc8019</color>
 </resources>

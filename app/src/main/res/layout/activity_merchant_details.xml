@@ -38,10 +38,22 @@
                 android:src="@drawable/back" />
 
             <TextView
-                android:id="@+id/act_details_TV_title_address"
+                android:id="@+id/act_details_TV_title_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/act_details_TV_title_back"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="marquee"
+                android:text="Title"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="normal" />
+
+            <TextView
+                android:id="@+id/act_details_TV_title_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/act_details_TV_title_name"
                 android:layout_centerHorizontal="true"
                 android:ellipsize="marquee"
                 android:focusable="true"
@@ -51,7 +63,7 @@
                 android:singleLine="true"
                 android:text="Aaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
                 android:textColor="@color/white"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/merchant_detail_wishlist"
@@ -65,18 +77,6 @@
                 android:paddingRight="30dp"
                 android:text="Add To Wishlist"
                 android:textColor="@color/white" />
-
-            <TextView
-                android:id="@+id/act_details_TV_title_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:ellipsize="marquee"
-                android:text="Title"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:textStyle="normal" />
 
         </RelativeLayout>
 
@@ -354,6 +354,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/activity_marchnat_ll_galleryview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

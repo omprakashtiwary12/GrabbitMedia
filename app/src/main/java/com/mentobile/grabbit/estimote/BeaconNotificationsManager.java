@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
+import com.estimote.sdk.Nearable;
 import com.estimote.sdk.Region;
 import com.mentobile.grabbit.Activity.SplashActivity;
+import com.mentobile.grabbit.GrabbitApplication;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,7 +21,6 @@ import java.util.List;
 public class BeaconNotificationsManager {
 
     private static final String TAG = "BeaconNotifications";
-
     private BeaconManager beaconManager;
 
     private List<Region> regionsToMonitor = new ArrayList<>();
@@ -26,28 +28,42 @@ public class BeaconNotificationsManager {
     private HashMap<String, String> exitMessages = new HashMap<>();
 
     private Context context;
-    private int notificationID = 0;
-
     public BeaconNotificationsManager(Context context) {
         this.context = context;
         beaconManager = new BeaconManager(context);
+        beaconManager.setBackgroundScanPeriod(300, 100);
+//        beaconManager.setNearableListener(new BeaconManager.NearableListener() {
+//            @Override
+//            public void onNearablesDiscovered(List<Nearable> list) {
+//                Log.d(TAG,"::::::Beacon Color "+list.get(0).currentMotionStateDuration);
+//            }
+//        });
+//
+//        beaconManager.setRangingListener(new BeaconManager.RangingListener() {
+//            @Override
+//            public void onBeaconsDiscovered(Region region, List<Beacon> list) {
+//                Log.d(TAG,"::::::Beacon Color "+list.get(0).getProximityUUID());
+//                Log.d(TAG,"::::::Beacon Color "+region.getProximityUUID());
+//            }
+//        });
+
         beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
             @Override
             public void onEnteredRegion(Region region, List<Beacon> list) {
-                Log.d(TAG, "onEnteredRegion: " + region.getIdentifier());
+                Log.d(TAG, "::::::::::::onEnteredRegion: " + region.getIdentifier());
                 String message = enterMessages.get(region.getIdentifier());
                 if (message != null) {
-                    showNotification(message);
+                    GrabbitApplication.getInstance().showNotification("Grabbit", message);
                 }
             }
 
             @Override
             public void onExitedRegion(Region region) {
-                Log.d(TAG, "onExitedRegion: " + region.getIdentifier());
-                String message = exitMessages.get(region.getIdentifier());
-                if (message != null) {
-                    showNotification(message);
-                }
+                Log.d(TAG, ":::::::::::onExitedRegion: " + region.getIdentifier());
+//                String message = exitMessages.get(region.getIdentifier());
+//                if (message != null) {
+//                   // showNotification(message);
+//                }
             }
         });
     }
@@ -55,7 +71,7 @@ public class BeaconNotificationsManager {
     public void addNotification(BeaconID beaconID, String enterMessage, String exitMessage) {
         Region region = beaconID.toBeaconRegion();
         enterMessages.put(region.getIdentifier(), enterMessage);
-       // exitMessages.put(region.getIdentifier(), exitMessage);
+        exitMessages.put(region.getIdentifier(), exitMessage);
         regionsToMonitor.add(region);
     }
 
@@ -68,23 +84,5 @@ public class BeaconNotificationsManager {
                 }
             }
         });
-    }
-
-    private void showNotification(String message) {
-        Intent resultIntent = new Intent(context, SplashActivity.class);
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(
-                context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-                .setSmallIcon(android.R.drawable.ic_dialog_info)
-                .setContentTitle("Grabbit")
-                .setContentText(message)
-                .setDefaults(NotificationCompat.DEFAULT_ALL)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(resultPendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(notificationID++, builder.build());
     }
 }

@@ -33,9 +33,7 @@ public class OneAdapter extends ArrayAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(resource, parent, false);
         }
-
         returnView.getAdapterView(convertView, position);
-
         return convertView;
     }
 

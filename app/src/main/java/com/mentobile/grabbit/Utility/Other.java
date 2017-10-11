@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationManager;
 import android.media.RingtoneManager;
@@ -16,61 +17,31 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.util.Base64;
+import android.util.Log;
 
 import com.mentobile.grabbit.R;
 
+import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by Gokul on 7/28/2016.
  */
+
 public class Other {
 
+    private static final String TAB = "Other";
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
-
-    public static void sendNotification(Context context, String title, String message, Class activity) {
-
-        NotificationManager mNotificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, activity), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                context).setSmallIcon(R.drawable.ic_menu_camera)
-                .setContentTitle(title)
-                .setContentText(message).setContentIntent(contentIntent)
-                .setSound(soundUri);
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(1, mBuilder.build());
-    }
-
-    public static void sendNotification(Context context, String title, String message, Class activity, int icon) {
-
-        NotificationManager mNotificationManager = (NotificationManager) context
-                .getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-                new Intent(context, activity), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(
-                context).setSmallIcon(icon)
-                .setContentTitle(title)
-                .setContentText(message).setContentIntent(contentIntent)
-                .setSound(soundUri);
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(1, mBuilder.build());
     }
 
     public static void sendToThisActivity(Context context, Class activity) {
@@ -98,7 +69,6 @@ public class Other {
         AppPref.getInstance().setUserName(userName);
         AppPref.getInstance().setUserEmail(userEmail);
         AppPref.getInstance().setUserMobile(userPhone);
-
     }
 
     public static boolean isValidEmail(String email) {
@@ -125,16 +95,49 @@ public class Other {
             }
             Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) == null ? locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) : locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
             if (location != null) {
-
                 return new Double[]{location.getLatitude(), location.getLongitude()};
             }
         }
         return new Double[]{0.0, 0.0};
+
+//        if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//           // return TODO;
+//        }
+//        Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) == null ? locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) : locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+//        if (location != null) {
+//            return new Double[]{location.getLatitude(), location.getLongitude()};
+//        }
+//        return new Double[]{0.0, 0.0};
     }
 
     public static boolean checkBluetoothConnection() {
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         final boolean isEnabled = bluetoothAdapter.isEnabled();
         return isEnabled;
+    }
+
+    public static String getCurrentTime() {
+        SimpleDateFormat s = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss");
+        s.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        System.out.println(s.format(new Date()));
+        long currentTime = new Date().getTime();
+        Log.d(TAB, "::::::Current Time " + currentTime);
+        return "" + currentTime;
+    }
+
+    public static String convertBitmapToBase64String(final Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        // Must compress the Image to reduce image size to make upload easy
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+        byte[] byte_arr = stream.toByteArray();
+        // Encode Image to String
+        return Base64.encodeToString(byte_arr, 0).trim();
     }
 }

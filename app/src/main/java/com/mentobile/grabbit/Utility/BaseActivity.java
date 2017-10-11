@@ -35,7 +35,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-
     }
 
     @Override

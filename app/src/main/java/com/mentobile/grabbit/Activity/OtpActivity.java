@@ -14,18 +14,20 @@ import com.mentobile.grabbit.Utility.GetDataUsingWService;
 import com.mentobile.grabbit.Utility.GetWebServiceData;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 /**
  * Created by Gokul on 11/23/2016.
  */
 public class OtpActivity extends BaseActivity implements View.OnClickListener, GetWebServiceData {
-    EditText edit_otp;
-    Button verify_otp;
-    TextView resend_otp;
+    private EditText edit_otp;
+    private Button verify_otp;
+    private TextView resend_otp;
 
     private String otp = "";
     private String phone = "";
     private String from = "";
+    private TextView textView;
 
 
     @Override
@@ -35,10 +37,12 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
 
     @Override
     public void initialize() {
-        setTitle("Otp");
+        setTitle("Account Verification");
         edit_otp = (EditText) findViewById(R.id.edit_otp);
         verify_otp = (Button) findViewById(R.id.verify_otp);
         resend_otp = (TextView) findViewById(R.id.resend_otp);
+
+        textView = (TextView) findViewById(R.id.text_message);
 
         resend_otp.setOnClickListener(this);
         verify_otp.setOnClickListener(this);
@@ -50,7 +54,8 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
         if (save != null) {
             from = save.getString("from");
             phone = save.getString("phone");
-            send_otp();
+            otp = save.getString("otp");
+            textView.setText("+91 " + phone);
         }
     }
 
@@ -58,7 +63,15 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.verify_otp:
-                verifyOtp();
+
+                String ed_otp = edit_otp.getText().toString().trim();
+                if (otp.equalsIgnoreCase(ed_otp)) {
+                    toastMessage("Verification successfully.");
+                    sendToThisActivity(DrawerActivity.class);
+                    finish();
+                } else {
+                    toastMessage("Please check your OTP or Resend OTP.");
+                }
                 break;
             case R.id.resend_otp:
                 send_otp();
@@ -74,50 +87,9 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
         stringBuilder.append("&phone=").append(phone);
         stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
         String content = stringBuilder.toString();
-
-        GetDataUsingWService wService = new GetDataUsingWService(OtpActivity.this, AppUrl.OTP_URL, 0, content, true, "Sending Otp ...", this);
+        GetDataUsingWService wService = new GetDataUsingWService(OtpActivity.this, AppUrl.OTP_URL, 0, content, true, "Sending OTP ...", this);
         wService.execute();
     }
-
-    private void verifyOtp() {
-        String s = edit_otp.getText().toString();
-        if (s.equalsIgnoreCase(otp)) {
-            if (from.equalsIgnoreCase("forget")) {
-                sendToThisActivity(ForgetNewPasswordActivity.class, new String[]{"phone;" + phone});
-                finish();
-                return;
-            }
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("phone=").append(phone);
-            stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
-            String content = stringBuilder.toString();
-
-
-            GetWebServiceData getWebServiceData = new GetWebServiceData() {
-                @Override
-                public void getWebServiceResponse(String responseData, int serviceCounter) {
-                    try {
-                        Log.w("response_data", responseData);
-                        JSONObject jsonObject = new JSONObject(responseData);
-                        String status = jsonObject.getString("status");
-                        if (status.equalsIgnoreCase("1")) {
-                            toastMessage("Verified SuccessFully");
-                            sendToThisActivity(DrawerActivity.class);
-                            finish();
-                        }
-                    } catch (Exception e) {
-
-                    }
-                }
-            };
-
-            GetDataUsingWService wService = new GetDataUsingWService(OtpActivity.this, AppUrl.VERIFY_URL, 0, content, true, "Verifying Otp ...", getWebServiceData);
-            wService.execute();
-        } else {
-            toastMessage("Otp not Matched");
-        }
-    }
-
 
     @Override
     public void getWebServiceResponse(String responseData, int serviceCounter) {
@@ -126,11 +98,9 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
             JSONObject jsonObject = new JSONObject(responseData);
             String status = jsonObject.getString("status");
             if (status.equalsIgnoreCase("1")) {
-                toastMessage("Otp Send SuccessFully.");
+                toastMessage("OTP Send Successfully.");
             }
         } catch (Exception e) {
-
         }
-
     }
 }

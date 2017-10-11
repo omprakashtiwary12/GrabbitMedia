@@ -3,6 +3,8 @@ package com.mentobile.grabbit.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,26 +16,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mentobile.grabbit.Adapter.ViewPagerAdapter;
+import com.mentobile.grabbit.Fragment.ImageViewFragment;
+import com.mentobile.grabbit.Fragment.NearByFragment;
+import com.mentobile.grabbit.Fragment.WishListFragment;
 import com.mentobile.grabbit.Model.NearByModel;
 import com.mentobile.grabbit.R;
 import com.mentobile.grabbit.Utility.AppUrl;
 import com.mentobile.grabbit.Utility.GetDataUsingWService;
 import com.mentobile.grabbit.Utility.GetWebServiceData;
-import com.mentobile.grabbit.Utility.Other;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Gokul on 11/28/2016.
  */
 
-public class MerchantDetailsActivity extends AppCompatActivity implements View.OnClickListener, ViewPager.OnPageChangeListener {
+public class MerchantDetailsActivity extends AppCompatActivity implements View.OnClickListener, ViewPagerAdapter.pageonClick {
 
     private String TAG = "MerchantDetailsActivity";
+
     private ImageView frameLayout;
     private TextView tvTitle;
     private TextView tvAddress;
@@ -51,13 +55,16 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     private LinearLayout llPhone;
     private LinearLayout llWebsite;
     private LinearLayout llOfferList;
-    private NearByModel nearByModel;
+    private LinearLayout llGalleryView;
+    public NearByModel nearByModel;
 
     private Button btnWishList;
 
-    int position = 0;
-    ViewPager viewPagerCompaign;
-    ViewPager viewPagerGalleryView;
+    private ViewPager viewPagerCompaign;
+    private ViewPager viewPagerGalleryView;
+
+    public String strPagerType;
+    public int pagerPosition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,11 +72,18 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
         setContentView(R.layout.activity_merchant_details);
         getSupportActionBar().hide();
 
-        int pos = getIntent().getFlags();
-        nearByModel = SplashActivity.nearByModelList.get(pos);
+        final int pos = getIntent().getExtras().getInt("index_value");
+        final String type = getIntent().getExtras().getString("type");
+        if (type.equals("w")) {
+            nearByModel = WishListFragment.wishListArrayList.get(pos);
+        } else {
+            nearByModel = DrawerActivity.nearByModelList.get(pos);
+        }
 
         frameLayout = (ImageView) findViewById(R.id.frameLayout);
         Picasso.with(getApplicationContext()).load(AppUrl.GET_IMAGE + nearByModel.getM_id() + "/" + nearByModel.getBanner())
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .networkPolicy(NetworkPolicy.NO_CACHE)
                 .placeholder(R.drawable.placeholder_banner).fit().into(frameLayout);
 
         imgBtn_Back = (ImageView) findViewById(R.id.act_details_TV_title_back);
@@ -119,17 +133,26 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
         llOfferList = (LinearLayout) findViewById(R.id.activity_marchnat_ll_offerlist);
         llOfferList.setOnClickListener(this);
 
-        viewPagerCompaign = (ViewPager) findViewById(R.id.marchang_offer_pager);
-        viewPagerCompaign.setOnClickListener(this);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, nearByModel.getOfferImageModels());
-        viewPagerCompaign.setAdapter(viewPagerAdapter);
-        viewPagerAdapter.notifyDataSetChanged();
+        llGalleryView = (LinearLayout) findViewById(R.id.activity_marchnat_ll_galleryview);
+        llGalleryView.setOnClickListener(this);
 
-        viewPagerGalleryView = (ViewPager) findViewById(R.id.marchang_gallery_view);
-        viewPagerGalleryView.setOnClickListener(this);
-        ViewPagerAdapter viewPagerAdapter1 = new ViewPagerAdapter(this, nearByModel.getGalleyImage());
-        viewPagerGalleryView.setAdapter(viewPagerAdapter1);
-        viewPagerAdapter.notifyDataSetChanged();
+        if (nearByModel.getOfferImageModels().size() > 0) {
+            llOfferList.setVisibility(View.VISIBLE);
+            viewPagerCompaign = (ViewPager) findViewById(R.id.marchang_offer_pager);
+            ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, nearByModel.getOfferImageModels(), this, "offer");
+            viewPagerCompaign.setAdapter(viewPagerAdapter);
+            viewPagerAdapter.notifyDataSetChanged();
+        } else {
+            llOfferList.setVisibility(View.GONE);
+        }
+        if (nearByModel.getGalleyImage().size() > 0) {
+            viewPagerGalleryView = (ViewPager) findViewById(R.id.marchang_gallery_view);
+            ViewPagerAdapter viewPagerAdapter1 = new ViewPagerAdapter(this, nearByModel.getGalleyImage(), this, "gallery");
+            viewPagerGalleryView.setAdapter(viewPagerAdapter1);
+            viewPagerAdapter1.notifyDataSetChanged();
+        } else {
+            llGalleryView.setVisibility(View.GONE);
+        }
 
         btnWishList = (Button) findViewById(R.id.merchant_detail_wishlist);
         btnWishList.setOnClickListener(this);
@@ -138,21 +161,15 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
         } else {
             btnWishList.setText("Add To Wishlist");
         }
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
+        if (nearByModel.getFacebook() == null || nearByModel.getFacebook().length() < 10) {
+            imgBtnFacebook.setVisibility(View.GONE);
+        }
+        if (nearByModel.getTwitter() == null || nearByModel.getTwitter().length() < 10) {
+            imgBtnTwitter.setVisibility(View.GONE);
+        }
+        if (nearByModel.getInstagram() == null || nearByModel.getInstagram().length() < 10) {
+            imgBtnInstagram.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -162,6 +179,7 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
                 finish();
                 break;
             case R.id.act_details_TV_website:
+            case R.id.act_details_ll_website:
                 openInBrowser(nearByModel.getWebsite());
                 break;
             case R.id.act_details_IV_facebook:
@@ -174,7 +192,7 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
                 openInBrowser(nearByModel.getInstagram());
                 break;
             case R.id.activity_marchnat_ll_offerlist:
-                //Other.sendToThisActivity(this, ImageActivity.class, new String[]{"position;" + position});
+//                Other.sendToThisActivity(this, ImageActivity.class, new String[]{"position;" + position});
                 break;
             case R.id.marchant_ll_about:
                 //showMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getAddress());
@@ -187,16 +205,9 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
                 intent.setData(Uri.parse("tel:" + nearByModel.getPhone()));
                 startActivity(intent);
                 break;
-            case R.id.act_details_ll_website:
-                String url = nearByModel.getWebsite();
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
-                break;
             case R.id.merchant_detail_wishlist:
                 String out_id = nearByModel.getOut_id();
                 String wishlist = nearByModel.getWishlist();
-                Log.d(TAG,"::::Name "+nearByModel.getBusiness_name());
                 addRemoveWishList(out_id, wishlist);
                 break;
         }
@@ -221,8 +232,8 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     private void addRemoveWishList(String out_id, String condition) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("api_key=").append(AppUrl.API_KEY);
-        stringBuilder.append("&out_id=").append(""+out_id);
-        stringBuilder.append("&status=").append(""+condition);
+        stringBuilder.append("&out_id=").append("" + out_id);
+        stringBuilder.append("&status=").append("" + condition);
         String content = stringBuilder.toString();
         Log.d(TAG, "::::Wish List " + content);
         GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.ADDREMOVE_WISHLIST_URL, 0, content, false, "Loading ...", new GetWebServiceData() {
@@ -246,5 +257,16 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
             }
         });
         getDataUsingWService.execute();
+    }
+
+    @Override
+    public void viewPageImageClick(String page, int position) {
+        strPagerType = page;
+        this.pagerPosition = position;
+        ImageViewFragment imageViewFragment = new ImageViewFragment();
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction().add(android.R.id.content, imageViewFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

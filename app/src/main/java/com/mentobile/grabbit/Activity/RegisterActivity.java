@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mentobile.grabbit.R;
 import com.mentobile.grabbit.Utility.AppUrl;
 import com.mentobile.grabbit.Utility.BaseActivity;
@@ -23,25 +25,31 @@ import com.mentobile.grabbit.Utility.GetDataUsingWService;
 import com.mentobile.grabbit.Utility.GetWebServiceData;
 import com.mentobile.grabbit.Utility.Other;
 import com.pkmmte.view.CircularImageView;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Gokul on 11/23/2016.
  */
+
 public class RegisterActivity extends BaseActivity implements View.OnClickListener, GetWebServiceData {
-    EditText act_signup_ET_lastName;
-    EditText act_signup_ET_mobile;
-    EditText act_signup_ET_email;
-    EditText act_signup_ET_password;
-    CircularImageView activity_register_profile_image;
-    Button act_signup_BTN_next;
+
+    private EditText act_signup_ET_lastName;
+    private EditText act_signup_ET_mobile;
+    private EditText act_signup_ET_email;
+    private EditText act_signup_ET_password;
+    private CircularImageView activity_register_profile_image;
+    private Button act_signup_BTN_next;
     String selectedFilePath;
     private static final int SIMPLE_LOGIN_TYPE = 0;
     private static final int FACEBOOK_LOGIN_TYPE = 2;
 
     private String gcm_id = "";
+    private boolean isPassword_Visible;
+    private String otp;
 
     @Override
     public int getActivityLayout() {
@@ -55,10 +63,25 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         act_signup_ET_mobile = (EditText) findViewById(R.id.act_signup_ET_mobile);
         act_signup_ET_email = (EditText) findViewById(R.id.act_signup_ET_email);
         act_signup_ET_password = (EditText) findViewById(R.id.act_signup_ET_password);
+        act_signup_ET_password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPassword_Visible) {
+                    isPassword_Visible = false;
+                    act_signup_ET_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                } else {
+                    isPassword_Visible = true;
+                    act_signup_ET_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                }
+            }
+        });
+
         activity_register_profile_image = (CircularImageView) findViewById(R.id.activity_register_profile_image);
         act_signup_BTN_next = (Button) findViewById(R.id.act_signup_BTN_next);
         act_signup_BTN_next.setOnClickListener(this);
         activity_register_profile_image.setOnClickListener(this);
+
+        gcm_id = FirebaseInstanceId.getInstance().getToken();
     }
 
     @Override
@@ -79,6 +102,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void save() {
+        int randomPIN = (int) (Math.random() * 9000) + 1000;
+        otp = randomPIN + "";
         String name = act_signup_ET_lastName.getText().toString();
         String mobile = act_signup_ET_mobile.getText().toString();
         String email = act_signup_ET_email.getText().toString();
@@ -97,7 +122,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             toastMessage("Please Provide Password");
             return;
         } else {
-          //  String encodedImage = getStringImage(activity_register_profile_image.getDrawingCache());
+            //  String encodedImage = getStringImage(activity_register_profile_image.getDrawingCache());
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("api_key=").append(AppUrl.API_KEY);
             stringBuilder.append("&email=").append(email);
@@ -107,6 +132,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             stringBuilder.append("&phone=").append(mobile);
             stringBuilder.append("&gcmid=").append(gcm_id);
             stringBuilder.append("&photo=").append("");
+            stringBuilder.append("&otp=").append(otp);
             String content = stringBuilder.toString();
             activity_register_profile_image.setDrawingCacheEnabled(true);
             GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.REGISTER_URL, 0, content, true, "Registering ...", this);
@@ -123,7 +149,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             String status = jsonObject.getString("status");
             if (status.equalsIgnoreCase("1")) {
                 String msg = jsonObject.getString("msg");
-                toastMessage(msg);
+               // toastMessage(msg);
                 JSONArray jsonArray = jsonObject.getJSONArray("details");
                 jsonObject = jsonArray.getJSONObject(0);
                 String cus_id = jsonObject.getString("cus_id");
@@ -131,8 +157,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 String email = jsonObject.getString("email");
                 String name = jsonObject.getString("name");
                 Other.saveDataInSharedPreferences(cus_id, name, email, phone);
-                sendToThisActivity(OtpActivity.class, new String[]{"from;register", "phone;" + act_signup_ET_mobile.getText().toString()});
-                sendToThisActivity(CategoryActivity.class);
+                sendToThisActivity(OtpActivity.class, new String[]{"from;register", "phone;" + phone,"otp;"+otp});
+                finish();
             } else {
                 String msg = jsonObject.getString("msg");
                 toastMessage(msg);
@@ -140,7 +166,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 finish();
             }
         } catch (Exception e) {
-
         }
     }
 
@@ -211,13 +236,5 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         } catch (Exception e) {
             Log.w("Error", e.toString());
         }
-    }
-
-    public static String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = android.util.Base64.encodeToString(imageBytes, android.util.Base64.DEFAULT);
-        return encodedImage;
     }
 }

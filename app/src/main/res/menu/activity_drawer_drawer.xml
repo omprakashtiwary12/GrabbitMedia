@@ -6,36 +6,37 @@
             android:id="@+id/my_profile"
             android:icon="@drawable/my_profile"
             android:title="My Profile" />
-        <!--<item-->
-        <!--android:id="@+id/offer_list"-->
-        <!--android:icon="@drawable/ic_menu_gallery"-->
-        <!--android:title="OfferList" />-->
-        <!--<item-->
-        <!--android:id="@+id/near_by"-->
-        <!--android:icon="@drawable/ic_menu_slideshow"-->
-        <!--android:title="Near By" />-->
-        <item
+        <!--<item
+            android:id="@+id/offer_list"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="OfferList" />-->
+        <!-- <item
+             android:id="@+id/near_by"
+             android:icon="@drawable/ic_menu_slideshow"
+             android:title="Near By" />-->
+        <!--<item
             android:id="@+id/about_us"
             android:icon="@drawable/about_us"
-            android:title="About Us" />
+            android:title="About Us" />&ndash;&gt;-->
+
+        <item
+            android:id="@+id/sharing"
+            android:icon="@drawable/share"
+            android:title="Refer &amp; Earn" />
+        <item
+            android:id="@+id/notification"
+            android:icon="@drawable/settings"
+            android:title="Notification" />
         <item
             android:id="@+id/contact_us"
             android:icon="@drawable/phone_contact"
             android:title="Contact Us" />
 
-        <item
-            android:id="@+id/help"
+         <item
+            android:id="@+id/feedback"
             android:icon="@drawable/help"
-            android:title="Help" />
+            android:title="Send Feedback" />
 
-        <item
-            android:id="@+id/sharing"
-            android:icon="@drawable/share"
-            android:title="Sharing" />
-        <item
-            android:id="@+id/setting"
-            android:icon="@drawable/settings"
-            android:title="Setting" />
     </group>
 
 </menu>

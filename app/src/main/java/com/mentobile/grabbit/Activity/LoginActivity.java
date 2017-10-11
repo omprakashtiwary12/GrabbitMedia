@@ -137,7 +137,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
     }
 
     @Override
@@ -156,14 +155,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String name = jsonObject.getString("name");
                 Other.saveDataInSharedPreferences(cus_id, name, email, phone);
                 AppPref.getInstance().setImageUrl(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg");
-               //checkBloothConnection();
-                sendToThisActivity(DrawerActivity.class);
-            }
-            else {
+                //checkBloothConnection();
+                Intent intent = new Intent(LoginActivity.this, CategoryActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
                 toastMessage(msg);
             }
         } catch (Exception e) {
-
         }
     }
 
@@ -189,7 +189,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.login_btn_signup:
-                sendToThisActivity(RegisterActivity.class);
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.login_tv_forgetpassword:
                 forgetPassword();
@@ -201,10 +204,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-    public void sendToThisActivity(Class activity) {
-        Intent intent = new Intent(this, activity);
-        startActivity(intent);
-    }
 
     public void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -235,7 +234,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         dialog.show();
-
     }
 
     public void sendToThisActivity(Class activity, String s[]) {
@@ -414,8 +412,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
 
-
-
       /*//
         Google Login Connection Method
         ------------ End  ---------------
@@ -453,8 +449,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-
                         }
 
                     });
@@ -506,10 +500,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 loginButton.setPressed(false);
 
                 loginButton.invalidate();
-
             }
         });
-
     }
 
     public void disconnectFromFacebook() {
@@ -535,7 +527,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         protected String doInBackground(String... strings) {
             try {
-               // gcmid = googleCloudMessaging.register("376155352726");
+                // gcmid = googleCloudMessaging.register("376155352726");
                 Log.d(TAG, ":::gcmid" + gcmid);
             } catch (Exception e) {
                 Log.d(TAG, "errorinlogin" + e.toString());
@@ -551,12 +543,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         final boolean isEnabled = bluetoothAdapter.isEnabled();
         if (isEnabled) {
-            sendToThisActivity(CategoryActivity.class);
+            Intent intent = new Intent(LoginActivity.this, DrawerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
         } else {
-            sendToThisActivity(BluetoothActivity.class);
+            Intent intent = new Intent(LoginActivity.this, BluetoothActivity.class);
+            startActivity(intent);
         }
     }
-
-
 }
 

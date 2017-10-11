@@ -7,7 +7,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />\
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    \
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
@@ -44,59 +45,51 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Activity.TourActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Activity.RegisterActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.OtpActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.ForgetNewPasswordActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.MerchantDetailsActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.BeaconActivity"
             android:label="MainActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.DrawerActivity"
             android:label="@string/title_activity_drawer"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
         </activity>
-
         <activity
             android:name=".Utility.NetworkErrorActivity"
             android:label="NetworkErrorActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Activity.CategoryActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".Activity.SearchActivity"
             android:label="Search"
@@ -137,13 +130,15 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service android:name=".Notification.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
+        <activity
+            android:name=".Activity.FeedbackPageActivity"
+            android:label="@string/title_feedback" />
     </application>
 
 </manifest>

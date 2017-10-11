@@ -8,26 +8,29 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-
-        <com.pkmmte.view.CircularImageView
-            android:id="@+id/activity_my_profile_img_photo"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:contentDescription="@string/app_name"
-            android:background="@drawable/user" />
-
-        <Button
-            android:id="@+id/activity_my_profile_btn_browse"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
-            android:background="@drawable/button_selector"
-            android:text="Browse"
-            android:textColor="@color/white"
-            android:visibility="gone" />
+            android:orientation="horizontal">
+
+            <com.pkmmte.view.CircularImageView
+                android:id="@+id/activity_my_profile_img_photo"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:background="@drawable/user"
+                android:contentDescription="@string/app_name" />
+
+            <ImageButton
+                android:id="@+id/activity_my_profile_btn_browse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="-20dp"
+                android:background="@drawable/photo_camera"
+                android:visibility="gone" />
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -110,7 +113,7 @@
 
 
         <Button
-            android:id="@+id/activity_my_profile_btn_save"
+            android:id="@+id/activity_my_profile_btn_logout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -118,6 +121,17 @@
             android:background="@drawable/button_selector"
             android:text="Logout"
             android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/activity_my_profile_btn_submit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="30dp"
+            android:background="@drawable/button_selector"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:visibility="gone" />
 
 
     </LinearLayout>
