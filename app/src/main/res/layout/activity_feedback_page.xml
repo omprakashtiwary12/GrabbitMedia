@@ -5,7 +5,7 @@
     android:id="@+id/activity_feedback_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mentobile.grabbit.Activity.FeedbackPageActivity">
+    tools:context="com.grabbit.daily_deals.Activity.FeedbackPageActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -6,12 +6,32 @@
         <item name="colorPrimary">@color/red</item>
         <item name="colorPrimaryDark">@color/red_press</item>
         <item name="colorAccent">@color/red</item>
+        <item name="android:windowSoftInputMode">stateHidden</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowSoftInputMode">stateHidden</item>
     </style>
+
+    <style name="button_property_type">
+        <item name="android:layout_width">40dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:background">@drawable/button_property_selector</item>
+    </style>
+
+    <style name="textview_property_type">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style>
+
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 

@@ -7,7 +7,9 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="app_id">109363919565990</string>
+
+    <string name="facebook_app_id">1149292515201776</string>
+    <string name="fb_login_protocol_scheme">fb1149292515201776</string>
 
     <string name="about_us">GRABBIT provides the easiest and fastest merchant- customer engagement. With all businesses looking to reach customer with their offers/deals the fastest and easiest way and reduce the time - cost cycle of printing , moving towards the philosophy of no paper and green environment. An innovative and new way to engage with guests, improve customer satisfaction  encourage customer loyalty. \n\n
 

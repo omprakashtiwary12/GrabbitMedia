@@ -3,302 +3,136 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_image">
 
-    <ImageView
-        android:id="@+id/frameLayout"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/placeholder_banner" />
+        android:background="@drawable/bg_transparent_stroke">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0.7"
-        android:background="@color/black" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:orientation="vertical">
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <ImageView
-                android:id="@+id/act_details_TV_title_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/back" />
-
-            <TextView
-                android:id="@+id/act_details_TV_title_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/act_details_TV_title_back"
-                android:layout_centerHorizontal="true"
-                android:ellipsize="marquee"
-                android:text="Title"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                android:textStyle="normal" />
-
-            <TextView
-                android:id="@+id/act_details_TV_title_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/act_details_TV_title_name"
-                android:layout_centerHorizontal="true"
-                android:ellipsize="marquee"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="center_horizontal"
-                android:scrollHorizontally="true"
-                android:singleLine="true"
-                android:text="Aaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-                android:textColor="@color/white"
-                android:textSize="12sp" />
-
-            <Button
-                android:id="@+id/merchant_detail_wishlist"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_below="@+id/act_details_TV_title_address"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="10dp"
-                android:background="@drawable/button_selector"
-                android:paddingLeft="30dp"
-                android:paddingRight="30dp"
-                android:text="Add To Wishlist"
-                android:textColor="@color/white" />
-
-        </RelativeLayout>
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/activity_marchnat_ll_offerlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_transparent_stroke"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/back" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/marchang_offer_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_margin="5dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/back"
+                    android:rotation="180" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/window_background"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="50 off all other services"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"
+                    android:textStyle="italic" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/marchant_ll_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/white"
                 android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/act_details_TV_weekdays_off"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:background="@color/green"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:text="OPEN TODAY"
+                    android:textAllCaps="true"
+                    android:textColor="@android:color/white"
+                    android:textSize="14sp"
+                    android:textStyle="italic" />
 
                 <LinearLayout
-                    android:id="@+id/activity_marchnat_ll_offerlist"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bg_transparent_stroke"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:gravity="center"
-                        android:text="OFFER LIST"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/marchang_offer_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:layout_margin="10dp" />
-
-                </LinearLayout>
-
-
-                <LinearLayout
-                    android:id="@+id/marchant_ll_about"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/bg_transparent_stroke"
+                    android:background="@color/white"
                     android:orientation="vertical"
                     android:padding="10dp">
 
                     <TextView
+                        android:id="@+id/act_details_TV_title_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="18dp"
-                        android:text="About"
-                        android:textAllCaps="true"
-                        android:textColor="@android:color/white"
-                        android:textSize="18sp"
+                        android:text="Mentobile Technologies LLP"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <!--<TextView-->
-                    <!--android:id="@+id/act_details_TV_about"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:textSize="14sp" />-->
-
-                    <!--<ImageView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="2dp"-->
-                    <!--android:layout_marginBottom="5dp"-->
-                    <!--android:layout_marginTop="5dp"-->
-                    <!--android:contentDescription="@string/app_name" />-->
-
-                    <LinearLayout
-                        android:id="@+id/act_details_ll_address"
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:id="@+id/act_details_TV_address"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:id="@+id/image1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:src="@drawable/address" />
-
-                        <TextView
-                            android:id="@+id/act_details_TV_address"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="8"
-                            android:autoLink="none"
-                            android:text="Address"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/next" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:color/darker_gray" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:contentDescription="@string/app_name" />
+                        android:layout_marginRight="30dp"
+                        android:text=""
+                        android:textSize="14sp" />
 
                     <LinearLayout
                         android:id="@+id/act_details_ll_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:layout_weight="10"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:src="@drawable/phone" />
+                            android:layout_weight="2"
+                            android:text="Open : "
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/act_details_TV_mobile"
+                            android:id="@+id/act_details_tv_opne_days"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
                             android:layout_weight="8"
-                            android:autoLink="none"
-                            android:text="Mobile: 9523558483"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
+                            android:text="Monday, Friday"
+                            android:textSize="14sp" />
 
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/next" />
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:color/darker_gray" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:contentDescription="@string/app_name" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:src="@drawable/clock" />
-
-                        <TextView
-                            android:id="@+id/act_details_TV_workingHours"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
-                            android:layout_weight="8"
-                            android:autoLink="none"
-                            android:text="10:00 am to 06:00 pm"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/next" />
-                    </LinearLayout>
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:color/darker_gray" />
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:contentDescription="@string/app_name" />
 
                     <LinearLayout
                         android:id="@+id/act_details_ll_website"
@@ -307,107 +141,148 @@
                         android:layout_weight="10"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:src="@drawable/website" />
+                            android:layout_weight="2"
+                            android:text="Time : "
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/act_details_TV_workingHours"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:text="10:00 am to 06:00 pm"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="Visit  : "
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/act_details_TV_website"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginLeft="5dp"
                             android:layout_weight="8"
-                            android:autoLink="none"
                             android:text="http://www.mentobile.com"
-                            android:textColor="@android:color/white"
-                            android:textSize="16sp" />
-
-                        <ImageView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_marginRight="10dp"
-                            android:layout_weight="1"
-                            android:src="@drawable/next" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
-                    <View
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginLeft="40dp"
-                        android:layout_marginRight="50dp"
-                        android:layout_marginTop="10dp"
-                        android:background="@android:color/darker_gray" />
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="2dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginTop="5dp"
-                        android:contentDescription="@string/app_name" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:text="Email : "
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
-
+                        <TextView
+                            android:id="@+id/act_details_TV_email"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:text="deepak@mentobile.com"
+                            android:textSize="14sp" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/activity_marchnat_ll_galleryview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+
+                <Button
+                    android:id="@+id/act_details_TV_mobile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
-                    android:background="@drawable/bg_transparent_stroke"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:layout_marginBottom="10dp"
-                        android:gravity="center"
-                        android:text="GALLERY"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <android.support.v4.view.ViewPager
-                        android:id="@+id/marchang_gallery_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="150dp"
-                        android:layout_margin="10dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
-
-                    <ImageView
-                        android:id="@+id/act_details_IV_facebook"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:src="@drawable/facebook" />
-
-                    <ImageView
-                        android:id="@+id/act_details_IV_twitter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:src="@drawable/twitter" />
-
-                    <ImageView
-                        android:id="@+id/act_details_IV_instagram"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:src="@drawable/instagram" />
-                </LinearLayout>
+                    android:background="@color/button_selected"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:text="Call @ 8826510669"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
             </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/activity_marchnat_ll_galleryview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/bg_transparent_stroke"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/back" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/marchang_gallery_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_margin="5dp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/back"
+                    android:rotation="180" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/act_details_IV_facebook"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/facebook" />
+
+                <ImageView
+                    android:id="@+id/act_details_IV_twitter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/twitter" />
+
+                <ImageView
+                    android:id="@+id/act_details_IV_instagram"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/instagram" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>

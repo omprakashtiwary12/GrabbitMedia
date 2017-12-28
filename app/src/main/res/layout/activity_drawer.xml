@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.mentobile.grabbit.Activity.DrawerActivity">
+        tools:context="com.grabbit.daily_deals.Activity.DrawerActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -58,7 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/activity_drawer_sort_by"
@@ -80,7 +81,6 @@
                     android:textColor="@color/white" />
             </LinearLayout>
         </RelativeLayout>
-
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
@@ -89,6 +89,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
+        android:visibility="gone"
         app:headerLayout="@layout/nav_header_drawer"
         app:menu="@menu/activity_drawer_drawer" />
 

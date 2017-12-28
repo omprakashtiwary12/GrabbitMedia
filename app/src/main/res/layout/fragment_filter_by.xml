@@ -4,8 +4,7 @@
     android:layout_gravity="bottom"
     android:background="@color/white"
     android:minWidth="300dp"
-    android:orientation="vertical"
-    android:padding="5dp">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -37,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:text="Electrnics" />
+        android:text="Electronics" />
 
     <CheckBox
         android:id="@+id/checkbox_hospitility"
@@ -79,6 +78,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:layout_weight="1"
+            android:background="@drawable/button_selector"
             android:text="Apply"
             android:textColor="#fff" />
 
@@ -89,6 +89,7 @@
             android:layout_margin="10dp"
             android:layout_marginLeft="10dp"
             android:layout_weight="1"
+            android:background="@drawable/button_selector"
             android:text="Clear"
             android:textColor="#fff" />
 

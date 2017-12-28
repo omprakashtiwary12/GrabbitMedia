@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <fragment
@@ -51,39 +51,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="20"
-                        android:text="Landline"
-                        android:textColor="#000"
-                        android:textSize="12dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:text=":"
-                        android:textColor="#000"
-                        android:textSize="12dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="70"
-                        android:text="+91 80 41573311"
-                        android:textSize="12dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="20"
                         android:text="Mobile"
                         android:textColor="#000"
                         android:textSize="12dp"
@@ -102,7 +69,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="70"
-                        android:text=" +91 9066300635"
+                        android:text=" +91 9811231881"
                         android:textSize="12dp" />
                 </LinearLayout>
 
@@ -135,7 +102,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="70"
-                        android:text="support@grabbit.com"
+                        android:text="support@grabbit.co.in"
                         android:textSize="12dp" />
                 </LinearLayout>
 
@@ -168,22 +135,22 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="70"
-                        android:text="B 21, Udyog Vihar Phase 5, Gurgaon, Haryana"
+                        android:text="211, 217, 225, 2nd Floor, Gupta Palace Rajouri Garden, New Delhi - 110027 (India)"
                         android:textSize="12dp" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
 
-
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/enquiry"
-            app:backgroundTint="#dd0000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
             android:layout_marginBottom="20dp"
             android:layout_marginRight="20dp"
-            android:src="@drawable/common_full_open_on_phone" />
+            android:src="@drawable/common_full_open_on_phone"
+            android:visibility="gone"
+            app:backgroundTint="#dd0000" />
 
     </FrameLayout>
 </LinearLayout>

@@ -42,6 +42,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Z to A" />
+
+        <RadioButton
+            android:id="@+id/radio_btn_distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Distance" />
     </RadioGroup>
 
     <LinearLayout

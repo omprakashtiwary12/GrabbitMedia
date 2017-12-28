@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:background="@color/white"
-    tools:context="com.mentobile.grabbit.Fragment.ImageViewFragment">
+    tools:context="com.grabbit.daily_deals.Fragment.ImageViewFragment">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/imageview_taping"

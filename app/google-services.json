@@ -1,27 +1,35 @@
 {
   "project_info": {
-    "project_number": "1094934455039",
-    "firebase_url": "https://grabbit-e7f1b.firebaseio.com",
-    "project_id": "grabbit-e7f1b",
-    "storage_bucket": "grabbit-e7f1b.appspot.com"
+    "project_number": "462493922834",
+    "firebase_url": "https://grabbit-daily-deals.firebaseio.com",
+    "project_id": "grabbit-daily-deals",
+    "storage_bucket": "grabbit-daily-deals.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1094934455039:android:9229e2c77b83b02e",
+        "mobilesdk_app_id": "1:462493922834:android:82d1e26cb2f236a3",
         "android_client_info": {
-          "package_name": "com.mentobile.grabbit"
+          "package_name": "com.grabbit.daily_deals"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1094934455039-956navp10lmvfbgsvprehputmlnbfui7.apps.googleusercontent.com",
+          "client_id": "462493922834-n6psf38s48trfqnbugtm85ksv2h050am.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.grabbit.daily_deals",
+            "certificate_hash": "10b2181eb76d8bb0217ef7caa81e026d181d4144"
+          }
+        },
+        {
+          "client_id": "462493922834-oahmp55efjpbk776jkea252gmr5v22qb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBNKDrnkWwm9IGbUOHGwIIVQza0kVN-KzA"
+          "current_key": "AIzaSyBnI8bil1qetPormGG8G1xS0dXBZyrxLnw"
         }
       ],
       "services": {
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462493922834-oahmp55efjpbk776jkea252gmr5v22qb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

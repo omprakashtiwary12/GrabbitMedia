@@ -9,7 +9,7 @@
         app:showAsAction="always" />
     <item
         android:id="@+id/menu_noti"
-        android:icon="@drawable/notification_32"
+        android:icon="@drawable/ic_menu_notifications"
         android:title="menu"
         app:showAsAction="always" />
 

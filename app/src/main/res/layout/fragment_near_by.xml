@@ -5,14 +5,22 @@
     android:background="@color/dark_gray"
     android:orientation="vertical">
 
-  <!--  <android.support.v4.widget.SwipeRefreshLayout
+    <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/drawer_swipe_pull_to_refresh"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">-->
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/frag_nearby_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    <!--</android.support.v4.widget.SwipeRefreshLayout>-->
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <ImageView
+        android:id="@+id/fragment_img_no_offers"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/no_offer"
+        android:visibility="visible" />
+
 </LinearLayout>

@@ -1,4 +1,4 @@
-package com.mentobile.grabbit;
+package com.grabbit.daily_deals;
 
 import org.junit.Test;
 
