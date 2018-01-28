@@ -8,5 +8,12 @@
         android:title="Edit"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/action_save"
+        android:orderInCategory="100"
+        android:title="Save"
+        android:visible="false"
+        app:showAsAction="always" />
+
 
 </menu>

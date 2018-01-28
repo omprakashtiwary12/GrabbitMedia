@@ -11,14 +11,20 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.grabbit.daily_deals.R;
+import com.grabbit.daily_deals.Utility.AppPref;
 import com.grabbit.daily_deals.Utility.AppUrl;
 import com.grabbit.daily_deals.Utility.BaseActivity;
 import com.grabbit.daily_deals.Utility.GetDataUsingWService;
@@ -63,6 +69,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private EditText act_signup_ET_email;
     private EditText act_signup_ET_password;
     private CircularImageView activity_register_profile_image;
+    private CheckBox chkCondition;
     private Button act_signup_BTN_next;
     String selectedFilePath;
     private String User_reg_social_type = "";
@@ -73,26 +80,23 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     public final static int IMAGE_GALLERY = 100;
     public final static int IMAGE_CAMERA = 101;
+    private ImageView imgBtn_Back;
+    private boolean isPasswordView;
+    private ImageButton imgBtnPasswordStatus;
 
     @Override
     public int getActivityLayout() {
-        //initialize the SDK facebook before executing any other operations
-        FacebookSdk.sdkInitialize(getApplicationContext());
         return R.layout.activity_register;
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        User_reg_social_type = "";
-        signOutFromGoogle();
-        logoutFromFacebook();
     }
 
     @Override
     public void initialize() {
         setTitle("Register");
         getSupportActionBar().hide();
+
+        imgBtn_Back = (ImageView) findViewById(R.id.act_details_TV_title_back);
+        imgBtn_Back.setOnClickListener(this);
+
         act_signup_ET_lastName = (EditText) findViewById(R.id.act_signup_ET_lastName);
         act_signup_ET_mobile = (EditText) findViewById(R.id.act_signup_ET_mobile);
         act_signup_ET_email = (EditText) findViewById(R.id.act_signup_ET_email);
@@ -110,16 +114,17 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         });
 
-        activity_register_profile_image = (CircularImageView) findViewById(R.id.activity_register_profile_image);
+//        activity_register_profile_image = (CircularImageView) findViewById(R.id.activity_register_profile_image);
+//        activity_register_profile_image.setOnClickListener(this);
         act_signup_BTN_next = (Button) findViewById(R.id.act_signup_BTN_next);
         act_signup_BTN_next.setOnClickListener(this);
-        activity_register_profile_image.setOnClickListener(this);
-        token = FirebaseInstanceId.getInstance().getToken();
 
-        Button btnLoginGoogle = (Button) findViewById(R.id.login_page_btn_google);
-        btnLoginGoogle.setOnClickListener(this);
-        initializeFacebook();
-        initializeGoogle();
+        imgBtnPasswordStatus = (ImageButton) findViewById(R.id.login_btn_password_syatus);
+        imgBtnPasswordStatus.setOnClickListener(this);
+
+        chkCondition = (CheckBox) findViewById(R.id.act_signup_chk_condition);
+        chkCondition.setOnClickListener(this);
+        token = FirebaseInstanceId.getInstance().getToken();
     }
 
     @Override
@@ -130,21 +135,24 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.login_page_btn_google:
-                User_reg_social_type = "Google";
-                signInWithGoogle();
+            case R.id.act_details_TV_title_back:
+                onBackPressed();
                 break;
-            case R.id.button_facebook:
-                User_reg_social_type = "Facebook";
-                loginByFacebook();
-                break;
-
             case R.id.act_signup_BTN_next:
                 User_reg_social_type = "Simple";
                 save();
                 break;
-            case R.id.activity_register_profile_image:
-                browse();
+
+            case R.id.login_btn_password_syatus:
+                if (isPasswordView) {
+                    imgBtnPasswordStatus.setBackgroundResource(R.drawable.ic_custom_show);
+                    act_signup_ET_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    isPasswordView = false;
+                } else {
+                    imgBtnPasswordStatus.setBackgroundResource(R.drawable.ic_custom_hide);
+                    act_signup_ET_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    isPasswordView = true;
+                }
                 break;
         }
     }
@@ -169,6 +177,9 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         } else if (password.length() < 5) {
             toastMessage("Please Provide Password");
             return;
+        } else if (chkCondition.isChecked() == false) {
+            toastMessage("Please accept terms and condition.");
+            return;
         } else {
             //  String encodedImage = getStringImage(activity_register_profile_image.getDrawingCache());
             StringBuilder stringBuilder = new StringBuilder();
@@ -182,8 +193,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             stringBuilder.append("&photo=").append("");
             stringBuilder.append("&otp=").append(otp);
             String content = stringBuilder.toString();
-            activity_register_profile_image.setDrawingCacheEnabled(true);
-            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.REGISTER_URL, 0, content, true, "Registering ...", this);
+            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.REGISTER_URL, 0, content, true, "Registering...", this);
             getDataUsingWService.execute();
         }
     }
@@ -204,41 +214,24 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 String email = jsonObject.getString("email");
                 String name = jsonObject.getString("name");
                 String login_type = jsonObject.getString("login_type");
-                Other.saveDataInSharedPreferences(cus_id, name, email, phone);
-                if (!login_type.equalsIgnoreCase("Simple")) {
-                    sendToThisActivity(DashboardActivity.class);
-                    finish();
-                } else {
-                    sendToThisActivity(OtpActivity.class, new String[]{"from;register", "phone;" + phone, "otp;" + otp});
-                    finish();
-                }
+                String photo = jsonObject.getString("photo");
+                Other.saveDataInSharedPreferences(cus_id, name, email, phone,photo);
+
+                String emg_phone1 = jsonObject.getString("emg_phone1");
+                AppPref.getInstance().setEPhone1(emg_phone1);
+                String emg_phone2 = jsonObject.getString("emg_phone2");
+                AppPref.getInstance().setEPhone2(emg_phone2);
+                String emg_phone3 = jsonObject.getString("emg_phone3");
+                AppPref.getInstance().setEPhone3(emg_phone3);
+
+                sendToThisActivity(OtpActivity.class, new String[]{"from;register", "phone;" + phone, "otp;" + otp});
+                finish();
             } else {
                 String msg = jsonObject.getString("msg");
                 toastMessage(msg);
             }
         } catch (Exception e) {
         }
-    }
-
-
-    private void registerBysocielMedia() {
-        String name = act_signup_ET_lastName.getText().toString();
-        String email = act_signup_ET_email.getText().toString();
-        String password = act_signup_ET_password.getText().toString();
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("api_key=").append(AppUrl.API_KEY);
-        stringBuilder.append("&email=").append(email);
-        stringBuilder.append("&login_type=").append(User_reg_social_type);
-        stringBuilder.append("&name=").append(name);
-        stringBuilder.append("&password=").append(password);
-        stringBuilder.append("&phone=").append("");
-        stringBuilder.append("&gcmid=").append(token);
-        stringBuilder.append("&photo=").append("");
-        String content = stringBuilder.toString();
-        activity_register_profile_image.setDrawingCacheEnabled(true);
-        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.REGISTER_URL, 0, content, true, "Registering ...", this);
-        getDataUsingWService.execute();
     }
 
     //upload  image  code
@@ -266,42 +259,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             }
         });
         builder.show();
-    }
-
-    // Sign with Google
-
-    private static final int RC_SIGN_IN = 9001;
-    private GoogleApiClient mGoogleApiClient;
-
-    private void initializeGoogle() {
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.disconnect();
-        }
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-    }
-
-    private void signInWithGoogle() {
-        final Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    public void signOutFromGoogle() {
-        if (mGoogleApiClient.isConnected()) {
-            Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                    new ResultCallback<Status>() {
-                        @Override
-                        public void onResult(Status status) {
-                            // [START_EXCLUDE]
-                            // updateUI(false);
-                            // [END_EXCLUDE]
-                        }
-                    });
-        }
     }
 
     public static String getPath(Uri contentURI, Context context) {
@@ -352,104 +309,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 } else {
                     Toast.makeText(getApplicationContext(), "Image not selected!", Toast.LENGTH_LONG).show();
                 }
-            } else if (requestCode == RC_SIGN_IN) {
-                GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-                if (result.isSuccess()) {
-                    // Signed in successfully, show authenticated UI.
-                    try {
-                        GoogleSignInAccount googleResult = result.getSignInAccount();
-                        act_signup_ET_email.setText("" + googleResult.getEmail());
-                        act_signup_ET_lastName.setText("" + googleResult.getDisplayName());
-                        registerBysocielMedia();
-                    } catch (Exception e) {
-                    }
-                } else {
-                }
-            } else {
-                callBackManager.onActivityResult(requestCode, resultCode, data);
             }
         }
-    }
-    // End og Google Login
-
-    // Start with Facebook Login
-
-    //facebook attribute
-    private LoginButton btnLoginFacebook;
-    private CallbackManager callBackManager;
-    private AccessTokenTracker accessTokenTracker;
-
-    private void initializeFacebook() {
-
-        btnLoginFacebook = (LoginButton) findViewById(R.id.login_page_btn_facebook);
-        Button buttonFacebook = (Button) findViewById(R.id.button_facebook);
-        buttonFacebook.setOnClickListener(this);
-
-        //callback
-        callBackManager = CallbackManager.Factory.create();
-        accessTokenTracker = new AccessTokenTracker() {
-            @Override
-            protected void onCurrentAccessTokenChanged(AccessToken oldToken, AccessToken newToken) {
-
-            }
-        };
-
-        accessTokenTracker.startTracking();
-        btnLoginFacebook.setReadPermissions("public_profile", "email", "user_friends");
-    }
-
-    /**
-     * FacebookCallBack
-     */
-    private FacebookCallback<LoginResult> mCallBack = new FacebookCallback<LoginResult>() {
-        @Override
-        public void onSuccess(LoginResult loginResult) {
-            GraphRequest request = GraphRequest.newMeRequest(
-                    loginResult.getAccessToken(),
-                    new GraphRequest.GraphJSONObjectCallback() {
-                        @Override
-                        public void onCompleted(
-                                JSONObject object,
-                                GraphResponse response) {
-
-                            Log.e("response: ", response + "");
-                            try {
-                                act_signup_ET_email.setText("" + object.getString("email"));
-                                act_signup_ET_lastName.setText("" + object.getString("name"));
-                                registerBysocielMedia();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,email,gender,birthday");
-            request.setParameters(parameters);
-            request.executeAsync();
-        }
-
-        @Override
-        public void onCancel() {
-
-        }
-
-        @Override
-        public void onError(FacebookException e) {
-
-        }
-    };
-
-    private void loginByFacebook() {
-
-        btnLoginFacebook.setSoundEffectsEnabled(false);
-        btnLoginFacebook.performClick();
-        btnLoginFacebook.setPressed(true);
-        btnLoginFacebook.invalidate();
-        btnLoginFacebook.registerCallback(callBackManager, mCallBack);
-    }
-
-    private void logoutFromFacebook() {
-        LoginManager.getInstance().logOut();
     }
 }

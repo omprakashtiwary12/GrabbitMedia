@@ -1,0 +1,36 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.grabbit.daily_deals.Fragment.HelpLineFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycle_view_helpline_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:padding="5dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/activity_dashboard_fb_sos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/helpline_btn_shortcut"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/sos_warning"
+        android:visibility="visible"
+        app:backgroundTint="@color/button_selected" />
+
+    <Button
+        android:id="@+id/helpline_btn_shortcut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_selector"
+        android:text="Add SOS Shortcut"
+        android:textColor="@color/white" />
+
+</RelativeLayout>

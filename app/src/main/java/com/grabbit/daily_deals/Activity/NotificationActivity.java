@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.grabbit.daily_deals.Adapter.RecyclerAdapter;
 import com.grabbit.daily_deals.Database.Database;
+import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Model.Notification;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.BaseActivity;

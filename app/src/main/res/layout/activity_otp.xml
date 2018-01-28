@@ -6,11 +6,13 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/apps_logo"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:src="@mipmap/grabbit" />
+        android:layout_margin="10dp"
+        android:adjustViewBounds="true"
+        android:src="@drawable/grlogo" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,7 +20,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:text="We have sent an OTP on your number"
+        android:text="We have sent an OTP on your number :"
         android:textSize="16sp" />
 
     <TextView
@@ -27,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="+91 8826510669"
+        android:text=""
         android:textSize="16sp" />
 
     <EditText
@@ -40,7 +42,7 @@
         android:layout_marginRight="10dp"
         android:layout_marginTop="50dp"
         android:gravity="center"
-        android:hint="Enter your OTP"
+        android:hint="Enter your otp"
         android:inputType="number"
         android:maxLength="4" />
 

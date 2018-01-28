@@ -3,19 +3,17 @@ package com.grabbit.daily_deals.Activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.util.Base64;
-import android.util.Base64InputStream;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,34 +21,30 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.error.VolleyError;
+import com.android.volley.request.SimpleMultiPartRequest;
+import com.facebook.internal.Utility;
+import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppPref;
 import com.grabbit.daily_deals.Utility.AppUrl;
 import com.grabbit.daily_deals.Utility.BaseActivity;
+import com.grabbit.daily_deals.Utility.FilePath;
 import com.grabbit.daily_deals.Utility.GetDataUsingWService;
 import com.grabbit.daily_deals.Utility.GetWebServiceData;
 import com.grabbit.daily_deals.Utility.Other;
 import com.pkmmte.view.CircularImageView;
+import com.squareup.picasso.Downloader;
 import com.squareup.picasso.Picasso;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Gokul on 11/22/2016.
@@ -66,7 +60,11 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
     private Button activity_my_profile_btn_submit;
     private Button activity_my_profile_btn_logout;
 
-    private String base64String;
+    private EditText edEmgPhone1;
+    private EditText edEmgPhone2;
+    private EditText edEmgPhone3;
+
+    private String selectedFilePath = "";
 
     @Override
     public int getActivityLayout() {
@@ -85,6 +83,15 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         activity_my_profile_edt_name = (EditText) findViewById(R.id.activity_my_profile_edt_name);
         activity_my_profile_edt_name.setText(AppPref.getInstance().getUserName());
 
+        edEmgPhone1 = (EditText) findViewById(R.id.activity_my_profile_edt_phone1);
+        edEmgPhone1.setText(AppPref.getInstance().getEPhone1());
+
+        edEmgPhone2 = (EditText) findViewById(R.id.activity_my_profile_edt_phone2);
+        edEmgPhone2.setText(AppPref.getInstance().getEPhone2());
+
+        edEmgPhone3 = (EditText) findViewById(R.id.activity_my_profile_edt_phone3);
+        edEmgPhone3.setText(AppPref.getInstance().getEPhone3());
+
         activity_my_profile_btn_browse = (ImageButton) findViewById(R.id.activity_my_profile_btn_browse);
         activity_my_profile_btn_browse.setOnClickListener(this);
 
@@ -95,7 +102,6 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         activity_my_profile_btn_logout.setOnClickListener(this);
 
         activity_my_profile_img_photo = (CircularImageView) findViewById(R.id.activity_my_profile_img_photo);
-
         try {
             Picasso.with(this).load(AppPref.getInstance().getImageUrl()).into(activity_my_profile_img_photo);
         } catch (Exception e) {
@@ -128,6 +134,12 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
                 activity_my_profile_edt_phone.setFocusableInTouchMode(true);
                 activity_my_profile_edt_name.setEnabled(true);
                 activity_my_profile_edt_name.setFocusableInTouchMode(true);
+                edEmgPhone1.setEnabled(true);
+                edEmgPhone1.setFocusableInTouchMode(true);
+                edEmgPhone2.setEnabled(true);
+                edEmgPhone2.setFocusableInTouchMode(true);
+                edEmgPhone3.setEnabled(true);
+                edEmgPhone3.setFocusableInTouchMode(true);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -137,18 +149,23 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.activity_my_profile_btn_browse:
-                browse();
+                boolean status = Other.checkPermission1(getApplicationContext(), Other.PERMISSION_READ_INTERNAL_STORAGE,
+                        Other.MY_PERMISSIONS_RESULT_READ_EXTERNAL_STORAGE);
+                if (status) {
+                    browse();
+                }
                 break;
             case R.id.activity_my_profile_btn_submit:
-
                 StringBuilder stringBuilder = new StringBuilder();
                 stringBuilder.append("api_key=").append(AppUrl.API_KEY);
                 stringBuilder.append("&name=").append("" + activity_my_profile_edt_name.getText().toString());
                 stringBuilder.append("&phone=").append("" + activity_my_profile_edt_phone.getText().toString());
                 stringBuilder.append("&cus_id=").append("" + AppPref.getInstance().getUserID());
-                stringBuilder.append("&photo=").append("" + base64String);
+                stringBuilder.append("&emg_phone1=").append("" + edEmgPhone1.getText().toString());
+                stringBuilder.append("&emg_phone2=").append("" + edEmgPhone2.getText().toString());
+                stringBuilder.append("&emg_phone3=").append("" + edEmgPhone3.getText().toString());
 
-                Log.d("Profile Activity ", base64String);
+                //   Log.d("Profile Activity ", base64String);
                 String content = stringBuilder.toString();
                 GetDataUsingWService serviceProfileUpdate =
                         new GetDataUsingWService(MyProfileActivity.this, AppUrl.PROFILE_UPDATE_URL, 0, content, true, "", this);
@@ -162,51 +179,80 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private void imageUpload(final String imagePath) {
+
+        SimpleMultiPartRequest smr = new SimpleMultiPartRequest(Request.Method.POST, AppUrl.UPLOAD_PROFILE_PIC,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Response", response);
+                        try {
+                            JSONObject jObj = new JSONObject(response);
+                            String message = jObj.getString("data");
+                            Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+                        } catch (JSONException e) {
+                            // JSON error
+                            e.printStackTrace();
+                            Toast.makeText(getApplicationContext(), "Json error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+        smr.addFile("image", imagePath);
+        smr.addStringParam("user_id", AppPref.getInstance().getUserID());
+        GrabbitApplication.getInstance().addToRequestQueue(smr);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        if (ContextCompat.checkSelfPermission(MyProfileActivity.this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MyProfileActivity.this,
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                ActivityCompat.requestPermissions(MyProfileActivity.this,
-                        new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                        1);
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MyProfileActivity.this,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
-            } else {
-                ActivityCompat.requestPermissions(MyProfileActivity.this,
-                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        1);
-            }
-        }
         try {
             if (requestCode == 1 && resultCode == Activity.RESULT_OK) {
-                Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-                base64String = Other.convertBitmapToBase64String(bitmap);
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                Uri selectedFileUri = getImageUri(getApplicationContext(), photo);
+                selectedFilePath = FilePath.getPath(this, selectedFileUri);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 4;
+                Bitmap bitmap = BitmapFactory.decodeFile(selectedFilePath, options);
                 activity_my_profile_img_photo.setImageBitmap(bitmap);
+                imageUpload(selectedFilePath);
             } else if (requestCode == 2 && resultCode == Activity.RESULT_OK) {
                 Uri selectedFileUri = data.getData();
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedFileUri);
-                base64String = Other.convertBitmapToBase64String(bitmap);
-                activity_my_profile_img_photo.setImageBitmap(bitmap);
+                selectedFilePath = Other.getPath(selectedFileUri, getApplicationContext());
+//                selectedFilePath = FilePath.getPath(this, selectedFileUri);
+//                BitmapFactory.Options options = new BitmapFactory.Options();
+//                options.inSampleSize = 4;
+//                Bitmap bitmap = BitmapFactory.decodeFile(selectedFilePath, options);
+                activity_my_profile_img_photo.setImageURI(selectedFileUri);
+                imageUpload(selectedFilePath);
             }
         } catch (Exception e) {
             Log.w("Error", e.toString());
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case Other.MY_PERMISSIONS_RESULT_WRITE_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    browse();
+                } else {
+                    //code for deny
+                }
+                break;
         }
     }
 
@@ -250,9 +296,17 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
                 activity_my_profile_btn_logout.setVisibility(View.VISIBLE);
                 activity_my_profile_edt_phone.setEnabled(false);
                 activity_my_profile_edt_name.setEnabled(false);
+                edEmgPhone1.setEnabled(false);
+                edEmgPhone2.setEnabled(false);
+                edEmgPhone3.setEnabled(false);
+
                 toastMessage(jsonObject.getString("msg"));
                 AppPref.getInstance().setUserName(activity_my_profile_edt_name.getText().toString());
                 AppPref.getInstance().setUserMobile(activity_my_profile_edt_phone.getText().toString());
+                AppPref.getInstance().setEPhone1(edEmgPhone1.getText().toString());
+                AppPref.getInstance().setEPhone2(edEmgPhone2.getText().toString());
+                AppPref.getInstance().setEPhone3(edEmgPhone3.getText().toString());
+                onBackPressed();
             }
         } catch (JSONException e) {
             e.printStackTrace();

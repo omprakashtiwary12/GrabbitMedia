@@ -2,36 +2,34 @@ package com.grabbit.daily_deals.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.grabbit.daily_deals.Adapter.ViewPagerAdapter;
 import com.grabbit.daily_deals.Fragment.ImageViewFragment;
-import com.grabbit.daily_deals.Fragment.NearByFragment;
-import com.grabbit.daily_deals.Fragment.WishListFragment;
+import com.grabbit.daily_deals.Model.ImageModel;
 import com.grabbit.daily_deals.Model.NearByModel;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppUrl;
 import com.grabbit.daily_deals.Utility.GetDataUsingWService;
 import com.grabbit.daily_deals.Utility.GetWebServiceData;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
-import com.squareup.picasso.Picasso;
+import com.grabbit.daily_deals.Utility.Other;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,6 +50,7 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     private TextView tvAboutAddress;
     private TextView tvMobile;
     private TextView tvWorkingHours;
+    private TextView tvDistance;
     private TextView tvWebsiteName;
     private TextView tvWorkingDays;
     private TextView tvOpeningDays;
@@ -65,6 +64,8 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     private RelativeLayout llGalleryView;
     public NearByModel nearByModel;
 
+    TextView tvDescription;
+
     private Button btnWishList;
 
     private ViewPager viewPagerCompaign;
@@ -72,6 +73,13 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
 
     public String strPagerType;
     public int pagerPosition;
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,20 +96,25 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
 //                .networkPolicy(NetworkPolicy.NO_CACHE)
 //                .placeholder(R.drawable.placeholder_banner).fit().into(frameLayout);
 
-//        imgBtn_Back = (ImageView) findViewById(R.id.act_details_TV_title_back);
-//        imgBtn_Back.setOnClickListener(this);
+        imgBtn_Back = (ImageView) findViewById(R.id.act_details_TV_title_back);
+        imgBtn_Back.setOnClickListener(this);
 
         tvTitle = (TextView) findViewById(R.id.act_details_TV_title_name);
         tvTitle.setText(nearByModel.getBusiness_name());
 
         tvAboutAddress = (TextView) findViewById(R.id.act_details_TV_address);
         tvAboutAddress.setText(nearByModel.getFullAddress());
+        tvAboutAddress.setOnClickListener(this);
 
         tvMobile = (TextView) findViewById(R.id.act_details_TV_mobile);
         tvMobile.setText("Call @ " + nearByModel.getPhone());
+        tvMobile.setOnClickListener(this);
 
         tvWorkingHours = (TextView) findViewById(R.id.act_details_TV_workingHours);
         tvWorkingHours.setText(nearByModel.getOpen_time() + " To " + nearByModel.getClose_time());
+
+        tvDistance = (TextView) findViewById(R.id.act_details_TV_distance);
+        tvDistance.setText("" + nearByModel.getDistance() + " KM");
 
         tvWebsiteName = (TextView) findViewById(R.id.act_details_TV_website);
         tvWebsiteName.setText(nearByModel.getWebsite());
@@ -124,15 +137,34 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
         llGalleryView = (RelativeLayout) findViewById(R.id.activity_marchnat_ll_galleryview);
         llGalleryView.setOnClickListener(this);
 
-        tvOpeningDays = (TextView) findViewById(R.id.act_details_tv_opne_days);
-        tvOpeningDays.setText("" + nearByModel.getOpening_days());
+//        tvOpeningDays = (TextView) findViewById(R.id.act_details_tv_opne_days);
+//        tvOpeningDays.setText("" + nearByModel.getOpening_days());
 
         tvEmail = (TextView) findViewById(R.id.act_details_TV_email);
         tvEmail.setText("" + nearByModel.getEmail());
 
+        tvDescription = (TextView) findViewById(R.id.viewpager_tv_description);
+
         if (nearByModel.getOfferImageModels().size() > 0) {
             llOfferList.setVisibility(View.VISIBLE);
             viewPagerCompaign = (ViewPager) findViewById(R.id.marchang_offer_pager);
+            setPager(0);
+            viewPagerCompaign.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    Log.d(TAG, "::::::Position " + position);
+                    setPager(position);
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this, nearByModel.getOfferImageModels(), this, "offer");
             viewPagerCompaign.setAdapter(viewPagerAdapter);
             viewPagerAdapter.notifyDataSetChanged();
@@ -170,11 +202,10 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-//            case R.id.act_details_TV_title_back:
-//                finish();
-//                break;
+            case R.id.act_details_TV_title_back:
+                onBackPressed();
+                break;
             case R.id.act_details_TV_website:
-            case R.id.act_details_ll_website:
                 openInBrowser(nearByModel.getWebsite());
                 break;
             case R.id.act_details_IV_facebook:
@@ -192,29 +223,13 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
             case R.id.marchant_ll_about:
                 //showMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getAddress());
                 break;
-//            case R.id.act_details_ll_address:
-//                showMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getAddress());
-//                break;
-//            case R.id.act_details_ll_phone:
-//                Intent intent = new Intent(Intent.ACTION_DIAL);
-//                intent.setData(Uri.parse("tel:" + nearByModel.getPhone()));
-//                startActivity(intent);
-//                break;
-//            case R.id.merchant_detail_wishlist:
-//                String out_id = nearByModel.getOut_id();
-//                String wishlist = nearByModel.getWishlist();
-//                addRemoveWishList(out_id, wishlist);
-//                break;
-        }
-    }
-
-    public void showMap(String lat, String lng, String name) {
-        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + lat + "," + lng + "(" + name + ")");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        startActivity(mapIntent);
-        if (mapIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(mapIntent);
+            case R.id.act_details_TV_address:
+                Other.viewMap(nearByModel.getLatitude(), nearByModel.getLongitude(), nearByModel.getBusiness_name(),
+                        MerchantDetailsActivity.this);
+                break;
+            case R.id.act_details_TV_mobile:
+                Other.callNow(MerchantDetailsActivity.this, "" + nearByModel.getPhone());
+                break;
         }
     }
 
@@ -222,6 +237,20 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
+    }
+
+    private void setPager(int position) {
+        ImageModel imageModel = nearByModel.getOfferImageModels().get(position);
+        if (imageModel.getOffer_details().trim().length() > 1) {
+            tvDescription.setVisibility(View.VISIBLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                tvDescription.setText(Html.fromHtml(imageModel.getOffer_details(), Html.FROM_HTML_MODE_COMPACT));
+            } else {
+                tvDescription.setText(Html.fromHtml(imageModel.getOffer_details()));
+            }
+        } else {
+            tvDescription.setVisibility(View.GONE);
+        }
     }
 
     private void addRemoveWishList(String out_id, String condition) {

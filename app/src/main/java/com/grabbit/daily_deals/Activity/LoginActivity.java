@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.estimote.sdk.cloud.internal.ApiUtils;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -49,6 +51,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppPref;
 import com.grabbit.daily_deals.Utility.AppUrl;
@@ -77,6 +80,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static String gcmid = "";
     private ImageButton imgBtnPasswordStatus;
     private boolean isPasswordView;
+    private ImageView imgBtn_Back;
 
     @Override
     protected void onStop() {
@@ -92,8 +96,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login1);
         setTitle("Login");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().hide();
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
@@ -109,6 +111,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } catch (NoSuchAlgorithmException e) {
             Log.d("KeyHash:", "" + e);
         }
+
+        imgBtn_Back = (ImageView) findViewById(R.id.act_details_TV_title_back);
+        imgBtn_Back.setOnClickListener(this);
 
         btnLogin = (Button) findViewById(R.id.login_btn_login);
         btnLogin.setOnClickListener(this);
@@ -136,27 +141,38 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void getWebServiceResponse(String responseData, int serviceCounter) {
 
         try {
-            Log.w("LoginActivity", responseData);
-            JSONObject jsonObject = new JSONObject(responseData);
-            String status = jsonObject.getString("status");
-            String msg = jsonObject.getString("msg");
-            if (status.equalsIgnoreCase("1")) {
-                jsonObject = jsonObject.getJSONObject("details");
-                String cus_id = jsonObject.getString("cus_id");
-                String phone = jsonObject.getString("phone");
-                String email = jsonObject.getString("email");
-                String name = jsonObject.getString("name");
-                String login_type = jsonObject.getString("login_type");
-                Other.saveDataInSharedPreferences(cus_id, name, email, phone);
-                AppPref.getInstance().setImageUrl(AppUrl.PROFILE_PIC_URL + AppPref.getInstance().getUserID() + ".jpg");
-                Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-                finish();
-            } else {
-                String phone = jsonObject.getString("phone");
-                sendToThisActivity(OtpActivity.class, new String[]{"from;login", "phone;" + phone, "otp;" + ""});
-                toastMessage(msg);
+            if (serviceCounter == 0) {
+                Log.w("LoginActivity", responseData);
+                JSONObject jsonObject = new JSONObject(responseData);
+                String status = jsonObject.getString("status");
+                String msg = jsonObject.getString("msg");
+                if (status.equalsIgnoreCase("1")) {
+                    jsonObject = jsonObject.getJSONObject("details");
+                    String cus_id = jsonObject.getString("cus_id");
+                    String phone = jsonObject.getString("phone");
+                    String email = jsonObject.getString("email");
+                    String name = jsonObject.getString("name");
+                    String photo_url = jsonObject.getString("photo");
+                    String login_type = jsonObject.getString("login_type");
+
+                    String emg_phone1 = jsonObject.getString("emg_phone1");
+                    AppPref.getInstance().setEPhone1(emg_phone1);
+                    String emg_phone2 = jsonObject.getString("emg_phone2");
+                    AppPref.getInstance().setEPhone2(emg_phone2);
+                    String emg_phone3 = jsonObject.getString("emg_phone3");
+                    AppPref.getInstance().setEPhone3(emg_phone3);
+                    Other.saveDataInSharedPreferences(cus_id, name, email, phone, photo_url);
+                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                    finishAffinity();
+                } else if (status == "2") {
+                    toastMessage(msg);
+                } else {
+                    String phone = jsonObject.getString("phone");
+                    sendToThisActivity(OtpActivity.class, new String[]{"from;login", "phone;" + phone, "otp;" + ""});
+                    toastMessage(msg);
+                }
             }
         } catch (Exception e) {
         }
@@ -164,12 +180,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-
         switch (view.getId()) {
+            case R.id.act_details_TV_title_back:
+                onBackPressed();
+                break;
+
             case R.id.login_btn_login:
                 String username = edUserName.getText().toString().trim();
                 String password = edPassword.getText().toString().trim();
-                login("Simple", username, password);
+                login("", username, password, "Simple", "");
                 break;
             case R.id.login_btn_signup:
                 Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
@@ -198,23 +217,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     isPasswordView = true;
                 }
                 break;
-
         }
     }
 
-    private void login(String login_by, String username, String password) {
+    private void login(String name, String username, String password, String login_by, String photo) {
+        String token = FirebaseInstanceId.getInstance().getToken();
         if (username.length() < 1) {
             toastMessage("Please Provide UserName");
         } else if (password.length() < 1) {
             toastMessage("Please Provide Password");
         } else {
             StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.append("email=").append(username);
+            stringBuilder.append("name=").append(name);
+            stringBuilder.append("&email=").append(username);
             stringBuilder.append("&password=").append(password);
             stringBuilder.append("&login_by=").append(login_by);
+            stringBuilder.append("&gcmid=").append(token);
+            stringBuilder.append("&photo=").append(photo);
             stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
             String content = stringBuilder.toString();
-            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 100, content, true, "Logging ...", this);
+            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 0, content, true, "Logging ...", this);
             getDataUsingWService.execute();
         }
     }
@@ -241,9 +263,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onClick(View view) {
                 String input = fragment_forget_et_email.getText().toString();
                 if (input.equalsIgnoreCase("")) {
-                    toastMessage("Please Enter Number");
+                    toastMessage("Please enter your mobile number");
                 } else {
-                    sendToThisActivity(OtpActivity.class, new String[]{"from;forget", "phone;" + fragment_forget_et_email.getText().toString()});
+                    sendToThisActivity(OtpActivity.class, new String[]{"from;forget", "phone;" + input});
                 }
             }
         });
@@ -323,8 +345,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 try {
                     GoogleSignInAccount googleResult = result.getSignInAccount();
                     String username = googleResult.getEmail();
+                    String name = googleResult.getDisplayName();
+                    String photo_url = googleResult.getPhotoUrl().toString();
                     edUserName.setText("" + username);
-                    login("Google", username, "13121");
+                    login(name, username, "123456", "Google", photo_url);
 
                 } catch (Exception e) {
                 }
@@ -380,14 +404,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Log.e("response: ", response + "");
                             try {
                                 String username = "" + object.getString("email");
-                                login("Facebook", username, "13121");
-
+                                String name = "" + object.getString("name");
+                                String profile_picture = "https://graph.facebook.com/" + object.getString("id").toString() + "/picture?type=large";
+                                login(name, username, "123456", "Facebook", profile_picture);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         }
                     });
-
             Bundle parameters = new Bundle();
             parameters.putString("fields", "id,name,email,gender,birthday");
             request.setParameters(parameters);

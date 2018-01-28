@@ -75,13 +75,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
             case REQUEST_GPS:
                 break;
             case REQUEST_NOTIFICATION:
-
-
                 break;
-
         }
-
-
     }
 
     private void turnGPSOn() {

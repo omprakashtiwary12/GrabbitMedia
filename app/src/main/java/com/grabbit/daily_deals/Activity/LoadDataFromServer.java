@@ -4,9 +4,9 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.grabbit.daily_deals.Database.Database;
+import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Model.ImageModel;
 import com.grabbit.daily_deals.Model.NearByModel;
 import com.grabbit.daily_deals.Utility.AppUrl;
@@ -34,6 +34,7 @@ public class LoadDataFromServer implements GetWebServiceData {
     private double current_latitude = 0.00;
     private double current_longitude = 0.00;
     private Activity activity;
+    private boolean isShowProgressBar = true;
     private List<NearByModel> nearByModelList = new ArrayList<NearByModel>();
 
     public interface iGetResponse {
@@ -51,7 +52,16 @@ public class LoadDataFromServer implements GetWebServiceData {
         this.activity = activity;
     }
 
+    public LoadDataFromServer(Activity activity, iGetResponse iGetResponse, boolean isShowProgressBar) {
+        this.iGetResponse = iGetResponse;
+        this.activity = activity;
+        this.isShowProgressBar = isShowProgressBar;
+    }
+
     public void startFatching() {
+        SimpleDateFormat s = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
+        s.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
+        Log.d(TAG, "$$Current Time" + s.format(new Date()));
 
         Double currentLocation[] = Other.getCurrentLocation(activity);
         current_latitude = currentLocation[0];
@@ -64,7 +74,7 @@ public class LoadDataFromServer implements GetWebServiceData {
         stringBuilder.append("&longitude=").append(current_longitude);
         String content = stringBuilder.toString();
         Log.d(TAG, ":::::::Load Data " + content);
-        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(activity, AppUrl.MERCHANTS_URL, LOAD_MERCHANT, content, true, "Loading ...", this);
+        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(activity, AppUrl.MERCHANTS_URL, LOAD_MERCHANT, content, isShowProgressBar, "Loading ...", this);
         getDataUsingWService.execute();
     }
 
@@ -100,7 +110,7 @@ public class LoadDataFromServer implements GetWebServiceData {
             }
         } catch (Exception e) {
             iGetResponse.getLoadDataResponse(true);
-            Toast.makeText(activity.getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            // Toast.makeText(activity.getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -201,18 +211,23 @@ public class LoadDataFromServer implements GetWebServiceData {
             String bcon_uuid = jsonObject.getString("bcon_uuid");
             contentValues.put("bcon_uuid", "" + bcon_uuid);
 
-            String distance = jsonObject.getString("distance");
+            double distance1 = jsonObject.getDouble("distance");
+            distance1 = Other.round(distance1, 1);
+            String distance = "" + distance1;
             contentValues.put("distance", "" + distance);
 
             String outlet_status = jsonObject.getString("outlet_status");
             contentValues.put("outlet_status", outlet_status);
 
             JSONArray jsonArray1 = jsonObject.getJSONObject("0").getJSONArray("compaign");
+            Log.d(TAG, "$$ Business Name " + business_name);
             for (int j = 0; j < jsonArray1.length(); j++) {
                 ContentValues contentValues1 = new ContentValues();
                 String banner_name = jsonArray1.getJSONObject(j).getString("banner_name");
                 String start_date = jsonArray1.getJSONObject(j).getString("start_date");
                 String end_date = jsonArray1.getJSONObject(j).getString("end_date");
+                String offer_description = jsonArray1.getJSONObject(j).getString("offer_description");
+                String offer_details = jsonArray1.getJSONObject(j).getString("offer_details");
                 try {
                     SimpleDateFormat f = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
                     f.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
@@ -220,6 +235,8 @@ public class LoadDataFromServer implements GetWebServiceData {
                     start_date = "" + d.getTime();
                     Date d1 = f.parse(end_date);
                     end_date = "" + d1.getTime();
+                    Log.d(TAG, "$$ Start Time  " + start_date);
+                    Log.d(TAG, "$$ End Time  " + end_date);
                 } catch (Exception e) {
                     Log.d(TAG, "::::Exception " + e.getMessage());
                 }
@@ -228,6 +245,8 @@ public class LoadDataFromServer implements GetWebServiceData {
                 contentValues1.put("banner_name", banner_name);
                 contentValues1.put("start_dt", start_date);
                 contentValues1.put("end_dt", end_date);
+                contentValues1.put("offer_description", offer_description);
+                contentValues1.put("offer_details", offer_details);
                 GrabbitApplication.database.insertData(contentValues1, Database.TBL_COMPAIGNS);
             }
             GrabbitApplication.database.insertData(contentValues, Database.TBL_MERCHANTS);
@@ -236,13 +255,15 @@ public class LoadDataFromServer implements GetWebServiceData {
 
     public List<NearByModel> getMerchantList(int filterCategory) {
         String query;
-
+        nearByModelList.clear();
 //        query = "SELECT * FROM tbl_merchants where status='ACTIVE' AND outlet_status='ACTIVE' AND distance < '50' and cat_id IN" + "(" + filterCategory + ")" +
 //                "  order by distance ASC";
-
-        query = "SELECT * FROM tbl_merchants where cat_id IN" + "(" + filterCategory + ")" +
-                "  order by distance ASC";
-
+        if (filterCategory == 100) {
+            query = "SELECT * FROM tbl_merchants order by distance ASC";
+        } else {
+            query = "SELECT * FROM tbl_merchants where cat_id IN" + "(" + filterCategory + ")" +
+                    "  order by distance ASC";
+        }
         Log.d(TAG, "::::Query " + query);
         Cursor cursor = GrabbitApplication.database.getMerchantDetailsFromLocalDB(query);
         Log.d(TAG, "::::Cursor Value  " + cursor.getCount());
@@ -347,30 +368,29 @@ public class LoadDataFromServer implements GetWebServiceData {
             while (cursor_compaign.getCount() > 0 && cursor_compaign.moveToNext()) {
                 int id = cursor_compaign.getInt(0);
                 String compaign_name = cursor_compaign.getString(3);
+                String offer_description = cursor_compaign.getString(6);
+                String offer_details = cursor_compaign.getString(7);
                 compaign_name = AppUrl.GET_COMPAIGN_IMAGE + "/" + m_id + "/" + compaign_name;
-                ImageModel imageModel = new ImageModel(id, compaign_name);
+                ImageModel imageModel = new ImageModel(id, compaign_name, offer_description, offer_details);
                 nearByModel.getOfferImageModels().add(imageModel);
             }
-            nearByModelList.add(nearByModel);
-//            if (nearByModel.getOfferImageModels().size() > 0)
-//                nearByModelList.add(nearByModel);
+            if (nearByModel.getOfferImageModels().size() > 0)
+                nearByModelList.add(nearByModel);
         }
         return nearByModelList;
     }
 
-    public String getOfferCount(int cat_id) {
-        String query = "SELECT * FROM tbl_merchants where cat_id IN" + "(" + cat_id + ")";
-        Cursor cursor = GrabbitApplication.database.getMerchantDetailsFromLocalDB(query);
-        int value = cursor.getCount();
-        Log.d(TAG, "::::Query " + query);
-        return "" + value;
-    }
+//    public String getOfferCount(int cat_id) {
+//        Cursor cursor = GrabbitApplication.database.getAllOffers();
+//        int value = cursor.getCount();
+//        return "" + value;
+//    }
 
-    public String getTotalOfferCount() {
-        String query = "SELECT * FROM tbl_merchants";
-        Cursor cursor = GrabbitApplication.database.getMerchantDetailsFromLocalDB(query);
-        int value = cursor.getCount();
-        Log.d(TAG, "::::Query " + query);
-        return "" + value;
-    }
+//    public String getTotalOfferCount() {
+//        String query = "SELECT * FROM tbl_merchants";
+//        Cursor cursor = GrabbitApplication.database.getMerchantDetailsFromLocalDB(query);
+//        int value = cursor.getCount();
+//        Log.d(TAG, "::::Query " + query);
+//        return "" + value;
+//    }
 }

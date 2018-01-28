@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_image">
 
+    <ImageView
+        android:id="@+id/act_details_TV_title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="5dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/back" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_transparent_stroke">
+        android:layout_above="@+id/below_button"
+        android:layout_below="@+id/act_details_TV_title_back">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="5dp"
+            android:visibility="visible">
 
             <RelativeLayout
                 android:id="@+id/activity_marchnat_ll_offerlist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_transparent_stroke"
-                android:visibility="gone">
+                android:visibility="visible">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/marchang_offer_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_centerHorizontal="true" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -30,12 +48,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/back" />
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/marchang_offer_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_margin="5dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -45,28 +57,29 @@
                     android:background="@drawable/back"
                     android:rotation="180" />
 
+            </RelativeLayout>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/viewpager_tv_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/window_background"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text="50 off all other services"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="5dp"
                     android:textColor="@color/black"
                     android:textSize="12sp"
-                    android:textStyle="italic" />
-
-            </RelativeLayout>
+                    android:textStyle="normal" />
+            </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:id="@+id/marchant_ll_about"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:background="@color/white"
+                android:background="@drawable/strip"
                 android:orientation="vertical">
 
                 <TextView
@@ -77,7 +90,7 @@
                     android:background="@color/green"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:text="OPEN TODAY"
+                    android:text=""
                     android:textAllCaps="true"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
@@ -85,128 +98,129 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="5dp">
 
                     <TextView
                         android:id="@+id/act_details_TV_title_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mentobile Technologies LLP"
+                        android:hint="Mentobile Technologies LLP"
                         android:textColor="@color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/act_details_TV_address"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="30dp"
-                        android:text=""
-                        android:textSize="14sp" />
-
-                    <LinearLayout
+                    <RelativeLayout
                         android:id="@+id/act_details_ll_phone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:layout_weight="10"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:visibility="visible">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Open : "
+                            android:text="Add:"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
-                            android:id="@+id/act_details_tv_opne_days"
-                            android:layout_width="0dp"
+                            android:id="@+id/act_details_TV_address"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="8"
-                            android:text="Monday, Friday"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toLeftOf="@+id/location"
+                            android:layout_toRightOf="@+id/add"
+                            android:text="844 Spaze iTech Park, Gurgaon"
                             android:textSize="14sp" />
 
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:id="@+id/act_details_ll_website"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:orientation="horizontal">
+                        <ImageView
+                            android:id="@+id/location"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentRight="true"
+                            android:background="@drawable/location" />
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:id="@+id/act_details_TV_distance"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Time : "
+                            android:layout_alignParentRight="true"
+                            android:layout_below="@+id/act_details_TV_address"
+                            android:hint="2.5Km"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/act_details_TV_address"
+                            android:text="Time:"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/act_details_TV_workingHours"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="8"
-                            android:text="10:00 am to 06:00 pm"
+                            android:layout_below="@+id/act_details_TV_address"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/add"
+                            android:hint="05:00 Am to 06:00 PM"
+                            android:text=""
                             android:textSize="14sp" />
 
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:orientation="horizontal">
+                        <!--<TextView
+                            android:id="@+id/act_details_TV_distance"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/act_details_TV_address"
+                            android:layout_weight="2"
+                            android:text=""
+                            android:textSize="14sp" />-->
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Visit  : "
+                            android:layout_below="@+id/act_details_TV_workingHours"
+                            android:text="Visit:"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/act_details_TV_website"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="8"
-                            android:text="http://www.mentobile.com"
+                            android:layout_below="@+id/act_details_TV_workingHours"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/add"
+                            android:text="www.mentobile.com"
                             android:textSize="14sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="10"
-                        android:orientation="horizontal">
 
                         <TextView
-                            android:layout_width="0dp"
+                            android:id="@+id/add"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="2"
-                            android:text="Email : "
+                            android:layout_below="@+id/act_details_TV_website"
+                            android:text="Email:"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/act_details_TV_email"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="8"
+                            android:layout_below="@+id/act_details_TV_website"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@+id/add"
                             android:text="deepak@mentobile.com"
                             android:textSize="14sp" />
-                    </LinearLayout>
-                </LinearLayout>
 
+                    </RelativeLayout>
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/act_details_TV_mobile"
@@ -215,9 +229,9 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_margin="10dp"
                     android:background="@color/button_selected"
+                    android:hint="Call @8826510669"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"
-                    android:text="Call @ 8826510669"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -226,9 +240,15 @@
                 android:id="@+id/activity_marchnat_ll_galleryview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
                 android:background="@drawable/bg_transparent_stroke"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/marchang_gallery_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dp"
+                    android:layout_margin="5dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -236,12 +256,6 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/back" />
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/marchang_gallery_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_margin="5dp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -251,38 +265,40 @@
                     android:background="@drawable/back"
                     android:rotation="180" />
             </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/act_details_IV_facebook"
-                    android:layout_width="0dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/facebook" />
-
-                <ImageView
-                    android:id="@+id/act_details_IV_twitter"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/twitter" />
-
-                <ImageView
-                    android:id="@+id/act_details_IV_instagram"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginRight="20dp"
-                    android:src="@drawable/instagram" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/below_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="3"
+        android:background="@color/white"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/act_details_IV_facebook"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:src="@drawable/facebook" />
+
+        <ImageView
+            android:id="@+id/act_details_IV_twitter"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:src="@drawable/twitter" />
+
+        <ImageView
+            android:id="@+id/act_details_IV_instagram"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:src="@drawable/instagram" />
+    </LinearLayout>
+</RelativeLayout>

@@ -6,12 +6,18 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_image">
 
+    <ImageView
+        android:id="@+id/act_details_TV_title_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:padding="5dp"
+        android:src="@drawable/back_black" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/act_signup_BTN_next"
-        android:alpha="0.8"
-        android:background="@color/white"
+        android:layout_below="@+id/act_details_TV_title_back"
         android:padding="10dp">
 
         <LinearLayout
@@ -21,92 +27,13 @@
 
             <ImageView
                 android:id="@+id/apps_logo"
-                android:layout_width="140dp"
+                android:layout_width="180dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/relhead"
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:adjustViewBounds="true"
                 android:src="@drawable/grlogo" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <FrameLayout
-                    android:id="@+id/frame_layout_btn_login_facebook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp">
-
-                    <com.facebook.login.widget.LoginButton
-                        android:id="@+id/login_page_btn_facebook"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAllCaps="false"
-                        android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/button_facebook"
-                        android:layout_width="50dp"
-                        android:layout_height="40dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/login_fb"
-                        android:textAllCaps="false" />
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/login_page_btn_google"
-                    android:layout_width="50dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/login_google"
-                    android:textAllCaps="false" />
-            </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:text="We won't post anything without your permission"
-                android:textColor="@color/dark_gray"
-                android:textSize="10sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:text="OR" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
-                android:text="Register with your email"
-                android:textColor="@color/com_facebook_blue" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:visibility="gone"
-                android:weightSum="1">
-
-                <com.pkmmte.view.CircularImageView
-                    android:id="@+id/activity_register_profile_image"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/my_profile"
-                    app:border="true"
-                    app:border_color="@color/white"
-                    app:border_width="1dp" />
-
-            </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="fill_parent"
@@ -117,7 +44,7 @@
                     android:id="@+id/act_signup_ET_lastName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter Name"
+                    android:hint="Enter Your Name"
                     android:imeOptions="actionNext"
                     android:inputType="text" />
             </android.support.design.widget.TextInputLayout>
@@ -131,7 +58,7 @@
                     android:id="@+id/act_signup_ET_mobile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter Your Mobile No."
+                    android:hint="Mobile Number"
                     android:inputType="phone"
                     android:maxLength="10"
                     android:textColor="@android:color/black"
@@ -147,35 +74,60 @@
                     android:id="@+id/act_signup_ET_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Enter Email Id"
+                    android:hint="Email ID"
                     android:imeOptions="actionNext"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+            <RelativeLayout
+                android:id="@+id/activity_login_textInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/login_til_username">
 
-                <EditText
-                    android:id="@+id/act_signup_ET_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableRight="@drawable/view_password"
-                    android:hint="Enter Password"
-                    android:imeOptions="actionDone"
-                    android:inputType="textPassword" />
-            </android.support.design.widget.TextInputLayout>
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
 
+                    <EditText
+                        android:id="@+id/act_signup_ET_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Enter Password"
+                        android:imeOptions="actionDone"
+                        android:inputType="textPassword" />
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/login_btn_password_syatus"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/ic_custom_show" />
+            </RelativeLayout>
+
+            <CheckBox
+                android:id="@+id/act_signup_chk_condition"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="I accept terms and condition." />
+
+            <Button
+                android:id="@+id/act_signup_BTN_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorPrimary"
+                android:onClick="register"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="  Sign Up  "
+                android:textColor="@color/white" />
         </LinearLayout>
-    </ScrollView>
 
-    <Button
-        android:id="@+id/act_signup_BTN_next"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
-        android:onClick="register"
-        android:text="Sign Up"
-        android:textColor="@color/white" />
+
+    </ScrollView>
 </RelativeLayout>

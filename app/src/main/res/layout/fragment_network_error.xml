@@ -1,41 +1,58 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="@color/white">
 
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:id="@+id/nointernet"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/network_error" />
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/wifi" />
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="30dp"
-            android:gravity="center_horizontal"
-            android:text="Oops, \n You seem to have gone out of network coverage. Please check your wifi setting or mobile data connection." />
-
-        <Button
-            android:id="@+id/network_btn_tryagain"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/button_selector"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="Try Again"
-            android:textColor="@color/white" />
-
+            android:layout_margin="15dp"
+            android:text="@string/no_internet"
+            android:textColor="@color/red" />
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/red"
+        android:gravity="center_vertical">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/splash_tv_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="RETRY"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/splash_tv_turn_on"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:text="TURN ON"
+            android:textColor="@color/white" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -24,9 +24,9 @@ import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.grabbit.daily_deals.Adapter.TabViewPageAdapter;
 import com.grabbit.daily_deals.Fragment.NearByFragment;
 import com.grabbit.daily_deals.Fragment.WishListFragment;
+import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Model.NearByModel;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppPref;
