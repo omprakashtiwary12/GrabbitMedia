@@ -1,6 +1,6 @@
 package com.grabbit.daily_deals.estimote;
 
-import com.estimote.sdk.Region;
+import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
 
 import java.util.UUID;
 
@@ -32,8 +32,8 @@ public class BeaconID {
         return minor;
     }
 
-    public Region toBeaconRegion() {
-        return new Region(toString(), getProximityUUID(), getMajor(), getMinor());
+    public BeaconRegion toBeaconRegion() {
+        return new BeaconRegion(toString(), getProximityUUID(), getMajor(), getMinor());
     }
 
     public String toString() {

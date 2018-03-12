@@ -1,11 +1,10 @@
 package com.grabbit.daily_deals.Fragment;
 
-import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,19 +20,17 @@ import java.util.List;
 public class ImageViewFragment extends Fragment implements ViewPagerAdapter_Tap.iPageonClick {
 
     private ViewPager viewPagerGalleryView;
+    private List<ImageModel> imageModels;
 
     public ImageViewFragment() {
         // Required empty public constructor
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if(isVisibleToUser) {
-//            Activity a = getActivity();
-//            if(a != null) a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//        }
-//    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ((MerchantDetailsActivity) getActivity()).getSupportActionBar().setTitle("");
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,10 +49,27 @@ public class ImageViewFragment extends Fragment implements ViewPagerAdapter_Tap.
         super.onViewCreated(view, savedInstanceState);
 
         viewPagerGalleryView = (ViewPager) view.findViewById(R.id.imageview_taping);
+        // Set title bar
+        viewPagerGalleryView.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Log.d("ImageModel", ":::::Position " + position);
+                ((MerchantDetailsActivity) getActivity()).getSupportActionBar().setTitle((position + 1) + " of " + imageModels.size());
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         NearByModel nearByModel = ((MerchantDetailsActivity) getActivity()).nearByModel;
 
         String strPageType = ((MerchantDetailsActivity) getActivity()).strPagerType;
-        List<ImageModel> imageModels;
         if (strPageType.equalsIgnoreCase("gallery")) {
             imageModels = nearByModel.getGalleyImage();
         } else {
@@ -66,10 +80,11 @@ public class ImageViewFragment extends Fragment implements ViewPagerAdapter_Tap.
         viewPagerGalleryView.setAdapter(viewPagerAdapter1);
         viewPagerGalleryView.setCurrentItem(((MerchantDetailsActivity) getActivity()).pagerPosition);
         viewPagerAdapter1.notifyDataSetChanged();
+        ((MerchantDetailsActivity) getActivity()).getSupportActionBar().setTitle("1" + " of " + imageModels.size());
     }
 
     @Override
     public void viewPagerItemClick(int poition) {
-
+        Log.d("ImageModel", ":::::Position " + poition);
     }
 }

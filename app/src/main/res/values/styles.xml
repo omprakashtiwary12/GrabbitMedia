@@ -9,6 +9,14 @@
         <item name="android:windowSoftInputMode">stateHidden</item>
     </style>
 
+    <style name="ActionBar_Transparent" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="android:windowSoftInputMode">stateHidden</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

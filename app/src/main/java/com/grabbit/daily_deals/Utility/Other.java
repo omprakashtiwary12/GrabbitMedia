@@ -101,8 +101,9 @@ public class Other {
         Matcher matcher = pattern.matcher(email);
         return matcher.matches();
     }
-
+    static Location location = null;
     public static Double[] getCurrentLocation(Activity activity) {
+
         if (checkPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION)
                 && checkPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION)) {
             LocationManager locationManager = (LocationManager) activity.getSystemService(Context.LOCATION_SERVICE);
@@ -117,7 +118,7 @@ public class Other {
                             new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                             1);
                 }
-                Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) == null ?
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) == null ?
                         locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER) :
                         locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                 if (location != null) {
@@ -132,8 +133,14 @@ public class Other {
             }
         } else {
             Toast.makeText(activity, "Location permission required.", Toast.LENGTH_SHORT).show();
+            if (location != null) {
+                return new Double[]{location.getLatitude(), location.getLongitude()};
+            } else {
+                Toast.makeText(activity, "Location not found.", Toast.LENGTH_SHORT).show();
+                return new Double[]{location.getLatitude(), location.getLongitude()};
+            }
+           // return new Double[]{0.0, 0.0};
         }
-        return new Double[]{0.0, 0.0};
     }
 
 
@@ -162,9 +169,12 @@ public class Other {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    String address = addresses.get(0).getAddressLine(0);
-                    Log.d(TAB, "::::Address " + addresses.get(0).getAddressLine(0));
-                    return address;
+                    if (addresses != null) {
+                        String address = addresses.get(0).getAddressLine(0);
+                        Log.d(TAB, "::::Address " + addresses.get(0).getAddressLine(0));
+                        return address;
+                    }
+                    return "";
                 }
             }
             return "";
@@ -179,9 +189,14 @@ public class Other {
         // Assume thisActivity is the current activity
 //        int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(),
 //                Manifest.permission.BLUETOOTH_PRIVILEGED);
-        final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        final boolean isEnabled = bluetoothAdapter.isEnabled();
-        return isEnabled;
+        try {
+            final BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            final boolean isEnabled = bluetoothAdapter.isEnabled();
+            return isEnabled;
+        } catch (NullPointerException e) {
+
+        }
+        return false;
     }
 
     public static long getCurrentTime() {
@@ -189,7 +204,7 @@ public class Other {
         s.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
         System.out.println(s.format(new Date()));
         long currentTime = new Date().getTime();
-        Log.d(TAB, "::::::Current Time " + currentTime);
+//        Log.d(TAB, "::::::Current Time " + currentTime);
         return currentTime;
     }
 
@@ -338,14 +353,13 @@ public class Other {
 
     public static int PROXIMITY_RADIUS = 5000;
 
-    public static String getUrl(double latitude, double longitude, String nearbyPlace) {
-
+    public static String getUrl(String latitude, String longitude, String nearbyPlace) {
         StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlacesUrl.append("location=" + latitude + "," + longitude);
         googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
         googlePlacesUrl.append("&type=" + nearbyPlace);
         googlePlacesUrl.append("&sensor=true");
-        googlePlacesUrl.append("&key=" + "AIzaSyDbkKz9UzpC8hYAa3Yw8BLk87zBk7Zn48A");
+        googlePlacesUrl.append("&key=" + AppUrl.GOOGLE_API_KEY);
         Log.d("getUrl", googlePlacesUrl.toString());
         return (googlePlacesUrl.toString());
     }

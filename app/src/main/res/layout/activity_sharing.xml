@@ -1,93 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/window_background">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_margin="5dp"
+        android:background="@color/white"
+        android:padding="5dp">
 
-        <ImageView
-            android:id="@+id/apps_logo"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/relhead"
-            android:layout_gravity="center"
-            android:layout_margin="10dp"
-            android:adjustViewBounds="true"
-            android:src="@drawable/grlogo" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:text="Share Your referral code"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-
-        <TextView
-            android:id="@+id/free_ride_tv_referralCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="DEEPAK2536"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!--<LinearLayout-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:layout_marginTop="20dp"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/free_ride_imgbtn_whatsapp"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:background="@drawable/facebook" />-->
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/free_ride_imgbtn_facebook"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_marginLeft="20dp"-->
-                <!--android:layout_marginRight="20dp"-->
-                <!--android:background="@drawable/twitter" />-->
-
-            <!--<ImageButton-->
-                <!--android:id="@+id/free_ride_imgbtn_message"-->
-                <!--android:layout_width="40dp"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:background="@drawable/instagram" />-->
-        <!--</LinearLayout>-->
-
-        <Button
-            android:id="@+id/free_ride_btn_invite_friend"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_selector"
-            android:text="Invite Friend"
-            android:textColor="@color/white" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:maxEms="20"
-            android:padding="10dp"
-            android:text="Invite your friend to get free ride with your referral code, you can get cashback and reward points"
-            android:textAlignment="center" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:layout_marginBottom="30dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ss" />
 
+            <TextView
+                android:id="@+id/refer_tv_referral_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:text="@string/refer_message"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
 
-    </LinearLayout>
-</ScrollView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dp"
+                android:text="Share Application"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/free_ride_imgbtn_whatsapp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/whatsapp" />
+
+                <ImageButton
+                    android:id="@+id/free_ride_imgbtn_facebook"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/facebook_share" />
+
+                <ImageButton
+                    android:id="@+id/free_ride_imgbtn_message"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/email" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

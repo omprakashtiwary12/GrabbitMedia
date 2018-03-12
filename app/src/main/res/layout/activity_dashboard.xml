@@ -37,6 +37,13 @@
                 android:padding="10dp">
 
                 <ImageView
+                    android:id="@+id/notification"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:src="@drawable/bell" />
+
+                <ImageView
                     android:id="@+id/apps_logo"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
@@ -93,7 +100,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:scrollbars="none">
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -257,15 +263,14 @@
         android:id="@+id/drawer_swipe_pull_to_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/cast_intro_overlay_button_margin_bottom"
         android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.widget.NestedScrollView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="50dp"
-            android:padding="2dp"
-            android:scrollbars="vertical">
+            android:padding="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -309,7 +314,7 @@
 
             </LinearLayout>
 
-        </android.support.v4.widget.NestedScrollView>
+        </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
@@ -357,13 +362,13 @@
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/notification" />
+                android:src="@drawable/share" />
 
             <TextView
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Notification"
+                android:text="Share"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
 
@@ -383,7 +388,6 @@
                 android:src="@drawable/help" />
 
             <TextView
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Help"

@@ -72,10 +72,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:drawableRight="@drawable/location"
                     android:text="View Map"
                     android:textSize="12sp"
                     android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:background="@drawable/location" />
             </LinearLayout>
 
         </LinearLayout>

@@ -32,7 +32,7 @@ public class ImageModel {
     }
 
     public String getOffer_details() {
-        return offer_details;
+        return offer_details.trim();
     }
 
     public void setOffer_details(String offer_details) {

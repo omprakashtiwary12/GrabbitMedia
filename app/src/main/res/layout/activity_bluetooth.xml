@@ -5,17 +5,29 @@
     android:layout_height="match_parent"
     android:background="@drawable/bluetooth_1">
 
+
     <Button
         android:id="@+id/Button_bluetooth"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/bluetooth_no_thanks"
         android:layout_centerHorizontal="true"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/round_white"
         android:paddingLeft="30dp"
         android:paddingRight="30dp"
         android:text="Enable" />
+
+    <TextView
+        android:id="@+id/bluetooth_no_thanks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:padding="20dp"
+        android:text="No Thanks"
+        android:textColor="@color/button_selected"
+        android:textStyle="normal" />
 
 </RelativeLayout>

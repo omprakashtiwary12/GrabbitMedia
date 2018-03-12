@@ -9,12 +9,13 @@
     <RelativeLayout
         android:id="@+id/item_nearby_adapter_relative"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/recycle_view_item_selector">
 
         <ImageView
             android:id="@+id/nearyby_item_IMG_place"
             android:layout_width="240dp"
-            android:layout_height="120dp"
+            android:layout_height="150dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
             android:src="@drawable/placeholder_banner" />
@@ -32,27 +33,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="Mentobile Technologies LLP"
+                android:text=""
                 android:textColor="@color/black"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/nearby_item_TXT_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLength="50"
                 android:text="offer details"
                 android:textColor="@color/button_selected"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textSize="14sp"
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/nearby_item_TXT_phone_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 android:visibility="visible" />
 
         </LinearLayout>
@@ -74,7 +73,7 @@
                 android:layout_centerVertical="true"
                 android:text="0 KM"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="normal" />
 
             <TextView
                 android:id="@+id/nearby_item_TXT_view_map"
@@ -86,7 +85,8 @@
                 android:drawableRight="@drawable/location"
                 android:text="View Map"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/nearby_item_img_cat_icon"
@@ -94,7 +94,8 @@
                 android:layout_height="48dp"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/nearby_item_TXT_deals_count"
-                android:background="@drawable/retail" />
+                android:background="@drawable/retail"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/nearby_item_TXT_deals_count"
@@ -106,7 +107,19 @@
                 android:layout_marginRight="10dp"
                 android:text="23"
                 android:textSize="12sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/offer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="OFFER"
+                android:textColor="@color/colorPrimary"
+                android:textSize="12sp"
+                android:textStyle="normal" />
         </RelativeLayout>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -2,6 +2,7 @@ package com.grabbit.daily_deals.Activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.Image;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,7 +38,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DashboardActivity extends AppCompatActivity implements RecyclerAdapter.onItemClickListener, LoadDataFromServer.iGetResponse, RecyclerAdapter.ReturnView, View.OnClickListener, GetWebServiceData {
+public class DashboardActivity extends AppCompatActivity implements RecyclerAdapter.onItemClickListener,
+        LoadDataFromServer.iGetResponse, RecyclerAdapter.ReturnView, View.OnClickListener, GetWebServiceData {
 
     private static final String TAG = "DashboardActivity";
 
@@ -49,6 +52,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     private LinearLayout tvMySetting;
     private LinearLayout tvReferandEarn;
     private LinearLayout tvMyContactUs;
+    private ImageView imgNotification;
     private TextView textOfferCount;
     TextView tvName;
 
@@ -76,10 +80,18 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     private VideoView videoView;
 
     int[] cat_icon = {R.drawable.hospitality, R.drawable.retail,
-            R.drawable.event, R.drawable.travel, R.drawable.saloon_spa, R.drawable.electronics, R.drawable.electronics};
+            R.drawable.event, R.drawable.travel, R.drawable.saloon_spa, R.drawable.fitness, R.drawable.real_estate};
 
     private ImageView imgBtn_Back;
     private FloatingActionButton fbSOS;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (loadDataFromServer == null) {
+            //loadDataFromServer = new LoadDataFromServer(this, this);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +107,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        loadDataFromServer = new LoadDataFromServer(this, this);
+        loadDataFromServer = new LoadDataFromServer(this, this, false);
         frag_nearby_rv = (RecyclerView) findViewById(R.id.frag_nearby_rv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -121,6 +133,9 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
 
         tvMyContactUs = (LinearLayout) findViewById(R.id.contact_us);
         tvMyContactUs.setOnClickListener(this);
+
+        imgNotification = (ImageView)findViewById(R.id.notification);
+        imgNotification.setOnClickListener(this);
 
         btnAll = (Button) findViewById(R.id.btn_all);
         btnAll.setOnClickListener(this);
@@ -164,7 +179,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
             @Override
             public void onRefresh() {
                 loadDataFromServer.startFatching();
-                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setRefreshing(true);
             }
         });
 
@@ -192,7 +207,12 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
         final NearByModel nearByModel = (nearByModelList.get(position));
         ImageView nearyby_item_IMG_place = (ImageView) view.findViewById(R.id.nearyby_item_IMG_place);
         TextView nearby_item_TXT_name = (TextView) view.findViewById(R.id.nearby_item_TXT_name);
-        nearby_item_TXT_name.setText(nearByModel.getBusiness_name());
+        if (nearByModel.getBusiness_name().length() > 50) {
+            Log.d(TAG, ":::::length " + nearByModel.getBusiness_name().length());
+            nearby_item_TXT_name.setText(nearByModel.getBusiness_name() + "...");
+        } else {
+            nearby_item_TXT_name.setText("" + nearByModel.getBusiness_name());
+        }
 
         TextView nearby_item_TXT_phone = (TextView) view.findViewById(R.id.nearby_item_TXT_phone_number);
         nearby_item_TXT_phone.setText("" + nearByModel.getAddress());
@@ -232,6 +252,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     @Override
     public void getLoadDataResponse(boolean isStatus) {
         if (isStatus) {
+            swipeRefreshLayout.setRefreshing(false);
             uploadCategoryData(cat_id_on_swiperfersh);
         }
     }
@@ -249,7 +270,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
                 break;
 
             case R.id.mysetting:
-                Other.sendToThisActivity(DashboardActivity.this, NotificationActivity.class);
+                Other.sendToThisActivity(DashboardActivity.this, SharingActivity.class);
                 break;
 
             case R.id.my_refer:
@@ -303,6 +324,9 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
             case R.id.activity_dashboard_fb_sos:
                 sendEmergencyMessage();
                 break;
+            case R.id.notification:
+                Other.sendToThisActivity(DashboardActivity.this, NotificationActivity.class);
+                break;
         }
     }
 
@@ -350,9 +374,9 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     }
 
     private void uploadCategoryData(int cat_id) {
-        cat_id_on_swiperfersh = cat_id ;
+        cat_id_on_swiperfersh = cat_id;
         nearByModelList = loadDataFromServer.getMerchantList(cat_id);
-        textOfferCount.setText("" + getOfferList(cat_id) + " Offers ");
+        textOfferCount.setText("" + getOfferList(cat_id) + " OFFER");
         recyclerAdapter = new RecyclerAdapter(nearByModelList, getApplicationContext(), R.layout.item_nearby_adapter, this, 0, this);
         frag_nearby_rv.setAdapter(recyclerAdapter);
         recyclerAdapter.notifyDataSetChanged();

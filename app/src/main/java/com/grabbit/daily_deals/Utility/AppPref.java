@@ -17,7 +17,6 @@ public class AppPref {
     private SharedPreferences.Editor sEditor;
     private String SG_SHARED_PREFERENCES = "shared_preferences";
 
-
     // variables
     private final String PREF_USER_ID = "user_id";
     private final String PREF_USER_NAME = "user_name";
@@ -30,6 +29,11 @@ public class AppPref {
     private final String PREF_EMG_PHONE1 = "emg_phone1";
     private final String PREF_EMG_PHONE2 = "emg_phone2";
     private final String PREF_EMG_PHONE3 = "emg_phone3";
+
+    private final String PREF_BLE_ENABLE = "is_ble_enable";
+
+    private final String PREF_LAT = "lat";
+    private final String PREF_LONG = "long";
 
 
     private AppPref(Context context) {
@@ -149,8 +153,36 @@ public class AppPref {
         sEditor.commit();
     }
 
+    public String getBleEnableStatus() {
+        return sPreferences.getString(PREF_EMG_PHONE3, "");
+    }
+
+    public void setBleEnableStatus(String emgPhone3) {
+        sEditor.putString(PREF_EMG_PHONE3, emgPhone3);
+        sEditor.commit();
+    }
+
+
+    public String getLat() {
+        return sPreferences.getString(PREF_LAT, "0.0d");
+    }
+
+    public void setLat(String lat) {
+        sEditor.putString(PREF_LAT, lat);
+        sEditor.commit();
+    }
+
+    public String getLong() {
+        return sPreferences.getString(PREF_LONG, "0.0d");
+    }
+
+    public void setLong(String longi) {
+        sEditor.putString(PREF_LONG, longi);
+        sEditor.commit();
+    }
+
     public boolean isLogin() {
-        Log.d("App Pref","::::User Id"+getUserID());
+        Log.d("App Pref", "::::User Id" + getUserID());
         if (getUserID() != null && getUserID().length() > 0) {
             return true;
         } else {

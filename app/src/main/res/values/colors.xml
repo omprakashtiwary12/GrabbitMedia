@@ -14,5 +14,6 @@
     <color name="button_selected">#f1073a</color>
     <color name="theme_accent_color">#FF339999</color>
     <color name="theme_accent_color_light">#44339999</color>
+    <color name="list_selector_bg_color">#dcd6d6</color>
 
 </resources>

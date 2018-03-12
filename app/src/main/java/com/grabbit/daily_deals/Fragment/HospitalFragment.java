@@ -18,6 +18,7 @@ import com.grabbit.daily_deals.Activity.HelpActivity;
 import com.grabbit.daily_deals.Adapter.RecyclerAdapter;
 import com.grabbit.daily_deals.Model.HospitalData;
 import com.grabbit.daily_deals.R;
+import com.grabbit.daily_deals.Utility.AppPref;
 import com.grabbit.daily_deals.Utility.GetNearbyPlacesData;
 import com.grabbit.daily_deals.Utility.Other;
 
@@ -57,9 +58,7 @@ public class HospitalFragment extends Fragment implements RecyclerAdapter.onItem
         super.onViewCreated(view, savedInstanceState);
 
         String Hospital = "hospital";
-        current_latitude = ((HelpActivity) getActivity()).current_latitude;
-        current_longitude = ((HelpActivity) getActivity()).current_longitude;
-        String url = Other.getUrl(current_latitude, current_longitude, Hospital);
+        String url = Other.getUrl(AppPref.getInstance().getLat(), AppPref.getInstance().getLong(), Hospital);
         Object[] DataTransfer = new Object[2];
         DataTransfer[1] = url;
         Log.d("onClick", url);
@@ -92,6 +91,8 @@ public class HospitalFragment extends Fragment implements RecyclerAdapter.onItem
                 String open_now = googlePlace.get("isOpen");
                 double distance = 0.0;
                 if (lat != 0.0 && lng != 0.0) {
+                    current_latitude = Double.valueOf(AppPref.getInstance().getLat());
+                    current_longitude = Double.valueOf(AppPref.getInstance().getLong());
                     distance = Other.getDistance(current_latitude, current_longitude, lat, lng);
                 }
                 HospitalData hospitalData = new HospitalData(place_id, placeName, rating, icon, open_now, vicinity, lat, lng, distance);

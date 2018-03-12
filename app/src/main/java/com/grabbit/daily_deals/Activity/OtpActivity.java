@@ -59,7 +59,7 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
             phone = save.getString("phone");
             otp = save.getString("otp");
             textView.setText("+91 " + phone);
-            if (from.equalsIgnoreCase("login")) {
+            if (from.equalsIgnoreCase("login") || from.equalsIgnoreCase("register")) {
                 send_otp();
             } else if (from.equalsIgnoreCase("forget")) {
                 forgotPassword();
@@ -120,11 +120,12 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, G
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("&user_id=").append(AppPref.getInstance().getUserID());
         stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
+        stringBuilder.append("&isRegister=").append(from);
+        stringBuilder.append("&phone=").append(phone);
         String content = stringBuilder.toString();
         GetDataUsingWService wService = new GetDataUsingWService(OtpActivity.this, AppUrl.OTP_VERIFY, 1, content, true, "Verify OTP...", this);
         wService.execute();
     }
-
 
     @Override
     public void getWebServiceResponse(String responseData, int serviceCounter) {

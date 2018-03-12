@@ -15,11 +15,13 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -84,6 +86,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private boolean isPasswordView;
     private ImageButton imgBtnPasswordStatus;
 
+    private TextView tvTermsCondition;
+
     @Override
     public int getActivityLayout() {
         return R.layout.activity_register;
@@ -111,6 +115,15 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     isPassword_Visible = true;
                     act_signup_ET_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
                 }
+            }
+        });
+
+        TextView tvAccept_terms = (TextView) findViewById(R.id.act_signup_tv_accept_terms);
+        tvAccept_terms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(AppUrl.TERMS_AND_CONDITION));
+                startActivity(browserIntent);
             }
         });
 
@@ -215,7 +228,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                 String name = jsonObject.getString("name");
                 String login_type = jsonObject.getString("login_type");
                 String photo = jsonObject.getString("photo");
-                Other.saveDataInSharedPreferences(cus_id, name, email, phone,photo);
+                Other.saveDataInSharedPreferences(cus_id, name, email, phone, photo);
 
                 String emg_phone1 = jsonObject.getString("emg_phone1");
                 AppPref.getInstance().setEPhone1(emg_phone1);

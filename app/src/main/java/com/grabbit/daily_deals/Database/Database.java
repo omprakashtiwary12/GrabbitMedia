@@ -122,7 +122,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getMerchantCompaign(String out_id, String current_dt) {
         SQLiteDatabase db = getReadableDatabase();
         String query = "SELECT * FROM tbl_compaign where out_id=" + "'" + out_id + "'";
-        Log.d(TAG,"::::::Query "+query);
+//        Log.d(TAG,"::::::Query "+query);
         Cursor cursor = db.rawQuery(query, null);
         return cursor;
     }
@@ -130,7 +130,7 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getAllOffers(int cat_id) {
         SQLiteDatabase db = getReadableDatabase();
         String query = "SELECT * FROM tbl_compaign where out_id=" + "'" + cat_id + "'";
-        Log.d(TAG,"::::::Query "+query);
+//        Log.d(TAG,"::::::Query "+query);
         Cursor cursor = db.rawQuery(query, null);
         return cursor;
     }
@@ -138,7 +138,7 @@ public class Database extends SQLiteOpenHelper {
     public boolean iSCompaignExits(int msg_id, int out_id) {
         SQLiteDatabase db = getReadableDatabase();
         String query = "SELECT * FROM tbl_notification where msg_id=" + "'" + msg_id + "' AND out_id=" + "'" + out_id + "' AND flag='0'";
-        Log.d(TAG, ":::::Query " + query);
+//        Log.d(TAG, ":::::Query " + query);
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.getCount() > 0 && cursor.moveToFirst()) {
             long currentDate = cursor.getLong(6);

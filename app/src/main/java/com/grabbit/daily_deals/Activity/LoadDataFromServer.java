@@ -1,18 +1,29 @@
 package com.grabbit.daily_deals.Activity;
 
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
+import android.location.Location;
 import android.util.Log;
 
+import com.facebook.internal.Utility;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.grabbit.daily_deals.Database.Database;
+import com.grabbit.daily_deals.Fragment.LocationFragment;
 import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Model.ImageModel;
 import com.grabbit.daily_deals.Model.NearByModel;
+import com.grabbit.daily_deals.R;
+import com.grabbit.daily_deals.Utility.AppPref;
 import com.grabbit.daily_deals.Utility.AppUrl;
 import com.grabbit.daily_deals.Utility.GetDataUsingWService;
 import com.grabbit.daily_deals.Utility.GetWebServiceData;
 import com.grabbit.daily_deals.Utility.Other;
+import com.grabbit.daily_deals.currentLocation.CurrentLocation;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -27,21 +38,18 @@ import java.util.TimeZone;
  * Created by Deepak Sharma on 4/19/2017.
  */
 
-public class LoadDataFromServer implements GetWebServiceData {
+public class LoadDataFromServer extends CurrentLocation.LocationResult implements GetWebServiceData, LocationFragment.iLocationFragment {
 
     private static final String TAG = "LoadDataFromServer";
     private static final int LOAD_MERCHANT = 0;
-    private double current_latitude = 0.00;
-    private double current_longitude = 0.00;
     private Activity activity;
     private boolean isShowProgressBar = true;
     private List<NearByModel> nearByModelList = new ArrayList<NearByModel>();
+    private iGetResponse iGetResponse;
 
     public interface iGetResponse {
         void getLoadDataResponse(boolean isStatus);
     }
-
-    private iGetResponse iGetResponse;
 
     public LoadDataFromServer() {
 
@@ -61,23 +69,45 @@ public class LoadDataFromServer implements GetWebServiceData {
     public void startFatching() {
         SimpleDateFormat s = new SimpleDateFormat("MM/dd/yyyy hh:mm a");
         s.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));
-        Log.d(TAG, "$$Current Time" + s.format(new Date()));
-
-        Double currentLocation[] = Other.getCurrentLocation(activity);
-        current_latitude = currentLocation[0];
-        current_longitude = currentLocation[1];
-        Log.d(TAG, "::::current_latitude " + current_latitude + " ::: current_longitude" + current_longitude);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("api_key=").append(AppUrl.API_KEY);
-        stringBuilder.append("&latitude=").append(current_latitude);
-        stringBuilder.append("&longitude=").append(current_longitude);
-        String content = stringBuilder.toString();
-        Log.d(TAG, ":::::::Load Data " + content);
-        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(activity, AppUrl.MERCHANTS_URL, LOAD_MERCHANT, content, isShowProgressBar, "Loading ...", this);
-        getDataUsingWService.execute();
+        new CurrentLocation().getLocation(activity, LoadDataFromServer.this);
     }
 
+    @Override
+    public void gotLocation(Location location) {
+        if(location!=null) {
+            AppPref.getInstance().setLat("" + location.getLatitude());
+            AppPref.getInstance().setLong("" + location.getLongitude());
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("api_key=").append(AppUrl.API_KEY);
+            stringBuilder.append("&latitude=").append(location.getLatitude());
+            stringBuilder.append("&longitude=").append(location.getLongitude());
+            String content = stringBuilder.toString();
+            Log.d(TAG, ":::::::Load Data 1 " + content);
+            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(activity, AppUrl.MERCHANTS_URL, LOAD_MERCHANT, content, isShowProgressBar, "Loading ...", LoadDataFromServer.this);
+            getDataUsingWService.execute();
+        }else{
+            LocationFragment locationFragment = new LocationFragment();
+            locationFragment.setCommunicator(this);
+            FragmentTransaction fragmentTransaction = activity.getFragmentManager().beginTransaction();
+            fragmentTransaction.add(android.R.id.content, locationFragment);
+            fragmentTransaction.addToBackStack(null);
+            fragmentTransaction.commit();
+        }
+    }
+
+    @Override
+    public void getCurrentLocation(String latitute, String longtitute) {
+        AppPref.getInstance().setLat("" + latitute);
+        AppPref.getInstance().setLong("" + longtitute);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("api_key=").append(AppUrl.API_KEY);
+        stringBuilder.append("&latitude=").append(latitute);
+        stringBuilder.append("&longitude=").append(longtitute);
+        String content = stringBuilder.toString();
+        Log.d(TAG, ":::::::Load Data " + content);
+        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(activity, AppUrl.MERCHANTS_URL, 0, content, true, "Loading ...", this);
+        getDataUsingWService.execute();
+    }
     @Override
     public void getWebServiceResponse(String responseData, int serviceCounter) {
         Log.w("responseData", responseData);
@@ -379,18 +409,4 @@ public class LoadDataFromServer implements GetWebServiceData {
         }
         return nearByModelList;
     }
-
-//    public String getOfferCount(int cat_id) {
-//        Cursor cursor = GrabbitApplication.database.getAllOffers();
-//        int value = cursor.getCount();
-//        return "" + value;
-//    }
-
-//    public String getTotalOfferCount() {
-//        String query = "SELECT * FROM tbl_merchants";
-//        Cursor cursor = GrabbitApplication.database.getMerchantDetailsFromLocalDB(query);
-//        int value = cursor.getCount();
-//        Log.d(TAG, "::::Query " + query);
-//        return "" + value;
-//    }
 }

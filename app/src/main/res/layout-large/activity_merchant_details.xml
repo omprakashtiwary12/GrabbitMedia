@@ -1,304 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_image">
 
-    <ImageView
-        android:id="@+id/act_details_TV_title_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center_vertical"
-        android:layout_margin="5dp"
-        android:contentDescription="@string/app_name"
-        android:src="@drawable/back" />
-
-    <ScrollView
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/below_button"
-        android:layout_below="@+id/act_details_TV_title_back">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapse_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="5dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorAccent"
+                android:visibility="gone"
+                app:layout_collapseMode="pin"
+                app:titleTextAppearance="@color/white"
+                app:titleTextColor="@color/white" />
+        </android.support.design.widget.CollapsingToolbarLayout>
+
+        <RelativeLayout
+            android:id="@+id/activity_marchnat_ll_offerlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_transparent_stroke"
             android:visibility="visible">
 
-            <RelativeLayout
-                android:id="@+id/activity_marchnat_ll_offerlist"
+            <android.support.v4.view.ViewPager
+                android:id="@+id/marchang_offer_pager"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_transparent_stroke"
-                android:visibility="visible">
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/marchang_offer_pager"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:layout_centerHorizontal="true" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/back" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/back"
-                    android:rotation="180" />
-
-            </RelativeLayout>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/viewpager_tv_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="5dp"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:textStyle="normal" />
-            </android.support.v7.widget.CardView>
+                android:layout_height="240dp"
+                android:layout_centerHorizontal="true" />
 
             <LinearLayout
-                android:id="@+id/marchant_ll_about"
+                android:id="@+id/slider_dots_offer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/strip"
-                android:orientation="vertical">
+                android:layout_alignBottom="@+id/marchang_offer_pager"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp" />
 
-                <TextView
-                    android:id="@+id/act_details_TV_weekdays_off"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:background="@color/green"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:text=""
-                    android:textAllCaps="true"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:textStyle="italic" />
+        </RelativeLayout>
+    </android.support.design.widget.AppBarLayout>
 
-                <LinearLayout
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/below_button">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="5dp"
+                android:visibility="visible">
+
+                <android.support.v7.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:padding="5dp">
+                    android:layout_height="wrap_content">
 
                     <TextView
-                        android:id="@+id/act_details_TV_title_name"
+                        android:id="@+id/viewpager_tv_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Mentobile Technologies LLP"
+                        android:layout_gravity="center_horizontal"
+                        android:padding="5dp"
                         android:textColor="@color/black"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textSize="12sp"
+                        android:textStyle="normal" />
+                </android.support.v7.widget.CardView>
 
-                    <RelativeLayout
-                        android:id="@+id/act_details_ll_phone"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                    android:id="@+id/marchant_ll_about"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:background="@drawable/strip"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/act_details_TV_weekdays_off"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="10"
-                        android:orientation="horizontal"
-                        android:visibility="visible">
+                        android:layout_gravity="right"
+                        android:background="@color/green"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:text=""
+                        android:textAllCaps="true"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:textStyle="italic" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:padding="5dp">
 
                         <TextView
+                            android:id="@+id/act_details_TV_title_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Add:"
-                            android:textSize="14sp"
+                            android:hint="Mentobile Technologies LLP"
+                            android:textColor="@color/black"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/act_details_TV_address"
-                            android:layout_width="wrap_content"
+                        <RelativeLayout
+                            android:id="@+id/act_details_ll_phone"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
-                            android:layout_toLeftOf="@+id/location"
-                            android:layout_toRightOf="@+id/add"
-                            android:text="844 Spaze iTech Park, Gurgaon"
-                            android:textSize="14sp" />
+                            android:layout_marginTop="10dp"
+                            android:layout_weight="10"
+                            android:orientation="horizontal"
+                            android:visibility="visible">
 
-                        <ImageView
-                            android:id="@+id/location"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/location" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add:"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/act_details_TV_distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_below="@+id/act_details_TV_address"
-                            android:hint="2.5Km"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/act_details_TV_address"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toLeftOf="@+id/location1"
+                                android:layout_toRightOf="@+id/add"
+                                android:text="844 Spaze iTech Park, Gurgaon"
+                                android:textSize="14sp" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_address"
-                            android:text="Time:"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            <LinearLayout
+                                android:id="@+id/location1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/act_details_TV_workingHours"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_address"
-                            android:layout_marginLeft="10dp"
-                            android:layout_toRightOf="@+id/add"
-                            android:hint="05:00 Am to 06:00 PM"
-                            android:text=""
-                            android:textSize="14sp" />
+                                <ImageView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:background="@drawable/location" />
 
-                        <!--<TextView
-                            android:id="@+id/act_details_TV_distance"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_address"
-                            android:layout_weight="2"
-                            android:text=""
-                            android:textSize="14sp" />-->
+                                <TextView
+                                    android:id="@+id/act_details_TV_distance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:hint="2.5Km"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_workingHours"
-                            android:text="Visit:"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_address"
+                                android:text="Time:"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/act_details_TV_website"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_workingHours"
-                            android:layout_marginLeft="10dp"
-                            android:layout_toRightOf="@+id/add"
-                            android:text="www.mentobile.com"
-                            android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/act_details_TV_workingHours"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_address"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/add"
+                                android:hint="05:00 Am to 06:00 PM"
+                                android:text=""
+                                android:textSize="14sp" />
 
-                        <TextView
-                            android:id="@+id/add"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_website"
-                            android:text="Email:"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            <!--<TextView
+                                android:id="@+id/act_details_TV_distance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_address"
+                                android:layout_weight="2"
+                                android:text=""
+                                android:textSize="14sp" />-->
 
-                        <TextView
-                            android:id="@+id/act_details_TV_email"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/act_details_TV_website"
-                            android:layout_marginLeft="10dp"
-                            android:layout_toRightOf="@+id/add"
-                            android:text="deepak@mentobile.com"
-                            android:textSize="14sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_workingHours"
+                                android:text="Visit:"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
 
-                    </RelativeLayout>
+                            <TextView
+                                android:id="@+id/act_details_TV_website"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_workingHours"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/add"
+                                android:text="www.mentobile.com"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:id="@+id/add"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_website"
+                                android:text="Email:"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/act_details_TV_email"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/act_details_TV_website"
+                                android:layout_marginLeft="10dp"
+                                android:layout_toRightOf="@+id/add"
+                                android:text="deepak@mentobile.com"
+                                android:textSize="14sp" />
+
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/act_details_TV_mobile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="10dp"
+                        android:background="@color/button_selected"
+                        android:hint="Call @8826510669"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        android:textColor="@color/white"
+                        android:textSize="16sp" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/act_details_TV_mobile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_margin="10dp"
-                    android:background="@color/button_selected"
-                    android:hint="Call @8826510669"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:textColor="@color/white"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/activity_marchnat_ll_galleryview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_transparent_stroke"
-                android:orientation="horizontal"
-                android:padding="5dp">
-
-                <android.support.v4.view.ViewPager
-                    android:id="@+id/marchang_gallery_view"
+                <RelativeLayout
+                    android:id="@+id/activity_marchnat_ll_galleryview"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:layout_margin="5dp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/back" />
+                    android:background="@drawable/bg_transparent_stroke"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/back"
-                    android:rotation="180" />
-            </RelativeLayout>
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/marchang_gallery_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="240dp"
+                        android:layout_margin="5dp" />
+
+                    <LinearLayout
+                        android:id="@+id/slider_dots_gallery"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/marchang_gallery_view"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        android:paddingBottom="5dp" />
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/below_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="3"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/act_details_IV_facebook"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/facebook" />
+
+            <ImageView
+                android:id="@+id/act_details_IV_twitter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/twitter" />
+
+            <ImageView
+                android:id="@+id/act_details_IV_instagram"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_weight="1"
+                android:src="@drawable/instagram" />
         </LinearLayout>
-    </ScrollView>
-
-    <LinearLayout
-        android:id="@+id/below_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_weight="3"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/act_details_IV_facebook"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_weight="1"
-            android:src="@drawable/facebook" />
-
-        <ImageView
-            android:id="@+id/act_details_IV_twitter"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@drawable/twitter" />
-
-        <ImageView
-            android:id="@+id/act_details_IV_instagram"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:src="@drawable/instagram" />
-    </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

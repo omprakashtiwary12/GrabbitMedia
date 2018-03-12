@@ -11,6 +11,7 @@ import android.content.pm.Signature;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.method.HideReturnsTransformationMethod;
@@ -28,7 +29,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.estimote.sdk.cloud.internal.ApiUtils;
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenTracker;
 import com.facebook.CallbackManager;
@@ -85,8 +85,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onStop() {
         super.onStop();
-        signOutFromGoogle();
-        logoutFromFacebook();
+//        signOutFromGoogle();
+//        logoutFromFacebook();
     }
 
     @Override
@@ -132,8 +132,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         imgBtnPasswordStatus = (ImageButton) findViewById(R.id.login_btn_password_syatus);
         imgBtnPasswordStatus.setOnClickListener(this);
 
-        initializeFacebook();
-        initializeGoogle();
+//        initializeFacebook();
+//        initializeGoogle();
     }
 
 
@@ -165,8 +165,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-                    finishAffinity();
-                } else if (status == "2") {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        finishAffinity();
+                    } else
+                        finish();
+                } else if (status.equals("2")) {
                     toastMessage(msg);
                 } else {
                     String phone = jsonObject.getString("phone");
@@ -236,10 +239,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             stringBuilder.append("&photo=").append(photo);
             stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
             String content = stringBuilder.toString();
-            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 0, content, true, "Logging ...", this);
+            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 0, content, true, "Signing...", this);
             getDataUsingWService.execute();
         }
     }
+
+    private void loginBySocielMedia(String name, String username, String password, String login_by, String photo) {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        if (username.length() < 1) {
+            toastMessage("Please Provide UserName");
+        } else {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("name=").append(name);
+            stringBuilder.append("&email=").append(username);
+            stringBuilder.append("&password=").append(password);
+            stringBuilder.append("&login_by=").append(login_by);
+            stringBuilder.append("&gcmid=").append(token);
+            stringBuilder.append("&photo=").append(photo);
+            stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
+            String content = stringBuilder.toString();
+            GetDataUsingWService getDataUsingWService = new GetDataUsingWService(LoginActivity.this, AppUrl.LOGIN_URL, 0, content, true, "Signing ...", this);
+            getDataUsingWService.execute();
+        }
+    }
+
 
     public void toastMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
@@ -342,17 +365,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
                 // Signed in successfully, show authenticated UI.
+                String username = "", name = "", photo_url = "";
                 try {
                     GoogleSignInAccount googleResult = result.getSignInAccount();
-                    String username = googleResult.getEmail();
-                    String name = googleResult.getDisplayName();
-                    String photo_url = googleResult.getPhotoUrl().toString();
+
+                    username = googleResult.getEmail();
+                    name = googleResult.getDisplayName();
+                    photo_url = googleResult.getPhotoUrl().toString();
                     edUserName.setText("" + username);
-                    login(name, username, "123456", "Google", photo_url);
+                    loginBySocielMedia(name, username, "", "GOOGLE", photo_url);
 
                 } catch (Exception e) {
+                    edUserName.setText("" + username);
+                    loginBySocielMedia(name, username, "", "GOOGLE", photo_url);
+                    //toastMessage("Google Signin Error " + e.getMessage());
                 }
             } else {
+                toastMessage("Google Signin Error " + resultCode);
             }
         } else {
             callBackManager.onActivityResult(requestCode, resultCode, data);
@@ -360,7 +389,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     // End og Google Login
-
 
     // Start with Facebook Login
 
@@ -402,13 +430,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 JSONObject object,
                                 GraphResponse response) {
                             Log.e("response: ", response + "");
+                            String username = "", name = "", profile_picture = "";
                             try {
-                                String username = "" + object.getString("email");
-                                String name = "" + object.getString("name");
-                                String profile_picture = "https://graph.facebook.com/" + object.getString("id").toString() + "/picture?type=large";
-                                login(name, username, "123456", "Facebook", profile_picture);
+                                username = "" + object.getString("email");
+                                name = "" + object.getString("name");
+                                profile_picture = "https://graph.facebook.com/" + object.getString("id").toString() + "/picture?type=large";
+                                loginBySocielMedia(name, username, "", "FACEBOOK", profile_picture);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                if (username != null) {
+                                    edUserName.setText("" + username);
+                                    loginBySocielMedia(name, username, "", "FACEBOOK", profile_picture);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     });
@@ -430,7 +464,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     };
 
     private void loginByFacebook() {
-
         btnLoginFacebook.setSoundEffectsEnabled(false);
         btnLoginFacebook.performClick();
         btnLoginFacebook.setPressed(true);

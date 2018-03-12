@@ -25,9 +25,6 @@ public class HelpActivity extends BaseActivity implements TabLayout.OnTabSelecte
     private TabLayout tabLayout;
     //This is our viewPager
     private ViewPager viewPager;
-    public double current_latitude = 0.00;
-    public double current_longitude = 0.00;
-
      void onCreate1(Bundle savedInstanceState) {
        // super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_help);
@@ -55,11 +52,6 @@ public class HelpActivity extends BaseActivity implements TabLayout.OnTabSelecte
         //Adding onTabSelectedListener to swipe views
         tabLayout.setOnTabSelectedListener(this);
         tabLayout.setupWithViewPager(viewPager);
-
-        Double currentLocation[] = Other.getCurrentLocation(this);
-        current_latitude = currentLocation[0];
-        current_longitude = currentLocation[1];
-        Log.d(TAG, "::::current_latitude " + current_latitude + " ::: current_longitude" + current_longitude);
     }
 
     @Override

@@ -4,9 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.util.Log;
 
-import com.estimote.sdk.Beacon;
-import com.estimote.sdk.BeaconManager;
-import com.estimote.sdk.Region;
+import com.estimote.coresdk.observation.region.beacon.BeaconRegion;
+import com.estimote.coresdk.recognition.packets.Beacon;
+import com.estimote.coresdk.service.BeaconManager;
 import com.grabbit.daily_deals.Database.Database;
 import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Utility.Other;
@@ -20,7 +20,7 @@ public class BeaconNotificationsManager {
     private static final String TAG = "BeaconNotifications";
     private BeaconManager beaconManager;
 
-    private List<Region> regionsToMonitor = new ArrayList<>();
+    private List<BeaconRegion> regionsToMonitor = new ArrayList<>();
     private HashMap<String, String> hashMapEnterMessage = new HashMap<>();
     private HashMap<String, String> hashMapExitMessage = new HashMap<>();
     private HashMap<String, Integer> hashMapOutlet = new HashMap<>();
@@ -30,31 +30,16 @@ public class BeaconNotificationsManager {
     public BeaconNotificationsManager(Context context) {
         this.context = context;
         beaconManager = new BeaconManager(context);
-        beaconManager.setBackgroundScanPeriod(3000, 100);
-//        beaconManager.setNearableListener(new BeaconManager.NearableListener() {
-//            @Override
-//            public void onNearablesDiscovered(List<Nearable> list) {
-//                Log.d(TAG,"::::::Beacon Color "+list.get(0).currentMotionStateDuration);
-//            }
-//        });
-//
-//        beaconManager.setRangingListener(new BeaconManager.RangingListener() {
-//            @Override
-//            public void onBeaconsDiscovered(Region region, List<Beacon> list) {
-//                Log.d(TAG,"::::::Beacon Color "+list.get(0).getProximityUUID());
-//                Log.d(TAG,"::::::Beacon Color "+region.getProximityUUID());
-//            }
-//        });
-
-        beaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
+        beaconManager.setBackgroundScanPeriod(1000, 0);
+        beaconManager.setMonitoringListener(new BeaconManager.BeaconMonitoringListener() {
             @Override
-            public void onEnteredRegion(Region region, List<Beacon> list) {
-                Log.d(TAG, "::::::::::::onEnteredRegion: " + region.getIdentifier());
-                String message = hashMapEnterMessage.get(region.getIdentifier());
-                int message_id1 = hashMapEnterMessageID.get(region.getIdentifier());
-                int outlet_id1 = hashMapOutlet.get(region.getIdentifier());
+            public void onEnteredRegion(BeaconRegion beaconRegion, List<Beacon> beacons) {
+                Log.d(TAG, "::::::::::::onEnteredRegion: " + beaconRegion.getIdentifier());
+                String message = hashMapEnterMessage.get(beaconRegion.getIdentifier());
+                int message_id1 = hashMapEnterMessageID.get(beaconRegion.getIdentifier());
+                int outlet_id1 = hashMapOutlet.get(beaconRegion.getIdentifier());
                 boolean isExists = GrabbitApplication.database.iSCompaignExits(message_id1, outlet_id1);
-                if (message != null && isExists == false) {
+                if (message != null && !isExists) {
                     ContentValues contentValues = new ContentValues();
                     contentValues.put("message", message);
                     contentValues.put("title", "Grabbit");
@@ -64,22 +49,24 @@ public class BeaconNotificationsManager {
                     contentValues.put("notification_dt", Other.getCurrentTimeinFormat());
                     GrabbitApplication.database.insertData(contentValues, Database.TBL_NOTIFICATION);
                     GrabbitApplication.getInstance().showNotification("Grabbit", message);
+                } else {
+                    GrabbitApplication.getInstance().showNotification("Grabbit", message);
                 }
             }
 
             @Override
-            public void onExitedRegion(Region region) {
-                Log.d(TAG, ":::::::::::onExitedRegion: " + region.getIdentifier());
-//                String message = hashMapExitMessage.get(region.getIdentifier());
+            public void onExitedRegion(BeaconRegion beaconRegion) {
+                //                String message = hashMapExitMessage.get(region.getIdentifier());
 //                if (message != null) {
 //                   // showNotification(message);
 //                }
+
             }
         });
     }
 
     public void addNotification(BeaconID beaconID, String enterMessage, String exitMessage, int msg_id, int out_id) {
-        Region region = beaconID.toBeaconRegion();
+        BeaconRegion region = beaconID.toBeaconRegion();
         hashMapEnterMessage.put(region.getIdentifier(), enterMessage);
         hashMapExitMessage.put(region.getIdentifier(), exitMessage);
         hashMapOutlet.put(region.getIdentifier(), out_id);
@@ -87,11 +74,22 @@ public class BeaconNotificationsManager {
         regionsToMonitor.add(region);
     }
 
+//    public void startMonitoring() {
+//        beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
+//            @Override
+//            public void onServiceReady() {
+//                for (Region region : regionsToMonitor) {
+//                    beaconManager.startMonitoring(region);
+//                }
+//            }
+//        });
+//    }
+
     public void startMonitoring() {
         beaconManager.connect(new BeaconManager.ServiceReadyCallback() {
             @Override
             public void onServiceReady() {
-                for (Region region : regionsToMonitor) {
+                for (BeaconRegion region : regionsToMonitor) {
                     beaconManager.startMonitoring(region);
                 }
             }

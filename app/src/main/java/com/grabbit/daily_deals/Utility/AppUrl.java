@@ -7,7 +7,7 @@ public class AppUrl {
 
     public static final String API_KEY = "1234";
 
-    public static final String DISTANCE_API_KEY = "&key=AIzaSyAJgswfd3KKqhMIg5nTEgCLKQRd9GbXXEY";
+    public static final String GOOGLE_API_KEY = "AIzaSyC2VIwnbp7Px_ZXKOgOiSojGI5g8EG4Tqk";
 
     public static final String APP_URL = "https://grabbit.co.in/web_services/";
 
@@ -43,5 +43,8 @@ public class AppUrl {
 
     public static final String GET_IMAGE = "https://grabbit.co.in/merchant/uploads/";
     public static final String GET_COMPAIGN_IMAGE = "https://grabbit.co.in/merchant/uploads/design/";
+    public static final String TERMS_AND_CONDITION = "https://www.grabbit.co.in/terms_conditions.php";
+
+    public static final String  MEMBER_URL = "https://grabbit.co.in/web_services/app_image/member.png";
 
 }

@@ -25,4 +25,5 @@ GRABBIT mobile app provides all the details of the offers/daily deals of the mer
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="refer_message">Your friend gets"+ \u20B9+  "10 in PayTM Wallet on installation PayTm Cashback!</string>
 </resources>

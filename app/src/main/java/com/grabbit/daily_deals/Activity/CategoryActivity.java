@@ -18,7 +18,7 @@ public class CategoryActivity extends BaseActivity implements ImageAdapter.iButt
 
     public int[] mThumbIds = {
             R.drawable.hospitality, R.drawable.retail,
-            R.drawable.event, R.drawable.travel, R.drawable.saloon_spa, R.drawable.electronics
+            R.drawable.event, R.drawable.travel, R.drawable.saloon_spa, R.drawable.fitness
     };
 
     private boolean isCloseApp;
