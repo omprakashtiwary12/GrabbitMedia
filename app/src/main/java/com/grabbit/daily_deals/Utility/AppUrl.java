@@ -26,15 +26,18 @@ public class AppUrl {
     public static final String CHANGE_PASSWORD = APP_URL + "change_password.php";
 
     public static final String VERIFY_URL = APP_URL + "verify.php";
+    public static final String SHARING_URL = APP_URL + "sharing.php";
 
     public static final String PROFILE_UPDATE_URL = APP_URL + "profile_update.php";
     public static final String EMERGENCY_MESSAGE = APP_URL + "emergency_message.php";
+    public static final String UPDATE_EMERGENCY = APP_URL + "update_emergency.php";
 
     public static final String UPLOAD_PROFILE_PIC = APP_URL + "upload_profile_picture.php";
 
     public static final String MERCHANTS_URL = APP_URL + "merchants.php";
 
     public static final String ALL_OFFERS_URL = APP_URL + "all_offers.php";
+    public static final String ALL_GRABBIT_OFFERS = APP_URL + "grabbit_offers.php";
 
     public static final String ADDREMOVE_WISHLIST_URL = APP_URL+"add_remove_wishlist.php";
     public static final String FEEDBACK = "https://grabbit.co.in/web_services/feedback.php";

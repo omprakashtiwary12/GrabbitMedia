@@ -78,6 +78,7 @@
                     android:enabled="false"
                     android:focusable="false"
                     android:hint="Enter Name"
+                    android:inputType="textPersonName"
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -93,7 +94,8 @@
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:focusable="false"
-                    android:hint="Enter Email id"
+                    android:hint="Enter your email id"
+                    android:inputType="textEmailAddress"
                     android:singleLine="true" />
             </android.support.design.widget.TextInputLayout>
 
@@ -112,7 +114,7 @@
                     android:inputType="number"
                     android:maxLength="10"
                     android:singleLine="true"
-                    android:text="Enter Phone number" />
+                    android:text="Enter your phone number" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView

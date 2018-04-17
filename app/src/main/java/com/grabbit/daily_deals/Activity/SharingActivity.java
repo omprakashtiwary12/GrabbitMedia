@@ -8,7 +8,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.grabbit.daily_deals.R;
+import com.grabbit.daily_deals.Utility.AppUrl;
 import com.grabbit.daily_deals.Utility.BaseActivity;
+import com.grabbit.daily_deals.Utility.GetDataUsingWService;
+import com.grabbit.daily_deals.Utility.GetWebServiceData;
+
+import org.json.JSONObject;
 
 /**
  * Created by Gokul on 11/22/2016.
@@ -21,6 +26,7 @@ public class SharingActivity extends BaseActivity implements View.OnClickListene
     private ImageButton imgBtnFacebook;
     private ImageButton imgBtnMessage;
     private String shareText;
+    private String displayMessage = "";
 
     @Override
     public int getActivityLayout() {
@@ -32,14 +38,33 @@ public class SharingActivity extends BaseActivity implements View.OnClickListene
         setTitle("Share App");
 
         tvShareMessage = (TextView) findViewById(R.id.refer_tv_referral_message);
-        tvShareMessage.setText("Install & share this app \n Get " + "\u20B9" + " 10.0 in PayTM wallet.");
+      //  tvShareMessage.setText("Install & share this app \n Get " + "\u20B9" + " 10.0 in PayTM wallet.");
         imgBtnWhatsApp = (ImageButton) findViewById(R.id.free_ride_imgbtn_whatsapp);
         imgBtnWhatsApp.setOnClickListener(this);
         imgBtnFacebook = (ImageButton) findViewById(R.id.free_ride_imgbtn_facebook);
         imgBtnFacebook.setOnClickListener(this);
         imgBtnMessage = (ImageButton) findViewById(R.id.free_ride_imgbtn_message);
         imgBtnMessage.setOnClickListener(this);
-        shareText = "Download the app get Rs 10/- now in your PayTM wallet and find best offers/deals near you." + "\n\n" + "http://bit.ly/2EqJ8i3";
+//        shareText = "Download the app get Rs 10/- now in your PayTM wallet and find best offers/deals near you." + "\n\n" + "http://bit.ly/2EqJ8i3";
+
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("&api_key=").append(AppUrl.API_KEY);
+        String content = stringBuilder.toString();
+        GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.SHARING_URL, 0, content, true, "Loading...", new GetWebServiceData() {
+
+            @Override
+            public void getWebServiceResponse(String responseData, int serviceCounter) {
+                try {
+                    JSONObject jsonObject = new JSONObject(responseData);
+                    String status = jsonObject.getString("status");
+                    shareText = jsonObject.getString("shareText");
+                    displayMessage = jsonObject.getString("displayMessage");
+                    tvShareMessage.setText("" + displayMessage);
+                } catch (Exception e) {
+                }
+            }
+        });
+        getDataUsingWService.execute();
     }
 
     @Override

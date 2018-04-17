@@ -64,7 +64,7 @@ public class ContactUsActivity extends BaseActivity implements OnMapReadyCallbac
                 break;
 
             case R.id.contact_us_tv_mobile:
-                Other.callNow(ContactUsActivity.this, "+91 99910605600");
+                Other.callNow(ContactUsActivity.this, "+91 9910605600");
                 break;
 
             case R.id.contact_us_tv_email:

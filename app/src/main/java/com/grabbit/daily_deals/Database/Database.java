@@ -47,7 +47,7 @@ public class Database extends SQLiteOpenHelper {
             "out_id varchar(6)," + "name varchar(50)," + "address varchar(50)," +
             "city_name varchar(20)," + "state_name varchar(20)," + "pincode varchar(6)," + "distance double," +
             "phone varchar(10)," + "latitute varchar(20)," + "longtitute varchar(20)," + "outlet_status varchar(10)," +
-            "bcon_id varchar(10)," + "bcon_uuid varchar(100))";
+            "bcon_id varchar(10)," + "bcon_uuid varchar(100)," + "count_click varchar(10))";
 
     private final String CREATE_TABLE_COMPAIGNS = "create table tbl_compaign" +
             "(id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -122,7 +122,6 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getMerchantCompaign(String out_id, String current_dt) {
         SQLiteDatabase db = getReadableDatabase();
         String query = "SELECT * FROM tbl_compaign where out_id=" + "'" + out_id + "'";
-//        Log.d(TAG,"::::::Query "+query);
         Cursor cursor = db.rawQuery(query, null);
         return cursor;
     }
@@ -130,7 +129,6 @@ public class Database extends SQLiteOpenHelper {
     public Cursor getAllOffers(int cat_id) {
         SQLiteDatabase db = getReadableDatabase();
         String query = "SELECT * FROM tbl_compaign where out_id=" + "'" + cat_id + "'";
-//        Log.d(TAG,"::::::Query "+query);
         Cursor cursor = db.rawQuery(query, null);
         return cursor;
     }

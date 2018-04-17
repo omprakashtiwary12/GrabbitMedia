@@ -48,15 +48,15 @@ public class NearByFragment extends Fragment implements RecyclerAdapter.ReturnVi
         frag_nearby_rv.setAdapter(recyclerAdapter);
         recyclerAdapter.notifyDataSetChanged();
 
-        loadDataFromServer = ((DashboardActivity) getActivity()).loadDataFromServer;
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.drawer_swipe_pull_to_refresh);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadDataFromServer.startFatching();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+//        loadDataFromServer = ((DashboardActivity) getActivity()).loadDataFromServer;
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.drawer_swipe_pull_to_refresh);
+//        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                loadDataFromServer.startFatching();
+//                swipeRefreshLayout.setRefreshing(false);
+//            }
+//        });
 
         imageView = (ImageView) view.findViewById(R.id.fragment_img_no_offers);
         return view;

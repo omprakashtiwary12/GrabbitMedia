@@ -171,7 +171,7 @@ public class Other {
                     }
                     if (addresses != null) {
                         String address = addresses.get(0).getAddressLine(0);
-                        Log.d(TAB, "::::Address " + addresses.get(0).getAddressLine(0));
+//                        Log.d(TAB, "::::Address " + addresses.get(0).getAddressLine(0));
                         return address;
                     }
                     return "";

@@ -1,23 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_image">
-
-    <ImageView
-        android:id="@+id/act_details_TV_title_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:padding="5dp"
-        android:src="@drawable/back_black" />
+    android:background="@color/window_background"
+    tools:context="com.grabbit.daily_deals.Activity.DashboardActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/act_details_TV_title_back"
+        android:layout_margin="5dp"
+        android:background="@color/white"
         android:padding="10dp">
 
         <LinearLayout
@@ -94,7 +88,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Enter Password"
-                        android:imeOptions="actionDone"
                         android:inputType="textPassword" />
                 </android.support.design.widget.TextInputLayout>
 
@@ -116,7 +109,8 @@
                 <CheckBox
                     android:id="@+id/act_signup_chk_condition"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" />
 
                 <TextView
                     android:id="@+id/act_signup_tv_accept_terms"
@@ -139,7 +133,5 @@
                 android:text="  Sign Up  "
                 android:textColor="@color/white" />
         </LinearLayout>
-
-
     </ScrollView>
-</RelativeLayout>
+</android.support.design.widget.CoordinatorLayout>

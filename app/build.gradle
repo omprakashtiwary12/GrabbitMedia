@@ -9,8 +9,8 @@ android {
         applicationId "com.grabbit.daily_deals"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.7"
+        versionCode 11
+        versionName "1.10"
         multiDexEnabled true //Add this
     }
     buildTypes {
@@ -32,6 +32,7 @@ android {
 
 dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'com.android.support:support-vector-drawable:26.1.0'
     compile fileTree(include: ['*.jar'], dir: 'libs')
     //noinspection GradleCompatible
     compile 'com.android.support:appcompat-v7:26.0.0'
@@ -63,3 +64,8 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+android {
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+}

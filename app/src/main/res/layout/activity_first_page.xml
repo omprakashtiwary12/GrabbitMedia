@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_first_page"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/splashscreen"
@@ -16,6 +17,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
         android:progressDrawable="@drawable/circular_progress_bar"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

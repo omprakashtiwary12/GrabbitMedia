@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 
 import com.grabbit.daily_deals.Adapter.ViewPagerAdapter;
 import com.grabbit.daily_deals.Fragment.ImageViewFragment;
+import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Model.ImageModel;
 import com.grabbit.daily_deals.Model.NearByModel;
 import com.grabbit.daily_deals.R;
@@ -38,8 +40,10 @@ import org.w3c.dom.Text;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -68,7 +72,7 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
 
     private RelativeLayout llOfferList;
     private RelativeLayout llGalleryView;
-    public NearByModel nearByModel;
+    public  static NearByModel nearByModel = new NearByModel();
 
     private TextView tvDescription;
     private LinearLayout llMapClick;
@@ -85,10 +89,12 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     private String full_description = "";
     private int pos_value;
 
+    private String shareString = "";
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //  overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     @Override
@@ -100,9 +106,6 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        final int pos = getIntent().getExtras().getInt("index_value");
-        nearByModel = DashboardActivity.nearByModelList.get(pos);
 
         getSupportActionBar().setTitle("" + nearByModel.getBusiness_name());
         tvTitle = (TextView) findViewById(R.id.act_details_TV_title_name);
@@ -256,8 +259,8 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
             tvWorkingDays.setText("Closed");
             tvWorkingDays.setBackgroundColor(getResources().getColor(R.color.button_selected));
         }
+        shareString = "You should try " + nearByModel.getBusiness_name() + " in " + nearByModel.getAddress() + " via \n" + "https://grabbit.co.in/";
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -265,9 +268,23 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.menu_share:
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareString);
+                startActivity(Intent.createChooser(sharingIntent, "Share with"));
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_merchant_details, menu);
+        MenuItem menuItem = menu.findItem(R.id.menu_share);
+        return true;
     }
 
     private int getSeconds(String time) {
@@ -381,11 +398,14 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
     }
 
     private void openInBrowser(String url) {
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setData(Uri.parse(url));
-        startActivity(i);
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(url));
+            startActivity(i);
+        } catch (Exception e) {
+            Toast.makeText(MerchantDetailsActivity.this, "Wrong Url used.", Toast.LENGTH_SHORT).show();
+        }
     }
-
 
     private void setPager(int position) {
         ImageModel imageModel = nearByModel.getOfferImageModels().get(position);
@@ -421,7 +441,7 @@ public class MerchantDetailsActivity extends AppCompatActivity implements View.O
         stringBuilder.append("&out_id=").append("" + out_id);
         stringBuilder.append("&status=").append("" + condition);
         String content = stringBuilder.toString();
-        Log.d(TAG, "::::Wish List " + content);
+//        Log.d(TAG, "::::Wish List " + content);
         GetDataUsingWService getDataUsingWService = new GetDataUsingWService(this, AppUrl.ADDREMOVE_WISHLIST_URL, 0, content, false, "Loading ...", new GetWebServiceData() {
             @Override
             public void getWebServiceResponse(String responseData, int serviceCounter) {

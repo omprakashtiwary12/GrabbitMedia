@@ -158,8 +158,8 @@ public class MyProfileActivity extends BaseActivity implements View.OnClickListe
                 activity_my_profile_btn_browse.setVisibility(View.VISIBLE);
                 activity_my_profile_btn_submit.setVisibility(View.VISIBLE);
                 activity_my_profile_btn_logout.setVisibility(View.GONE);
-                activity_my_profile_edt_phone.setEnabled(true);
-                activity_my_profile_edt_phone.setFocusableInTouchMode(true);
+                activity_my_profile_edt_phone.setEnabled(false);
+                activity_my_profile_edt_phone.setFocusableInTouchMode(false);
                 activity_my_profile_edt_name.setEnabled(true);
                 activity_my_profile_edt_name.setFocusableInTouchMode(true);
                 edEmgPhone1.setEnabled(true);

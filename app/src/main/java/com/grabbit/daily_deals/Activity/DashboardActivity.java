@@ -1,32 +1,47 @@
 package com.grabbit.daily_deals.Activity;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.LayerDrawable;
 import android.media.Image;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.gms.maps.model.Dash;
 import com.grabbit.daily_deals.Adapter.RecyclerAdapter;
+import com.grabbit.daily_deals.GrabbitApplication;
 import com.grabbit.daily_deals.Model.NearByModel;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppPref;
 import com.grabbit.daily_deals.Utility.AppUrl;
+import com.grabbit.daily_deals.Utility.EndlessRecyclerViewScrollListener;
 import com.grabbit.daily_deals.Utility.GetDataUsingWService;
 import com.grabbit.daily_deals.Utility.GetWebServiceData;
 import com.grabbit.daily_deals.Utility.Other;
@@ -34,6 +49,7 @@ import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +59,7 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
 
     private static final String TAG = "DashboardActivity";
 
-    public static List<NearByModel> nearByModelList = new ArrayList<NearByModel>();
+    private List<NearByModel> nearByModelList = new ArrayList<NearByModel>();
     private RecyclerView frag_nearby_rv;
     private RecyclerAdapter recyclerAdapter;
     public LoadDataFromServer loadDataFromServer;
@@ -54,18 +70,25 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     private LinearLayout tvMyContactUs;
     private ImageView imgNotification;
     private TextView textOfferCount;
+    private TextView tvNotificationCount;
     TextView tvName;
 
-    private Button btnAll;
-    private Button btnEvents;
-    private Button btnElectronics;
-    private Button btnHospitality;
-    private Button btnRetails;
-    private Button btnSaloon_Spa;
-    private Button btnTravel;
-    private Button btnReal_state;
+    private LinearLayout btnEvents;
+    private LinearLayout btnElectronics;
+    private LinearLayout btnHospitality;
+    private LinearLayout btnRetails;
+    private LinearLayout btnSaloon_Spa;
+    private LinearLayout btnTravel;
+    private LinearLayout btnReal_state;
 
-    private final int CAT_ID_ALL = 100;
+    private TextView tvEvents;
+    private TextView tvElectronics;
+    private TextView tvHospitality;
+    private TextView tvRetails;
+    private TextView tvSaloon_Spa;
+    private TextView tvTravel;
+    private TextView tvReal_state;
+
     private final int CAT_ID_HOSPITALITY = 1;
     private final int CAT_ID_RETAILS = 2;
     private final int CAT_ID_EVENTS = 3;
@@ -85,13 +108,8 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     private ImageView imgBtn_Back;
     private FloatingActionButton fbSOS;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (loadDataFromServer == null) {
-            //loadDataFromServer = new LoadDataFromServer(this, this);
-        }
-    }
+    private EndlessRecyclerViewScrollListener endlessScrollListener;
+    boolean isScroll = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +118,12 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(null);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        toolbar.setTitle(null);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        loadDataFromServer = new LoadDataFromServer(this, this, false);
         frag_nearby_rv = (RecyclerView) findViewById(R.id.frag_nearby_rv);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -134,40 +150,36 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
         tvMyContactUs = (LinearLayout) findViewById(R.id.contact_us);
         tvMyContactUs.setOnClickListener(this);
 
-        imgNotification = (ImageView)findViewById(R.id.notification);
+        imgNotification = (ImageView) findViewById(R.id.notification);
         imgNotification.setOnClickListener(this);
 
-        btnAll = (Button) findViewById(R.id.btn_all);
-        btnAll.setOnClickListener(this);
-        btnAll.setText(getMerchantCount(CAT_ID_ALL));
-
-        btnEvents = (Button) findViewById(R.id.btn_events);
-        btnEvents.setText(getMerchantCount(CAT_ID_EVENTS));
+        btnEvents = (LinearLayout) findViewById(R.id.btn_events);
         btnEvents.setOnClickListener(this);
+        tvEvents = (TextView) findViewById(R.id.tv_events);
 
-        btnElectronics = (Button) findViewById(R.id.btn_electronics);
-        btnElectronics.setText(getMerchantCount(CAT_ID_FITNES));
+        btnElectronics = (LinearLayout) findViewById(R.id.btn_electronics);
         btnElectronics.setOnClickListener(this);
+        tvElectronics = (TextView) findViewById(R.id.tv_electronics);
 
-        btnHospitality = (Button) findViewById(R.id.btn_hospitality);
+        btnHospitality = (LinearLayout) findViewById(R.id.btn_hospitality);
         btnHospitality.setOnClickListener(this);
-        btnHospitality.setText(getMerchantCount(CAT_ID_HOSPITALITY));
+        tvHospitality = (TextView) findViewById(R.id.tv_hospitality);
 
-        btnRetails = (Button) findViewById(R.id.btn_retails);
+        btnRetails = (LinearLayout) findViewById(R.id.btn_retails);
         btnRetails.setOnClickListener(this);
-        btnRetails.setText(getMerchantCount(CAT_ID_RETAILS));
+        tvRetails = (TextView) findViewById(R.id.tv_retails);
 
-        btnSaloon_Spa = (Button) findViewById(R.id.btn_saloon_spa);
+        btnSaloon_Spa = (LinearLayout) findViewById(R.id.btn_saloon_spa);
         btnSaloon_Spa.setOnClickListener(this);
-        btnSaloon_Spa.setText(getMerchantCount(CAT_ID_SALOON_SPA));
+        tvSaloon_Spa = (TextView) findViewById(R.id.tv_saloon_spa);
 
-        btnTravel = (Button) findViewById(R.id.btn_travel);
+        btnTravel = (LinearLayout) findViewById(R.id.btn_travel);
         btnTravel.setOnClickListener(this);
-        btnTravel.setText(getMerchantCount(CAT_ID_TRAVEL));
+        tvTravel = (TextView) findViewById(R.id.tv_travel);
 
-        btnReal_state = (Button) findViewById(R.id.btn_real_state);
+        btnReal_state = (LinearLayout) findViewById(R.id.btn_real_state);
         btnReal_state.setOnClickListener(this);
-        btnReal_state.setText(getMerchantCount(CAT_ID_REAL_STATE));
+        tvReal_state = (TextView) findViewById(R.id.tv_real_state);
 
         fbSOS = (FloatingActionButton) findViewById(R.id.activity_dashboard_fb_sos);
         fbSOS.setOnClickListener(this);
@@ -178,28 +190,82 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadDataFromServer.startFatching();
+                if (loadDataFromServer != null) {
+                    loadDataFromServer = null;
+                }
+                loadDataFromServer = new LoadDataFromServer(DashboardActivity.this, DashboardActivity.this, false);
+                loadDataFromServer.startFatching(0, cat_id_on_swiperfersh);
                 swipeRefreshLayout.setRefreshing(true);
             }
         });
 
+//        cat_id_on_swiperfersh = CAT_ID_HOSPITALITY;
+//        LinearLayoutManager llm = new LinearLayoutManager(this);
+//        llm.setOrientation(LinearLayoutManager.VERTICAL);
+//        frag_nearby_rv.setLayoutManager(llm);
+//        endlessScrollListener = new EndlessRecyclerViewScrollListener(llm) {
+//            @Override
+//            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+//                if (!isScroll) {
+//                    if (loadDataFromServer != null) {
+//                        loadDataFromServer = null;
+//                    }
+//                    loadDataFromServer = new LoadDataFromServer(DashboardActivity.this, DashboardActivity.this, false);
+//                    loadDataFromServer.startFatching(page, cat_id_on_swiperfersh);
+//                    swipeRefreshLayout.setRefreshing(true);
+//                    Toast.makeText(DashboardActivity.this, "Load More " + page + " Item " +
+//                            totalItemsCount, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        };
+        //frag_nearby_rv.addOnScrollListener(endlessScrollListener);
         llNoOffer = (LinearLayout) findViewById(R.id.fragment_img_no_offers);
-        //        String videoPath = "https://www.grabbit.co.in/presentation/4855060_fa6f22a8f4caddd142cb2746cd92929318323485.mp4";
-//        videoView = (VideoView) findViewById(R.id.dashboard_video_view);
-//        videoView.setVideoPath(videoPath);
-//        MediaController mediaController = new MediaController(this);
-//        mediaController.setAnchorView(videoView);
-//        videoView.setMediaController(mediaController);
-        uploadCategoryData(CAT_ID_ALL);
-        setSelected(btnAll);
+        if (AppPref.getInstance().getEPhone1().length() < 10 && AppPref.getInstance().getEPhone2().length() < 10
+                && AppPref.getInstance().getEPhone3().length() < 10 &&
+                !AppPref.getInstance().getEmgEnableStatus().equalsIgnoreCase("block")) {
+            dialogAddEmergencyNumber();
+        }
+
+//        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+//        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        //tvNotificationCount = (TextView) findViewById(R.id.activity_dashboard_tv_notification_count);
+        loadDataFromServer = new LoadDataFromServer(this, this, false);
+        loadDataFromServer.startFatching(0, CAT_ID_HOSPITALITY);
+        swipeRefreshLayout.setRefreshing(true);
+        //setSelected(btnHospitality, tvHospitality);
     }
 
     @Override
     public void getItemPosition(int position) {
+        MerchantDetailsActivity.nearByModel = nearByModelList.get(position);
         Intent intent = new Intent(DashboardActivity.this, MerchantDetailsActivity.class);
-        intent.putExtra("index_value", position);
         startActivity(intent);
         overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.drawer_menu, menu);
+//        MenuItem menuItem = menu.findItem(R.id.menu_noti);
+//        LayerDrawable layerDrawable = (LayerDrawable) menuItem.getIcon();
+        int mNotificationCount = GrabbitApplication.database.getNotificationCount();
+        // tvNotificationCount.setText("" + mNotificationCount);
+        //Other.setBadgeCount(getApplicationContext(), layerDrawable, mNotificationCount);
+        return true;
+    }
+
+    @SuppressLint("WrongConstant")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_noti:
+                Other.sendToThisActivity(DashboardActivity.this, NotificationActivity.class);
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     @Override
@@ -224,6 +290,9 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
 
         TextView nearby_item_TXT_deals_count = (TextView) view.findViewById(R.id.nearby_item_TXT_deals_count);
         nearby_item_TXT_deals_count.setText("" + nearByModel.getOfferImageModels().size());
+
+        TextView nearby_item_TXT_view_count = (TextView) view.findViewById(R.id.nearby_item_TXT_view_count);
+        nearby_item_TXT_view_count.setText("" + nearByModel.getCount_click());
 
         ImageView nearyby_item_IMG_cat_icon = (ImageView) view.findViewById(R.id.nearby_item_img_cat_icon);
         int cat_id = Integer.parseInt(nearByModel.getCategory_id());
@@ -253,13 +322,12 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     public void getLoadDataResponse(boolean isStatus) {
         if (isStatus) {
             swipeRefreshLayout.setRefreshing(false);
-            uploadCategoryData(cat_id_on_swiperfersh);
+            uploadCategoryData(0);
         }
     }
 
     @Override
     public void onClick(View v) {
-        setUnSelected();
         switch (v.getId()) {
             case R.id.act_details_TV_title_back:
                 onBackPressed();
@@ -267,57 +335,56 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
 
             case R.id.my_profile:
                 Other.sendToThisActivity(DashboardActivity.this, MyProfileActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
 
             case R.id.mysetting:
                 Other.sendToThisActivity(DashboardActivity.this, SharingActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
 
             case R.id.my_refer:
                 Other.sendToThisActivity(DashboardActivity.this, HelpActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
 
             case R.id.contact_us:
-                Other.sendToThisActivity(DashboardActivity.this, ContactUsActivity.class);
-                break;
-
-            case R.id.btn_all:
-                setSelected(btnAll);
-                uploadCategoryData(CAT_ID_ALL);
+                Other.sendToThisActivity(DashboardActivity.this, OffersActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
 
             case R.id.btn_events:
-                setSelected(btnEvents);
+                setSelected(btnEvents, tvEvents);
                 uploadCategoryData(CAT_ID_EVENTS);
                 break;
 
             case R.id.btn_electronics:
-                setSelected(btnElectronics);
+                setSelected(btnElectronics, tvElectronics);
                 uploadCategoryData(CAT_ID_FITNES);
                 break;
 
             case R.id.btn_hospitality:
-                setSelected(btnHospitality);
+                setSelected(btnHospitality, tvHospitality);
                 uploadCategoryData(CAT_ID_HOSPITALITY);
                 break;
 
             case R.id.btn_retails:
-                setSelected(btnRetails);
+                setSelected(btnRetails, tvRetails);
                 uploadCategoryData(CAT_ID_RETAILS);
                 break;
 
             case R.id.btn_saloon_spa:
-                setSelected(btnSaloon_Spa);
+                setSelected(btnSaloon_Spa, tvSaloon_Spa);
                 uploadCategoryData(CAT_ID_SALOON_SPA);
                 break;
 
             case R.id.btn_travel:
-                setSelected(btnTravel);
+                setSelected(btnTravel, tvTravel);
                 uploadCategoryData(CAT_ID_TRAVEL);
                 break;
 
             case R.id.btn_real_state:
-                setSelected(btnReal_state);
+                setSelected(btnReal_state, tvReal_state);
                 uploadCategoryData(CAT_ID_REAL_STATE);
                 break;
 
@@ -326,40 +393,35 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
                 break;
             case R.id.notification:
                 Other.sendToThisActivity(DashboardActivity.this, NotificationActivity.class);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
         }
     }
 
-    private void setUnSelected() {
+    private void setSelected(LinearLayout linearLayout, TextView textView) {
+        btnHospitality.setAlpha(1.0f);
+        tvHospitality.setTextColor(Color.WHITE);
 
-        btnAll.setSelected(false);
-        btnAll.setTextColor(Color.DKGRAY);
+        btnRetails.setAlpha(1.0f);
+        tvRetails.setTextColor(Color.WHITE);
 
-        btnEvents.setSelected(false);
-        btnEvents.setTextColor(Color.DKGRAY);
+        btnTravel.setAlpha(1.0f);
+        tvTravel.setTextColor(Color.WHITE);
 
-        btnHospitality.setSelected(false);
-        btnHospitality.setTextColor(Color.DKGRAY);
+        btnSaloon_Spa.setAlpha(1.0f);
+        tvSaloon_Spa.setTextColor(Color.WHITE);
 
-        btnElectronics.setSelected(false);
-        btnElectronics.setTextColor(Color.DKGRAY);
+        btnEvents.setAlpha(1.0f);
+        tvEvents.setTextColor(Color.WHITE);
 
-        btnReal_state.setSelected(false);
-        btnReal_state.setTextColor(Color.DKGRAY);
+        btnReal_state.setAlpha(1.0f);
+        tvReal_state.setTextColor(Color.WHITE);
 
-        btnTravel.setSelected(false);
-        btnTravel.setTextColor(Color.DKGRAY);
+        btnElectronics.setAlpha(1.0f);
+        tvElectronics.setTextColor(Color.WHITE);
 
-        btnSaloon_Spa.setSelected(false);
-        btnSaloon_Spa.setTextColor(Color.DKGRAY);
-
-        btnRetails.setSelected(false);
-        btnRetails.setTextColor(Color.DKGRAY);
-    }
-
-    private void setSelected(Button button) {
-        button.setSelected(true);
-        button.setTextColor(Color.RED);
+        linearLayout.setAlpha(0.7f);
+        textView.setTextColor(Color.GREEN);
     }
 
     private void sendEmergencyMessage() {
@@ -374,7 +436,6 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
     }
 
     private void uploadCategoryData(int cat_id) {
-        cat_id_on_swiperfersh = cat_id;
         nearByModelList = loadDataFromServer.getMerchantList(cat_id);
         textOfferCount.setText("" + getOfferList(cat_id) + " OFFER");
         recyclerAdapter = new RecyclerAdapter(nearByModelList, getApplicationContext(), R.layout.item_nearby_adapter, this, 0, this);
@@ -399,23 +460,118 @@ public class DashboardActivity extends AppCompatActivity implements RecyclerAdap
         return count;
     }
 
-    private String getMerchantCount(int cat_id) {
-        int size = loadDataFromServer.getMerchantList(cat_id).size();
-        Log.d(TAG, "::::Cat Id " + cat_id + " Size " + size);
-        return "" + size;
-    }
-
     @Override
     public void getWebServiceResponse(String responseData, int serviceCounter) {
         if (responseData != null) {
             try {
                 JSONObject jsonObject = new JSONObject(responseData);
-                String status = jsonObject.getString("status");
-                String message = jsonObject.getString("msg");
-                Toast.makeText(getApplicationContext(), "" + message, Toast.LENGTH_LONG).show();
+                if (serviceCounter == 0) {
+
+                    String status = jsonObject.getString("status");
+                    String message = jsonObject.getString("msg");
+                    Toast.makeText(getApplicationContext(), "" + message, Toast.LENGTH_LONG).show();
+                } else {
+                    String status = jsonObject.getString("status");
+                    String message = jsonObject.getString("msg");
+                    String phone1 = jsonObject.getString("phone1");
+                    String phone2 = jsonObject.getString("phone2");
+                    String phone3 = jsonObject.getString("phone3");
+
+                    if (status.equalsIgnoreCase("1")) {
+                        AppPref.getInstance().setEPhone1("" + phone1);
+                        AppPref.getInstance().setEPhone2("" + phone2);
+                        AppPref.getInstance().setEPhone3("" + phone3);
+                        Snackbar.make(findViewById(R.id.coordinatorLayout),
+                                "" + message, Snackbar.LENGTH_SHORT).show();
+                        if (dialog != null)
+                            dialog.cancel();
+                    }
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
     }
+
+    private Dialog dialog = null;
+
+    private void dialogAddEmergencyNumber() {
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.dialog_emergency_number);
+        final EditText dialogEdEmg1 = (EditText) dialog.findViewById(R.id.activity_my_profile_edt_phone1);
+        dialogEdEmg1.setText("" + AppPref.getInstance().getEPhone1());
+        final EditText dialogEdEmg2 = (EditText) dialog.findViewById(R.id.activity_my_profile_edt_phone2);
+        dialogEdEmg2.setText("" + AppPref.getInstance().getEPhone2());
+        final EditText dialogEdEmg3 = (EditText) dialog.findViewById(R.id.activity_my_profile_edt_phone3);
+        dialogEdEmg3.setText("" + AppPref.getInstance().getEPhone3());
+        final CheckBox chkAskAgain = (CheckBox) dialog.findViewById(R.id.dialog_chk_ask_again);
+        chkAskAgain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (chkAskAgain.isChecked()) {
+                    AppPref.getInstance().setEmgEnableStatus("block");
+                } else {
+                    AppPref.getInstance().setEmgEnableStatus("");
+                }
+            }
+        });
+
+        Button fragment_forget_cancel = (Button) dialog.findViewById(R.id.fragment_forget_cancel);
+        fragment_forget_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        Button dialog_btn_btn_submit = (Button) dialog.findViewById(R.id.dialog_btn_btn_submit);
+        dialog_btn_btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String strEMG1 = dialogEdEmg1.getText().toString();
+                String strEMG2 = dialogEdEmg2.getText().toString();
+                String strEMG3 = dialogEdEmg3.getText().toString();
+                if (TextUtils.isEmpty(strEMG1) && TextUtils.isEmpty(strEMG2) && TextUtils.isEmpty(strEMG3)) {
+                    Snackbar.make(findViewById(R.id.coordinatorLayout),
+                            "Enter emergency number.", Snackbar.LENGTH_SHORT).show();
+                    return;
+                }
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("api_key=").append(AppUrl.API_KEY);
+                stringBuilder.append("&cus_id=").append("" + AppPref.getInstance().getUserID());
+                stringBuilder.append("&emg_phone1=").append("" + dialogEdEmg1.getText().toString());
+                stringBuilder.append("&emg_phone2=").append("" + dialogEdEmg2.getText().toString());
+                stringBuilder.append("&emg_phone3=").append("" + dialogEdEmg3.getText().toString());
+                String content = stringBuilder.toString();
+                GetDataUsingWService serviceProfileUpdate =
+                        new GetDataUsingWService(DashboardActivity.this, AppUrl.UPDATE_EMERGENCY, 1, content, true, "Updating...", DashboardActivity.this);
+                serviceProfileUpdate.execute();
+            }
+        });
+        dialog.show();
+    }
+
+   /* private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_profile:
+                    Other.sendToThisActivity(DashboardActivity.this, MyProfileActivity.class);
+                    return true;
+                case R.id.navigation_share:
+                    Other.sendToThisActivity(DashboardActivity.this, SharingActivity.class);
+                    return true;
+                case R.id.navigation_help:
+                    Other.sendToThisActivity(DashboardActivity.this, HelpActivity.class);
+                    return true;
+                case R.id.navigation_contact_us:
+                    Other.sendToThisActivity(DashboardActivity.this, ContactUsActivity.class);
+                    return true;
+            }
+            return false;
+        }
+    };*/
 }

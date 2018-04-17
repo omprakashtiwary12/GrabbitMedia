@@ -3,8 +3,10 @@ package com.grabbit.daily_deals.Fragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppPref;
+import com.grabbit.daily_deals.currentLocation.CurrentLocation;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -34,6 +37,7 @@ public class LocationFragment extends Fragment implements PlaceSelectionListener
     private EditText edGetLocation;
     private TextView tvSelectAddress;
     private ImageView btnBack;
+    private Button btnCurrentLocation;
     private Button btnOkay;
 
     public interface iLocationFragment {
@@ -84,6 +88,9 @@ public class LocationFragment extends Fragment implements PlaceSelectionListener
         btnOkay.setOnClickListener(this);
         btnOkay.setVisibility(View.GONE);
 
+        btnCurrentLocation = (Button) view.findViewById(R.id.layout_location_btn_current_location);
+        btnCurrentLocation.setOnClickListener(this);
+
         edGetLocation = (EditText) view.findViewById(R.id.location_ed_get_current_location);
         edGetLocation.setOnClickListener(this);
 
@@ -123,6 +130,22 @@ public class LocationFragment extends Fragment implements PlaceSelectionListener
                         GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
+                break;
+
+            case R.id.layout_location_btn_current_location:
+                new CurrentLocation().getLocation(getActivity(), new CurrentLocation.LocationResult() {
+                    @Override
+                    public void gotLocation(Location location) {
+                        if (location != null) {
+                            AppPref.getInstance().setLat("" + location.getLatitude());
+                            AppPref.getInstance().setLong("" + location.getLongitude());
+                            getActivity().onBackPressed();
+                        } else {
+                            Snackbar.make(getActivity().findViewById(R.id.fregment_location),
+                                    "Location not found.", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
                 break;
         }
     }

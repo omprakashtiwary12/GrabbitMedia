@@ -29,6 +29,7 @@ public class AppPref {
     private final String PREF_EMG_PHONE1 = "emg_phone1";
     private final String PREF_EMG_PHONE2 = "emg_phone2";
     private final String PREF_EMG_PHONE3 = "emg_phone3";
+    private final String PREF_EMG_ENABLE = "is_emg_enable";
 
     private final String PREF_BLE_ENABLE = "is_ble_enable";
 
@@ -153,12 +154,21 @@ public class AppPref {
         sEditor.commit();
     }
 
+    public String getEmgEnableStatus() {
+        return sPreferences.getString(PREF_EMG_ENABLE, "");
+    }
+
+    public void setEmgEnableStatus(String emgEnable) {
+        sEditor.putString(PREF_EMG_ENABLE, emgEnable);
+        sEditor.commit();
+    }
+
     public String getBleEnableStatus() {
-        return sPreferences.getString(PREF_EMG_PHONE3, "");
+        return sPreferences.getString(PREF_BLE_ENABLE, "");
     }
 
     public void setBleEnableStatus(String emgPhone3) {
-        sEditor.putString(PREF_EMG_PHONE3, emgPhone3);
+        sEditor.putString(PREF_BLE_ENABLE, emgPhone3);
         sEditor.commit();
     }
 
@@ -182,7 +192,6 @@ public class AppPref {
     }
 
     public boolean isLogin() {
-        Log.d("App Pref", "::::User Id" + getUserID());
         if (getUserID() != null && getUserID().length() > 0) {
             return true;
         } else {

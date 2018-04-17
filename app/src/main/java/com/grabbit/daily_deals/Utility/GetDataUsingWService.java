@@ -2,6 +2,7 @@ package com.grabbit.daily_deals.Utility;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.View;
@@ -45,7 +46,6 @@ public class GetDataUsingWService extends AsyncTask<String, String, String> {
             progressBar = new CProgressDialog(activity);
             progressBar.setIndeterminate(false);
             progressBar.setMessage(message);
-//            progressBar.setProgressStyle(R.style.MyTheme);
             progressBar.setCanceledOnTouchOutside(false);
             progressBar.setCancelable(false);
             progressBar.show();
@@ -54,12 +54,10 @@ public class GetDataUsingWService extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... params) {
-
         if (!Other.isNetworkAvailable(activity)) {
             NetworkErrorFragment networkErrorFragment = new NetworkErrorFragment();
             activity.getFragmentManager().beginTransaction().
                     add(android.R.id.content, networkErrorFragment).commit();
-
         } else {
             responseData = WebService1.Web_FetchData(url, content);
         }
@@ -69,7 +67,7 @@ public class GetDataUsingWService extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        if (isShowProgress)
+        if (isShowProgress && progressBar != null)
             progressBar.dismiss();
         getWebServiceData.getWebServiceResponse(result, serviceCounter);
     }

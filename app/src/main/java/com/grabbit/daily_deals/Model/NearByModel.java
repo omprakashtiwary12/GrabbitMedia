@@ -1,12 +1,14 @@
 package com.grabbit.daily_deals.Model;
 
 import android.media.Image;
+import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /* Created By Gokul */
-public class NearByModel {
+public class NearByModel implements Serializable, Comparable {
 
     private String m_id;
     private String business_name;
@@ -34,7 +36,9 @@ public class NearByModel {
     private String longitude;
     private String bcon_id;
     private String bcon_uuid;
+    private String count_click;
     private String distance;
+    private int intDistance;
     private String status;
     private List<ImageModel> offerImageModels = new ArrayList<ImageModel>();
     private List<ImageModel> gallerImageModels = new ArrayList<ImageModel>();
@@ -294,6 +298,14 @@ public class NearByModel {
         this.bcon_uuid = bcon_uuid;
     }
 
+    public String getCount_click() {
+        return count_click;
+    }
+
+    public void setCount_click(String count_click) {
+        this.count_click = count_click;
+    }
+
     public String getDistance() {
         return distance;
     }
@@ -333,5 +345,19 @@ public class NearByModel {
 
     public void setCategory_id(String category_id) {
         this.category_id = category_id;
+    }
+
+    public int getIntDistance() {
+        return intDistance;
+    }
+
+    public void setIntDistance(int intDistance) {
+        this.intDistance = intDistance;
+    }
+
+    @Override
+    public int compareTo(@NonNull Object o) {
+        int compareValue = ((NearByModel) o).getIntDistance();
+        return this.intDistance - compareValue;
     }
 }

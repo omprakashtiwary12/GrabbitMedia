@@ -205,11 +205,6 @@ public class DrawerActivity extends AppCompatActivity
             case R.id.menu_noti:
                 Other.sendToThisActivity(DrawerActivity.this, NotificationActivity.class);
                 break;
-            case R.id.action_search:
-                Intent intent1 = new Intent(DrawerActivity.this, CategoryActivity.class);
-                intent1.setFlags(100);
-                startActivityForResult(intent1, 100);
-                break;
             default:
                 break;
         }

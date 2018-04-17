@@ -2,10 +2,15 @@ package com.grabbit.daily_deals.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.grabbit.daily_deals.R;
 import com.grabbit.daily_deals.Utility.AppPref;
@@ -20,9 +25,13 @@ import org.json.JSONObject;
 /**
  * Created by Gokul on 7/7/2016.
  */
-public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener, GetWebServiceData {
-    EditText new_password, re_enter_password;
-    Button save;
+public class ChangePasswordActivity extends BaseActivity implements View.OnClickListener, GetWebServiceData, TextWatcher {
+    private EditText new_password, re_enter_password;
+    private Button save;
+    private ImageButton imgBtnPasswordStatus;
+    private ImageButton imgBtnConfirmPasswordStatus;
+    private boolean isPasswordView;
+    private boolean isPasswordView1;
 
     private static final String TAG = "ChangePasswordActivity";
     private String phone = "";
@@ -37,9 +46,16 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
     public void initialize() {
         setTitle("Change Password");
         re_enter_password = (EditText) findViewById(R.id.re_enter_password);
+        re_enter_password.addTextChangedListener(this);
         new_password = (EditText) findViewById(R.id.new_password);
+        new_password.addTextChangedListener(this);
         save = (Button) findViewById(R.id.save);
         save.setOnClickListener(this);
+
+        imgBtnPasswordStatus = (ImageButton) findViewById(R.id.login_btn_password_syatus);
+        imgBtnPasswordStatus.setOnClickListener(this);
+        imgBtnConfirmPasswordStatus = (ImageButton) findViewById(R.id.login_btn_confirm_password);
+        imgBtnConfirmPasswordStatus.setOnClickListener(this);
     }
 
     @Override
@@ -51,12 +67,35 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         }
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.save:
                 save();
+                break;
+
+            case R.id.login_btn_password_syatus:
+                if (isPasswordView) {
+                    imgBtnPasswordStatus.setBackgroundResource(R.drawable.ic_custom_show);
+                    re_enter_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    isPasswordView = false;
+                } else {
+                    imgBtnPasswordStatus.setBackgroundResource(R.drawable.ic_custom_hide);
+                    re_enter_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    isPasswordView = true;
+                }
+                break;
+
+            case R.id.login_btn_confirm_password:
+                if (isPasswordView1) {
+                    imgBtnPasswordStatus.setBackgroundResource(R.drawable.ic_custom_show);
+                    new_password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    isPasswordView1 = false;
+                } else {
+                    imgBtnPasswordStatus.setBackgroundResource(R.drawable.ic_custom_hide);
+                    new_password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    isPasswordView1 = true;
+                }
                 break;
         }
     }
@@ -113,4 +152,18 @@ public class ChangePasswordActivity extends BaseActivity implements View.OnClick
         }
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }

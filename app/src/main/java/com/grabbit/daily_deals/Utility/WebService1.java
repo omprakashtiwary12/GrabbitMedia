@@ -1,5 +1,6 @@
 package com.grabbit.daily_deals.Utility;
 
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.BufferedReader;
@@ -8,10 +9,12 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import io.fabric.sdk.android.services.network.HttpRequest;
+import okio.Utf8;
+
 public class WebService1 {
 
     public static String Web_FetchData(String webServiceURL, String content) {
-
 
         HttpURLConnection urlConnection = null;
         OutputStreamWriter dos = null;
@@ -30,7 +33,6 @@ public class WebService1 {
             urlConnection.setRequestProperty("Content-Type", sContentType);
             urlConnection.setDoOutput(true);
             dos = new OutputStreamWriter(urlConnection.getOutputStream());
-
             dos.write(content);
             dos.flush();
             dos.close();

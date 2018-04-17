@@ -41,7 +41,6 @@ public class GrabbitApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "::::::Application on Create method");
         mInstance = this;
         database = new Database(getApplicationContext(), 1);
         beaconNotificationsManager = new BeaconNotificationsManager(this);
@@ -59,7 +58,6 @@ public class GrabbitApplication extends MultiDexApplication {
             String bconId = cursor.getString(8);
             BeaconID beaconID = new BeaconID(bconId, mazor, minor);
             beaconNotificationsManager.addNotification(beaconID, message, "Bye " + message, message_id, outlet_id);
-            Log.d(TAG, ":::BCon UDID " + mazor + "  Message " + message);
         }
         beaconNotificationsManager.startMonitoring();
     }

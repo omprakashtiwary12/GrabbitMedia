@@ -1,19 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_image">
-
-    <ImageView
-        android:id="@+id/act_details_TV_title_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:padding="5dp"
-        android:src="@drawable/back_black" />
+    android:background="@color/window_background">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:background="@color/white"
         android:padding="10dp">
 
         <LinearLayout
@@ -59,7 +53,8 @@
                     android:id="@+id/activity_login_textInput"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/login_til_username">
+                    android:layout_below="@id/login_til_username"
+                    android:layout_marginBottom="10dp">
 
                     <android.support.design.widget.TextInputLayout
                         android:id="@+id/login_til_password"
@@ -87,7 +82,6 @@
                         android:background="@drawable/ic_custom_show" />
                 </RelativeLayout>
 
-
                 <RelativeLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -101,8 +95,8 @@
                         android:layout_height="40dp"
                         android:layout_alignParentLeft="true"
                         android:background="@drawable/button_selector"
-                        android:paddingLeft="30dp"
-                        android:paddingRight="30dp"
+                        android:paddingLeft="40dp"
+                        android:paddingRight="40dp"
                         android:text="Log in"
                         android:textColor="#ffffff"
                         android:textSize="12sp" />
@@ -119,71 +113,10 @@
                         android:textSize="14sp"
                         android:textStyle="italic" />
 
-                    <Button
-                        android:id="@+id/login_btn_signup"
-                        android:layout_width="0dp"
-                        android:layout_height="40dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_weight="1"
-                        android:background="@drawable/button_selector"
-                        android:text="Sign up"
-                        android:textColor="#ffffff"
-                        android:textSize="12sp"
-                        android:visibility="gone" />
                 </RelativeLayout>
 
             </RelativeLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
-                android:visibility="gone"
-                android:text="OR" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="10dp"
-                android:visibility="gone"
-                android:text="Login with your email" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_gravity="center"
-                android:visibility="gone"
-                android:orientation="horizontal">
-
-                <FrameLayout
-                    android:id="@+id/frame_layout_btn_login_facebook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <com.facebook.login.widget.LoginButton
-                        android:id="@+id/login_page_btn_facebook"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textAllCaps="false"
-                        android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/button_facebook"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:background="@drawable/login_fb" />
-                </FrameLayout>
-
-                <Button
-                    android:id="@+id/login_btn_google"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="20dp"
-                    android:background="@drawable/login_google"
-                    android:textAllCaps="false" />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

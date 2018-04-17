@@ -66,7 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, ":::::::::Message Notification Body: " + remoteMessage.getNotification().getBody());
             //sendNotification(remoteMessage.getNotification().getBody());
-            GrabbitApplication.getInstance().sendNotification("Grabbit", remoteMessage.getNotification().getBody());
+            GrabbitApplication.getInstance().sendNotification("Grabbit Media", remoteMessage.getNotification().getBody());
         }
 
         // Also if you intend on generating your own notifications as a result of a received FCM

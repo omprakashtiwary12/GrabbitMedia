@@ -82,7 +82,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     public final static int IMAGE_GALLERY = 100;
     public final static int IMAGE_CAMERA = 101;
-    private ImageView imgBtn_Back;
     private boolean isPasswordView;
     private ImageButton imgBtnPasswordStatus;
 
@@ -96,11 +95,8 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void initialize() {
         setTitle("Register");
-        getSupportActionBar().hide();
-
-        imgBtn_Back = (ImageView) findViewById(R.id.act_details_TV_title_back);
-        imgBtn_Back.setOnClickListener(this);
-
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         act_signup_ET_lastName = (EditText) findViewById(R.id.act_signup_ET_lastName);
         act_signup_ET_mobile = (EditText) findViewById(R.id.act_signup_ET_mobile);
         act_signup_ET_email = (EditText) findViewById(R.id.act_signup_ET_email);
@@ -108,13 +104,13 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         act_signup_ET_password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isPassword_Visible) {
-                    isPassword_Visible = false;
-                    act_signup_ET_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                } else {
-                    isPassword_Visible = true;
-                    act_signup_ET_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-                }
+//                if (isPassword_Visible) {
+//                    isPassword_Visible = false;
+//                    act_signup_ET_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                } else {
+//                    isPassword_Visible = true;
+//                    act_signup_ET_password.setInputType(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+//                }
             }
         });
 
@@ -148,9 +144,6 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.act_details_TV_title_back:
-                onBackPressed();
-                break;
             case R.id.act_signup_BTN_next:
                 User_reg_social_type = "Simple";
                 save();
@@ -182,19 +175,18 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
             toastMessage("Please Provide name");
             return;
         } else if (mobile.length() != 10) {
-            toastMessage("Please Provide Mobile No");
+            toastMessage("Invalid phone number");
             return;
         } else if (!Other.isValidEmail(email)) {
-            toastMessage("Please Provide a Valid E-Mail Id");
+            toastMessage("Invalid email id");
             return;
-        } else if (password.length() < 5) {
-            toastMessage("Please Provide Password");
+        } else if (password.length() < 6) {
+            toastMessage("Min 6 char password required");
             return;
         } else if (chkCondition.isChecked() == false) {
             toastMessage("Please accept terms and condition.");
             return;
         } else {
-            //  String encodedImage = getStringImage(activity_register_profile_image.getDrawingCache());
             StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("api_key=").append(AppUrl.API_KEY);
             stringBuilder.append("&email=").append(email);

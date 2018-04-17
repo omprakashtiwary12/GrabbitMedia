@@ -120,12 +120,14 @@ public class SplashActivity extends BaseActivity implements LoadDataFromServer.i
                 Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
 
             case R.id.btn_signup:
                 Intent intent1 = new Intent(SplashActivity.this, RegisterActivity.class);
                 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent1);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 break;
             case R.id.login_btn_google:
                 signInWithGoogle();
@@ -199,7 +201,7 @@ public class SplashActivity extends BaseActivity implements LoadDataFromServer.i
         super.onActivityResult(requestCode, resultCode, data);
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (resultCode == RESULT_BLUETOOTH) {
-            new LoadDataFromServer(this, this).startFatching();
+           // new LoadDataFromServer(this, this).startFatching();
         }
 
         if (requestCode == RC_SIGN_IN) {
@@ -209,7 +211,6 @@ public class SplashActivity extends BaseActivity implements LoadDataFromServer.i
                 String username = "", name = "", photo_url = "";
                 try {
                     GoogleSignInAccount googleResult = result.getSignInAccount();
-
                     username = googleResult.getEmail();
                     name = googleResult.getDisplayName();
                     photo_url = googleResult.getPhotoUrl().toString();
